@@ -435,6 +435,13 @@ function sentence(toks, opts = {}) {
     if (isN(pick) && an.some((a) => a.code === "N:p") && an.some((a) => a.code === "N:s") && !prevWasPrep) {
       const vb = words.slice(i + 1, i + 4).flatMap((x) => analyses(x.low)).find(isV);
       if (vb && /:(3p|p)(:|$)/.test(vb.code)) pick = an.find((a) => a.code === "N:p");      // «звезды поют» — много
+      else {
+        // «люблю море и звёзды», «вижу звёзды»: «звезды» = род. ед. только после сущ., числа, «нет/много/мало…»; иначе — много
+        const pw = i > 0 ? words[i - 1].low : "";
+        const genCtx = (out.length && out[out.length - 1].noun && pw !== "и") || NUM[pw] !== undefined || /^\d+$/.test(pw) ||
+          /^(нет|много|мало|сколько|несколько|немного|без)$/.test(pw);
+        if (!genCtx && !(vb && /:3s(:|$)/.test(vb.code)) && pick.lemma !== low) pick = an.find((a) => a.code === "N:p");   // «видео», «кафе» не склоняются — не трогаем
+      }
     }
     if (isN(pick) && !prevWasPrep && GF && GF.has(low) && out.length && out[out.length - 1].noun && !st.det && !st.adjs.length) {
       emit("de", ""); st.afterPrep = true;                                          // берег реки → le riv de le rivyer
