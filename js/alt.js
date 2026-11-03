@@ -6,7 +6,25 @@ const ALT_VERBS = [["chanter", "петь"], ["danser", "танцевать"], ["
 const ALT_P = [["m", "я"], ["s", "ты"], ["t", "он, она"], ["n", "мы"], ["z", "вы"], ["l", "они"]];
 const ALT_T = [["e", "сейчас"], ["i", "было (раз)"], ["a", "было (долго)"], ["re", "будет"], ["o", "вот-вот"], ["u", "только что"]];
 const ALT_M = [["", "—"], ["ri", "бы"], ["se", "пусть"], ["pe", "наверное"]];
-const altS = () => { const S = Store.get(); if (!S.alt) S.alt = { cheat: {}, texts: {}, puzzles: {} }; return S.alt; };
+const altS = () => { const S = Store.get(); if (!S.alt) S.alt = {}; const A = S.alt;
+  for (const k of ["cheat", "texts", "puzzles", "chex", "tex", "err"]) A[k] = A[k] || {}; A.prac = A.prac || { sets: 0, best: 0 }; return A; };
+// записать ответ: ошибки по темам (главам) — «Практика» чаще даёт то, в чём ошибался
+function altRecord(item, first, ok) {
+  const A = altS(), t = item.ref || "misc";
+  if (first && ok) A.err[t] = Math.max(0, (A.err[t] || 0) - 0.5); else A.err[t] = (A.err[t] || 0) + 1;
+  Store.save();
+}
+// задания в контейнер: по окончании — очки за верные с первой попытки (только в первый раз) и результат в store[key]
+function altMountTasks(el, items, store, key, after) {
+  AltT.mount(el, items, { onAnswer: altRecord, onDone: (r) => {
+    const A = altS(), first = A[store][key] === undefined;
+    A[store][key] = Math.max(A[store][key] || 0, r.first);
+    if (first && r.first) { Store.addPoints(r.first * 2); toast(`+${r.first * 2} очков ✦`); renderNav("альтернатива"); } else Store.save();
+    el.insertAdjacentHTML("beforeend", `<div class="card alt-sum"><b>Готово!</b> С первой попытки: ${r.first} из ${r.total}. ${r.first === r.total ? "Отлично ✦" : r.first >= r.total * .7 ? "Хорошо!" : "Стоит перечитать главу и попробовать ещё раз."} <button class="btn sm" data-again>Ещё раз</button></div>`);
+    el.querySelector("[data-again]").onclick = () => { route(); };
+    if (after) after(r);
+  } });
+}
 const altH = (...p) => "#/" + ["альтернатива", ...p].join("/");
 
 // ---------------------------------------------------------------- разметка глав
@@ -66,7 +84,7 @@ function altPageHome() {
     <div class="alt-bar"><i style="width:${Math.round(done / all * 100)}%"></i></div><small class="muted">${done} из ${all}</small>${list}</div>
     <a class="btn ${done < all ? "gold" : ""}" href="${href}">${done ? done < all ? "Дальше ▶" : "Повторить" : "Начать ▶"}</a></div>`;
   return `<div class="k">Альтернативное обучение</div><h1 class="page">Весь язык <i>сразу</i></h1>
-  <p class="lead">Для тех, кому скучно идти маленькими шагами. Сначала — шпаргалка по всему языку (подробнее всего — про звуки), потом тексты, где под каждым кусочком слова подписано, что он значит, а потом загадки: правила находишь сам.</p>
+  <p class="lead">Для тех, кому скучно идти маленькими шагами. Сначала — шпаргалка по всему языку (подробнее всего — про звуки) с заданиями после каждой главы, потом тексты, где под каждым кусочком слова подписано, что он значит, потом загадки (правила находишь сам) и бесконечная практика.</p>
   <div class="alt-steps">
   ${step(1, "📐", "Шпаргалка", "Весь язык: звуки, слова, глагол-конструктор, местоимения, числа", nC, C.length, altH("шпаргалка", nextC.id),
     `<div class="alt-mini">${C.map((c) => `<a href="${altH("шпаргалка", c.id)}" class="${A.cheat[c.id] ? "d" : ""}">${c.ic} ${esc(c.t)}</a>`).join("")}</div>`)}
@@ -74,6 +92,8 @@ function altPageHome() {
     `<div class="alt-mini">${T.map((x, i) => `<a href="${altH("текст", i + 1)}" class="${A.texts[i + 1] ? "d" : ""}">${i + 1}. ${esc(x.t)}</a>`).join("")}</div>`)}
   ${step(3, "🧩", "Загадки", "Примеры с переводом — правило выводишь сам и сразу проверяешь", nP, P.length, altH("загадка", nextP),
     `<div class="alt-mini">${P.map((x, i) => `<a href="${altH("загадка", i + 1)}" class="${A.puzzles[i + 1] !== undefined ? "d" : ""}">${i + 1}. ${esc(x.t)}</a>`).join("")}</div>`)}
+  <div class="card alt-step"><div class="alt-sn">4</div><div style="flex:1;min-width:0"><b>🎯 Практика</b><div class="muted">Бесконечная смесь: каждый раз новые 15 заданий по всему языку, чаще — то, в чём ошибался</div>
+    <small class="muted">Наборов пройдено: ${A.prac.sets}${A.prac.sets ? ` · лучший: ${A.prac.best} из 15` : ""}</small></div><a class="btn gold" href="${altH("практика")}">Начать ▶</a></div>
   </div>`;
 }
 
@@ -83,7 +103,8 @@ function altPageCheat(id) {
   if (!A.cheat[c.id]) { A.cheat[c.id] = 1; Store.save(); }
   return `<div class="row alt-crumbs"><a class="muted" href="${altH()}">← Альтернативное обучение</a><span class="muted">Шпаргалка · ${k + 1} из ${C.length}</span></div>
   <div class="alt-cheat"><nav class="card alt-toc">${C.map((x, i) => `<a href="${altH("шпаргалка", x.id)}" class="${i === k ? "on" : ""}${A.cheat[x.id] ? " d" : ""}"><span>${x.ic}</span>${esc(x.t)}</a>`).join("")}</nav>
-  <article class="card alt-body"><div class="k">Глава ${k + 1}</div><h1 class="page" style="margin-top:4px">${c.ic} ${esc(c.t)}</h1>${altRich(c.body)}
+  <article class="card alt-body"><div class="k">Глава ${k + 1}</div><h1 class="page" style="margin-top:4px">${c.ic} ${esc(c.t)}</h1>${altRich(c.body)}${c.more ? altRich(c.more) : ""}
+  ${c.ex && c.ex.length ? `<h3 class="alt-exh">✍ Проверь себя <small class="muted">${c.ex.length} заданий${A.chex[c.id] !== undefined ? ` · лучший результат ${A.chex[c.id]} из ${c.ex.length}` : ""}</small></h3><div class="alt-qs" id="altex"></div>` : ""}
   <div class="row alt-nav">${k ? `<a class="btn" href="${altH("шпаргалка", C[k - 1].id)}">← ${esc(C[k - 1].t)}</a>` : "<span></span>"}
     ${k < C.length - 1 ? `<a class="btn gold" href="${altH("шпаргалка", C[k + 1].id)}">${esc(C[k + 1].t)} →</a>` : `<a class="btn gold" href="${altH("текст", 1)}">К текстам →</a>`}</div></article></div>`;
 }
@@ -131,6 +152,7 @@ function altPageText(n) {
   <div class="alt-legend"><span class="mo-b">основа</span><span class="mo-t">время</span><span class="mo-m">бы / пусть / наверное</span><span class="mo-p">кто</span><span class="mo-z">много (z)</span><span class="mo-s">суффикс</span>
     <span class="muted">${mode === "all" ? "" : "Слово без подсказки — нажми на него."}</span></div>
   <div id="altlines">${lines}</div>
+  ${(ET_ALT.textEx || {})[n] ? `<h3 class="alt-exh">✍ Задания по тексту</h3><div class="alt-qs" id="altex"></div>` : ""}
   <div class="row alt-nav">${n > 1 ? `<a class="btn" href="${altH("текст", n - 1)}">← Текст ${n - 1}</a>` : "<span></span>"}
     <button class="btn gold" id="altdone">${done ? "✓ Прочитано" : "Прочитал ✓"}</button>
     ${n < T.length ? `<a class="btn" href="${altH("текст", n + 1)}">Текст ${n + 1} →</a>` : `<a class="btn" href="${altH("загадка", 1)}">К загадкам →</a>`}</div>`;
@@ -142,6 +164,7 @@ function altBindText(n) {
     const bl = e.target.closest(".alt-blk"); if (bl) { bl.classList.toggle("hid"); return; }
     const tr = e.target.closest(".alt-tr button"); if (tr) tr.parentElement.classList.remove("hid");
   });
+  if ($("#altex")) altMountTasks($("#altex"), ET_ALT.textEx[n], "tex", n);
   $("#altsayall").onclick = () => altPlayAll(x.lines.map((l) => l[0]));
   $("#altdone").onclick = () => { const A = altS(); if (!A.texts[n]) { A.texts[n] = 1; Store.addPoints(5); toast("+5 очков ✦"); renderNav("альтернатива"); } else Store.save();
     location.hash = n < ET_ALT.texts.length ? altH("текст", n + 1) : altH("загадка", 1); };
@@ -157,70 +180,102 @@ function altPlayAll(list) {                            // весь текст: �
   next(0);
 }
 
-// ---------------------------------------------------------------- загадки
-const altNorm = (s) => s.toLowerCase().replace(/ё/g, "е").replace(/[«».,!?;:"]/g, " ").replace(/\s+/g, " ").trim();
-let altPZ = null;
+// ---------------------------------------------------------------- загадки (задания — общий движок js/alt-tasks.js)
+const ALT_PZ_REF = ["zvuki", "glag", "glag", "sush", "ne", "mest", "glag", "slova", "pril", "chis", "glag", "zvuki", "glag", "pril", "mal", "byt", "ne", "zvuki"];
+function altPuzzleItems(n) {                         // загадка: [вопрос, [ответы], пояснение, варианты?] → задания движка
+  const x = ET_ALT.puzzles[n - 1];
+  return x.q.map(([q, ans, why, ch]) => ch ? { k: "choice", q, opts: ch, a: ans[0], why, lang: /[a-z]/.test(ans[0]) && !/[а-я]/i.test(ans[0]) ? "et" : "x", ref: ALT_PZ_REF[n - 1] }
+    : { k: "input", q, a: ans, why, hint: why, ref: ALT_PZ_REF[n - 1] });
+}
 function altPagePuzzle(n) {
   const P = ET_ALT.puzzles, x = P[n - 1]; if (!x) return altPageHome();
-  altPZ = { n, st: x.q.map(() => ({ tries: 0, ok: false, shown: false })) };
   const ex = x.ex.map(([et, ru]) => { const w = et.split(" → ")[0];
     return `<div class="alt-ex">${playBtn(w, 1)}<div><span class="et">${esc(et)}</span> <span class="alt-ru">— ${esc(ru)}</span></div></div>`; }).join("");
-  const qs = x.q.map(([q, ans, why, ch], i) => `<div class="card alt-q" data-i="${i}"><div class="alt-qt"><span class="alt-qn">${i + 1}</span>${esc(q)}</div>
-    ${ch ? `<div class="alt-ch">${ch.map((c) => `<button class="btn" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>`
-      : `<div class="row alt-in"><input class="in" placeholder="Напиши на Etoilal…" autocomplete="off" spellcheck="false"><button class="btn gold" data-go>Проверить</button></div>`}
-    <div class="alt-fb"></div></div>`).join("");
   return `<div class="row alt-crumbs"><a class="muted" href="${altH()}">← Альтернативное обучение</a><span class="muted">Загадка ${n} из ${P.length}</span></div>
   <div class="k">Загадка ${n} · ${esc(x.s)}</div><h1 class="page">${esc(x.t)}</h1>
   <p class="lead">Посмотри на примеры и найди закономерность. Правило не подсказываю — попробуй вывести сам, потом ответь на вопросы.</p>
   <div class="card"><div class="k" style="margin-bottom:8px">Примеры</div><div class="alt-exs">${ex}</div></div>
-  <div class="alt-qs">${qs}</div>
+  <div class="alt-qs" id="altex"></div>
   <div class="card alt-rule" id="altrule" hidden></div>
   <div class="row alt-nav">${n > 1 ? `<a class="btn" href="${altH("загадка", n - 1)}">← Загадка ${n - 1}</a>` : "<span></span>"}
     <button class="btn" id="altshowrule">Показать правило</button>
-    ${n < P.length ? `<a class="btn" href="${altH("загадка", n + 1)}">Загадка ${n + 1} →</a>` : `<a class="btn" href="${altH()}">К разделу →</a>`}</div>`;
+    ${n < P.length ? `<a class="btn" href="${altH("загадка", n + 1)}">Загадка ${n + 1} →</a>` : `<a class="btn" href="${altH("практика")}">К практике →</a>`}</div>`;
 }
 function altBindPuzzle(n) {
   const x = ET_ALT.puzzles[n - 1]; if (!x) return;
-  const showRule = () => { const r = $("#altrule"); r.hidden = false; const st = altPZ.st, good = st.filter((s) => s.ok && s.tries === 1).length;
-    r.innerHTML = `<div class="k">Правило</div><div style="font-size:17px;margin-top:6px">${esc(x.rule)}</div>` +
-      (st.every((s) => s.ok || s.shown) ? `<div class="note fixn">С первой попытки: ${good} из ${st.length}</div>` : ""); };
-  const finish = () => {
-    if (!altPZ.st.every((s) => s.ok || s.shown)) return;
-    const good = altPZ.st.filter((s) => s.ok && s.tries === 1).length, A = altS(), first = A.puzzles[n] === undefined;
-    A.puzzles[n] = Math.max(A.puzzles[n] || 0, good);
-    if (first && good) { Store.addPoints(good * 2); toast(`+${good * 2} очков ✦`); renderNav("альтернатива"); } else Store.save();
-    showRule();
-  };
-  const check = (box, val) => {
-    const i = +box.dataset.i, [, ans, why] = x.q[i], s = altPZ.st[i]; if (s.ok || s.shown) return;
-    s.tries++; const ok = ans.some((a) => altNorm(a) === altNorm(val)), fb = box.querySelector(".alt-fb");
-    if (ok) { s.ok = true; box.classList.add("ok"); fb.innerHTML = `<div class="note fixn">✓ Верно${ans[0] !== val ? ": <span class='et'>" + esc(ans[0]) + "</span>" : ""} — ${esc(why)}</div>`;
-      box.querySelectorAll("button, input").forEach((b) => b.disabled = true); finish(); return; }
-    box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake");
-    fb.innerHTML = `<div class="note unk">Не совсем. ${s.tries >= 2 ? `Подсказка: ${esc(why)}.` : "Посмотри на примеры ещё раз."} <button class="btn sm" data-show>Показать ответ</button></div>`;
-  };
-  $(".alt-qs").addEventListener("click", (e) => {
-    const box = e.target.closest(".alt-q"); if (!box) return;
-    const c = e.target.closest("[data-c]"); if (c) { box.querySelectorAll("[data-c]").forEach((b) => b.classList.toggle("on", b === c)); check(box, c.dataset.c); return; }
-    if (e.target.closest("[data-go]")) { check(box, box.querySelector("input").value); return; }
-    if (e.target.closest("[data-show]")) { const i = +box.dataset.i, s = altPZ.st[i]; s.shown = true; box.classList.add("shown");
-      box.querySelector(".alt-fb").innerHTML = `<div class="note">Ответ: <span class="et">${esc(x.q[i][1][0])}</span> ${playBtn(x.q[i][1][0], 1)} — ${esc(x.q[i][2])}</div>`;
-      box.querySelectorAll("input, [data-c], [data-go]").forEach((b) => b.disabled = true); finish(); }
-  });
-  $(".alt-qs").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches("input")) check(e.target.closest(".alt-q"), e.target.value); });
+  const showRule = () => { const r = $("#altrule"); r.hidden = false; r.innerHTML = `<div class="k">Правило</div><div style="font-size:17px;margin-top:6px">${esc(x.rule)}</div>`; };
+  altMountTasks($("#altex"), altPuzzleItems(n), "puzzles", n, showRule);
   $("#altshowrule").onclick = showRule;
 }
 
+// ---------------------------------------------------------------- практика: бесконечная смесь по 15, чаще — темы с ошибками
+const altRnd = (a) => a[Math.floor(Math.random() * a.length)];
+function altGenItem() {                               // задание «на лету» (глагол, число, чтение, много/один)
+  const kind = altRnd(["vb", "vb", "vm", "num", "rd", "pl"]);
+  if (kind === "vb" || kind === "vm") {
+    const v = altRnd(ALT_VERBS.filter((x) => !["eser", "aver"].includes(x[0]))), t = altRnd(ALT_T), p = altRnd(ALT_P), m = Math.random() < .3 ? altRnd(ALT_M.slice(1)) : ALT_M[0];
+    const w = v[0].slice(0, -2) + t[0] + m[0] + p[0], desc = `${v[1]} · ${t[1]}${m[0] ? " · " + m[1] : ""} · ${p[1]}`;
+    if (kind === "vb") return { k: "input", q: `${v[0]}: ${desc}`, a: [w], why: `${v[0].slice(0, -2)} + ${t[0]}${m[0] ? " + " + m[0] : ""} + ${p[0]}`, ref: "glag" };
+    const others = new Set([desc]);
+    while (others.size < 3) { const t2 = altRnd(ALT_T), p2 = altRnd(ALT_P); others.add(`${v[1]} · ${t2[1]}${m[0] ? " · " + m[1] : ""} · ${p2[1]}`); }
+    return { k: "choice", q: `Что значит ${w}?`, opts: [...others], a: desc, lang: "x", why: `${t[0]} — ${t[1]}${m[0] ? ", " + m[0] + " — " + m[1] : ""}, ${p[0]} — ${p[1]}`, ref: "glag" };
+  }
+  if (kind === "num") { const n = Math.random() < .5 ? 11 + Math.floor(Math.random() * 89) : 100 + Math.floor(Math.random() * 900);
+    return { k: "input", q: `Число ${n} — словами`, a: [RefCore.numToEt(n)], why: "десятки — слитно (deudis), остальное — раздельно", ref: "chis" }; }
+  if (kind === "pl") { const d = altRnd([["le", "lez", "те самые"], ["un", "unz", "какие-то"], ["ma", "maz", "мои"], ["se", "sez", "эти"]]), w = altRnd([["etoil", "звёзды"], ["ami", "друзья"], ["livr", "книги"], ["chanson", "песни"], ["cha", "кошки"], ["mezon", "дома"]]);
+    return { k: "input", q: `${d[2]} ${w[1]}`, a: [d[1] + " " + w[0]], why: `${d[0]} + z, ${w[0]} не меняется`, ref: "sush" }; }
+  const words = ET_DICT.words.filter((x) => x[4] && x[4] < 1500 && /^[a-z]{3,8}$/.test(x[0]));
+  const w = altRnd(words), r = rd(w[0]);
+  const bad = new Set([r]);
+  const muts = [[/э/g, "е"], [/ю/g, "у"], [/ё/g, "эу"], [/уа/g, "ой"], [/ш/g, "ч"], [/ж/g, "дж"], [/у/g, "оу"], [/о/g, "а"], [/нь/g, "гн"]];
+  for (const [re, to] of muts) { const x = r.replace(re, to); if (x !== r) bad.add(x); if (bad.size >= 3) break; }
+  if (bad.size < 2) return altGenItem();
+  return { k: "choice", q: `Как читается ${w[0]} (${w[2].split(/[,;(]/)[0].trim()})?`, opts: [...bad], a: r, lang: "x", why: "одна буква — один звук; смотри таблицу звуков", ref: "zvuki" };
+}
+function altPracticeSet() {
+  const A = altS(), pool = [];
+  ET_ALT.cheat.forEach((c) => (c.ex || []).forEach((it) => pool.push(it)));
+  Object.values(ET_ALT.textEx || {}).forEach((l) => l.forEach((it) => pool.push(it)));
+  ET_ALT.puzzles.forEach((_, i) => altPuzzleItems(i + 1).forEach((it) => pool.push(it)));
+  const weight = (it) => 1 + 2 * Math.min(4, A.err[it.ref || "misc"] || 0);
+  const out = [], used = new Set();
+  while (out.length < 15) {
+    if (Math.random() < .35) { out.push(altGenItem()); continue; }
+    const tot = pool.reduce((s, it) => s + (used.has(it) ? 0 : weight(it)), 0); let r = Math.random() * tot;
+    for (const it of pool) { if (used.has(it)) continue; r -= weight(it); if (r <= 0) { used.add(it); out.push(it); break; } }
+  }
+  return out;
+}
+function altPagePractice() {
+  const A = altS(), weak = Object.entries(A.err).filter(([k, v]) => v >= 1 && k !== "misc").sort((a, b) => b[1] - a[1]).slice(0, 4)
+    .map(([k]) => (ET_ALT.cheat.find((c) => c.id === k) || {}).t).filter(Boolean);
+  return `<div class="row alt-crumbs"><a class="muted" href="${altH()}">← Альтернативное обучение</a><span class="muted">Практика · наборов пройдено: ${A.prac.sets}</span></div>
+  <div class="k">Шаг 4</div><h1 class="page">Практика</h1>
+  <p class="lead">Каждый раз — новый набор из 15 заданий по всему языку: перевод, сборка фраз, ошибки, звуки, числа, глаголы. Темы, где ты ошибался, попадаются чаще.${weak.length ? ` Сейчас чаще будет: <b>${weak.map(esc).join(", ")}</b>.` : ""}</p>
+  <div class="alt-qs" id="altex"></div>`;
+}
+function altBindPractice() {
+  const el = $("#altex");
+  AltT.mount(el, altPracticeSet(), { onAnswer: altRecord, onDone: (r) => {
+    const A = altS(); A.prac.sets++; A.prac.best = Math.max(A.prac.best, r.first);
+    Store.addPoints(r.first); toast(`+${r.first} очков ✦`); renderNav("альтернатива");
+    el.insertAdjacentHTML("beforeend", `<div class="card alt-sum"><b>Набор пройден!</b> С первой попытки: ${r.first} из ${r.total}. <button class="btn gold sm" data-again>Новый набор ▶</button></div>`);
+    el.querySelector("[data-again]").onclick = () => { route(); };
+  } });
+}
 // ---------------------------------------------------------------- маршрут
 function altPage(a) {
   if (a[0] === "шпаргалка") return altPageCheat(a[1]);
   if (a[0] === "текст") return altPageText(+a[1] || 1);
   if (a[0] === "загадка") return altPagePuzzle(+a[1] || 1);
+  if (a[0] === "практика") return altPagePractice();
   return altPageHome();
 }
 async function altBind(a) {
   await trReady();                                     // чтение и обратный перевод нужны данные переводчика
-  if (a[0] === "шпаргалка") { $("#app").innerHTML = altPageCheat(a[1]); altBindRich(); }
+  if (a[0] === "шпаргалка") { $("#app").innerHTML = altPageCheat(a[1]); altBindRich();
+    const c = ET_ALT.cheat.find((x) => x.id === a[1]) || ET_ALT.cheat[0]; if ($("#altex")) altMountTasks($("#altex"), c.ex, "chex", c.id); }
   else if (a[0] === "текст") { $("#app").innerHTML = altPageText(+a[1] || 1); altBindText(+a[1] || 1); }
   else if (a[0] === "загадка") { $("#app").innerHTML = altPagePuzzle(+a[1] || 1); altBindPuzzle(+a[1] || 1); }
+  else if (a[0] === "практика") { $("#app").innerHTML = altPagePractice(); altBindPractice(); }
 }
