@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611032126`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
