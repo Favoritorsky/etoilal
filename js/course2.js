@@ -83,8 +83,10 @@ async function c2BindLesson(args) {
   // группы заданий: запоминание слов, задания урока, повторение
   const mem = c2MemItems(L), rev = c2ReviewItems(n), tasks = (L.tasks || []).map((t) => ({ rq: t.why, ...t }));
   if (!rev.length) { $("#c2revh").remove(); $("#c2rev").remove(); }
-  C2 = { n, L, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
-  const each = (item, first, ok) => { C2.done++; if (first && ok) C2.first++; $("#c2bar").style.width = Math.round(C2.done / C2.total * 100) + "%"; if (C2.done >= C2.total) c2Finish(); };
+  const S2 = C2 = { n, L, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
+  const each = (item, first, ok) => { S2.done++; if (first && ok) S2.first++; $("#c2bar").style.width = Math.round(S2.done / S2.total * 100) + "%"; if (S2.done >= S2.total) c2Finish(S2); };
+  const bInfo = Board.current();                         // при возвращении к уроку — вернуть его шпаргалки на доску
+  PageHook.onShow = () => { C2 = S2; Board.setLesson(bInfo); Board.render(); };
   if (mem.length) AltT.mount($("#c2mem"), mem, { onAnswer: each });
   if (tasks.length) AltT.mount($("#c2tasks"), tasks, { onAnswer: each });
   if (rev.length) AltT.mount($("#c2rev"), rev, { onAnswer: each });
@@ -122,8 +124,8 @@ function c2PinOffer(L, end) {
     <div class="muted">${end ? "Закреплённая таблица останется на доске шпаргалок во всех следующих уроках — не придётся листать назад." : "Закрепи её на доске шпаргалок — она останется сбоку во всех следующих уроках, пока сам не уберёшь."}</div></div>
     <div class="c2offb">${P.map((p) => `<span class="c2offi"><span>${esc(p.t)}</span>${Board.pinButton(p.id)}</span>`).join("")}</div></div>`;
 }
-function c2Finish() {
-  if (C2.finished) return; C2.finished = true;
+function c2Finish(st = C2) {
+  if (st.finished) return; st.finished = true; const C2 = st;
   const { n, L } = C2, pct = Math.round(C2.first / C2.total * 100), stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
   const r = Store.finishLesson(n, stars, pct, C2.first);
   let added = 0; for (const [w] of L.words || []) if (!Store.hasWord(w)) { Store.toggleWord(w); added++; }

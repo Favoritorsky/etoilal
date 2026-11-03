@@ -80,5 +80,5 @@ const Board = (() => {
     <button class="btn gold bfab" title="Доска шпаргалок">📌</button><div class="bsheetbg"></div><div class="bsheet"><div class="row"><b>📌 Доска шпаргалок</b><button class="btn sm" data-bclose>✕</button></div><div class="bsbody"></div></div>`;
   // кнопка «закрепить» рядом с важной таблицей урока
   const pinButton = (id) => `<button class="btn sm" data-pin="${id}">📌 Закрепить на доске</button>`;
-  return { wrap, render, bind, pinButton, setLesson(l) { cur = l; }, pin };
+  return { wrap, render, bind, pinButton, setLesson(l) { cur = l; }, current: () => cur, pin };
 })();

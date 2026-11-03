@@ -299,20 +299,42 @@ const PAGES = {
   "альтернатива": [altPage, altBind],
   "вход": [cloudPageLogin, cloudBindLogin], "игрок": [cloudPagePlayer, cloudBindPlayer],
 };
-async function route() {
+// Открытые страницы запоминаются: при переходе в другой раздел страница не уничтожается, а откладывается (вместе с ответами,
+// введённым текстом, открытыми блоками и прокруткой) и при возвращении показывается как была. Главная, профиль, карточки,
+// тренировки и т.п. всегда рисуются заново (там данные меняются). Прямой вызов route() (кнопки «Ещё раз», смена темы) — заново.
+const PAGE_KEEP = new Set(["урок", "альтернатива", "переводчик", "проверка", "словарь", "тексты", "справочник", "полезное", "библиотека", "о-языке", "экспресс"]);
+const PAGE_CACHE = new Map();                          // ключ (адрес) → { el, y, onShow }
+const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
+let pageKey = null;
+async function route(fromNav) {
   closePop();
-  const parts = decodeURIComponent(location.hash.replace(/^#\/?/, "")).split("/");
-  const id = PAGES[parts[0]] ? parts[0] : "главная";
+  const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")), parts = raw.split("/");
+  const id = PAGES[parts[0]] ? parts[0] : "главная", key = id + "/" + parts.slice(1).join("/");
   const [view, bind] = PAGES[id];
-  if (id === "главная") await trReady();               // фраза дня с чтением
+  const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
+  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key) {        // отложить уходящую страницу
+    app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
+    PAGE_CACHE.delete(pageKey); PAGE_CACHE.set(pageKey, { el: cur, y: scrollY, onShow: PageHook.onShow });
+    while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
+  }
+  PageHook.onShow = null;
   renderNav(["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id);
-  $("#app").innerHTML = view(parts.slice(1));
+  const kept = fromNav === true && PAGE_CACHE.get(key);
+  pageKey = key;
+  if (kept) {                                           // вернуться к отложенной странице как была
+    app.replaceChildren(...kept.el); PAGE_CACHE.delete(key); PageHook.onShow = kept.onShow;
+    if (kept.onShow) kept.onShow();
+    window.scrollTo(0, kept.y); return;
+  }
+  PAGE_CACHE.delete(key);
+  if (id === "главная") await trReady();               // фраза дня с чтением
+  const pg = document.createElement("div"); pg.className = "pg"; pg.innerHTML = view(parts.slice(1)); app.replaceChildren(pg);
   if (bind) await bind(parts.slice(1));
   checkAchievements();
   window.scrollTo(0, 0);
   if (id === "главная") cloudFillTop();
 }
-window.addEventListener("hashchange", route);
+window.addEventListener("hashchange", () => route(true));
 Store.touchDay();
 route();
 if (Cloud.user()) Cloud.sync().then((changed) => { if (changed) { applyTheme(); route(); } });
