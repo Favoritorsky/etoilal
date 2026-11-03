@@ -7,7 +7,7 @@ function pageExpress(args) {
   const dots = X.map((s, i) => `<a href="#/экспресс/${i + 1}" class="${i < done ? "d" : ""}${i === k ? " c" : ""}" title="${esc(s.title)}">${i < done ? "✓" : i + 1}</a>`).join("") +
     `<a href="#/экспресс/${N + 1}" class="${k === N ? "c" : ""}" title="Финиш">★</a>`;
   const head = `<div class="k">Экспресс-курс</div><h1 class="page">Минимум, <i>чтобы заговорить</i></h1>
-    <p class="lead">10 коротких экранов — 15 минут. Послушай каждую фразу ▶ и повтори вслух.</p><div class="dots xdots">${dots}</div>`;
+    <p class="lead">10 коротких экранов — 15 минут. Послушай каждую фразу ▶ и повтори вслух.</p><div class="aud-note" style="margin:-10px 0 12px">🔊 Аудио синтезировано — возможны неточности</div><div class="dots xdots">${dots}</div>`;
   if (k === N) return head + `<div class="card xcard xfin"><div class="ic">🌟</div><h2>Ты знаешь минимум!</h2>
     <p class="muted">Здороваться, представляться, говорить «я голоден», «не понимаю», спрашивать «где?» и просить повторить. Дальше — настоящий курс: там всё это подробно, с диалогами и заданиями.</p>
     <div class="row" style="justify-content:center;flex-wrap:wrap"><a class="btn gold" href="#/урок/1">Урок 1 ▶</a><a class="btn" href="#/учиться">Все уроки</a><a class="btn" href="#/экспресс/1">С начала</a></div></div>`;

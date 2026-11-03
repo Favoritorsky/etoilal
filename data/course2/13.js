@@ -1,0 +1,22 @@
+window.ET_C2 = window.ET_C2 || {};
+ET_C2[13] = { n: 13, sec: 1, check: true, t: "Контрольная: первые фразы", s: "звуки, местоимения, быть, le/un, много, прилагательные, глагол, не, мой, числа",
+  words: [], gram: [],
+  sut: "Проверь себя по урокам 1–12. Если в каком-то задании сомневаешься — нажми «?» или посмотри на доску шпаргалок сбоку.",
+  rule: `<p>Звуки: ou у · u ю · eu ё · oi уа · ch ш · gn нь. Глагол: основа + e + кто (m s t n z l). Не: pa после глагола. Много: z у маленьких слов.</p>`,
+  tasks: [
+    { k: "choice", q: "Как читается keur?", opts: ["кеур", "кёр", "кур"], a: "кёр", lang: "x", why: "eu — «ё»" },
+    { k: "input", q: "Соедини: le + etoil", a: ["l'etoil"], why: "слияние перед гласной" },
+    { k: "choice", q: "«они» (мама и сестра)", opts: ["ilz", "elz", "el"], a: "elz", why: "только женщины — elz" },
+    { k: "input", q: "Я здесь.", a: ["J'esem isi."], why: "j'esem" },
+    { k: "input", q: "(какая-то) кошка", a: ["un cha"], why: "un — какой-то" },
+    { k: "input", q: "Дети здесь.", a: ["Lez anfan esel isi."], why: "lez + esel" },
+    { k: "input", q: "красный цветок", a: ["un fleur rouj", "le fleur rouj"], why: "прилагательное после" },
+    { k: "input", q: "Мы танцуем.", a: ["Nou dansen."], why: "dans + e + n" },
+    { k: "input", q: "Он не говорит.", a: ["Il parlet pa."], why: "pa после глагола" },
+    { k: "input", q: "Где ты?", a: ["Ou tu eses?"], why: "ou + tu eses" },
+    { k: "input", q: "мои ключи", a: ["maz kle"], why: "ma + z" },
+    { k: "input", q: "У меня есть две сестры.", a: ["J'avem deu seur."], why: "j'avem + число" },
+    { k: "fix", q: "Lez cha petiz dormet.", a: ["Lez cha peti dormel."], why: "прилагательное не меняется; много → l" },
+    { k: "choice", q: "Что значит Eske tu emes le te?", opts: ["Ты любишь чай?", "Ты не любишь чай.", "Кто любит чай?"], a: "Ты любишь чай?", lang: "x", why: "eske — вопрос" },
+    { k: "listen", say: "Ki travayet isi?", q: "Послушай и напиши", a: ["Ki travayet isi?"], why: "«Кто здесь работает?»" },
+  ] };

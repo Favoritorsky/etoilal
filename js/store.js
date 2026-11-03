@@ -4,6 +4,7 @@ const Store = (() => {
   const blank = () => ({ points: 0, chests: 0, days: [], lessons: {}, cards: {}, senses: {}, myWords: [], created: new Date().toISOString() });
   let S = blank();
   try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch (e) {}
+  if (S.courseV !== 2) { if (Object.keys(S.lessons || {}).length) S.lessonsOld = S.lessons; S.lessons = {}; S.courseV = 2; }   // новый самоучитель (3.11.2026)
   let hook = null;                                       // js/cloud.js: отправить прогресс в облако (с задержкой)
   const monday = () => { const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.toISOString().slice(0, 10); };
   const write = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };

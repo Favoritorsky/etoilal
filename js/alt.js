@@ -49,7 +49,7 @@ function altRich(body) {
   return out.join("\n");
 }
 function altSounds() {
-  return `<div class="tblw"><table class="tbl alt-snd"><thead><tr><th>пишется</th><th>звук</th><th>как произносить</th><th>послушай</th></tr></thead><tbody>${ET_ALT.sounds.map(([l, s, n, ex]) =>
+  return `<div class="aud-note">🔊 Аудио синтезировано — возможны неточности</div><div class="tblw"><table class="tbl alt-snd"><thead><tr><th>пишется</th><th>звук</th><th>как произносить</th><th>послушай</th></tr></thead><tbody>${ET_ALT.sounds.map(([l, s, n, ex]) =>
     `<tr><td class="et alt-l">${esc(l)}</td><td class="alt-s">${esc(s)}</td><td>${esc(n)}</td><td>${ex.split(" ").map((w) => `<span class="alt-sx">${altWord(w)}<small>${esc(rd(w))}</small></span>`).join("")}</td></tr>`).join("")}</tbody></table></div>`;
 }
 function altVerbBox() {
@@ -151,6 +151,7 @@ function altPageText(n) {
     <button class="btn sm" id="altsayall">▶ Весь текст</button></div>
   <div class="alt-legend"><span class="mo-b">основа</span><span class="mo-t">время</span><span class="mo-m">бы / пусть / наверное</span><span class="mo-p">кто</span><span class="mo-z">много (z)</span><span class="mo-s">суффикс</span>
     <span class="muted">${mode === "all" ? "" : "Слово без подсказки — нажми на него."}</span></div>
+  <div class="aud-note" style="margin:-6px 0 10px">🔊 Аудио синтезировано — возможны неточности</div>
   <div id="altlines">${lines}</div>
   ${(ET_ALT.textEx || {})[n] ? `<h3 class="alt-exh">✍ Задания по тексту</h3><div class="alt-qs" id="altex"></div>` : ""}
   <div class="row alt-nav">${n > 1 ? `<a class="btn" href="${altH("текст", n - 1)}">← Текст ${n - 1}</a>` : "<span></span>"}

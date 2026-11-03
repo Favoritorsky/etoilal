@@ -1,5 +1,6 @@
 // Тренировки (#/тренировки[/режим]): «Набор из 15» (задания пройденных уроков вперемешку — движок lesson.js), «Успей перевести»
 // (60 секунд, выбор перевода), «Аудирование» (послушай — выбери / напиши), «Произношение» (запись микрофоном, сравнение с эталоном
+// Материал — новый самоучитель (js/course2.js): задания уроков и примеры из «Простыми словами».
 // по ритму и громкости + прослушивание рядом). Материал — уроки до первого непройденного включительно (минимум уроки 1–5).
 
 const TR_MODES = [["набор", "🎯", "Набор из 15", "задания всех пройденных уроков вперемешку"], ["успей", "⏱", "Успей перевести", "60 секунд: сколько фраз переведёшь?"],
@@ -9,14 +10,17 @@ function trainLessons() {
   const upto = Math.max(6, done.length ? Math.max(...done) + 1 : 0);
   return ET_TOC.filter((l) => l[0] <= upto).map((l) => l[0]);
 }
-async function trainPool() {
-  const ns = trainLessons(), Ls = await Promise.all(ns.map((n) => loadLesson(n).catch(() => null)));
+async function trainPool() {                      // новый самоучитель (js/course2.js): задания уроков + примеры «> фраза :: перевод»
+  const ns = trainLessons(), Ls = await Promise.all(ns.map((n) => c2Load(n).catch(() => null)));
+  const C = window.ET_AUDIO_C || {}, K = window.ET_AUDIO_C2 || {}, A = window.ET_AUDIO_A || {};
+  const src = (t) => { const l = t.toLowerCase().trim(), s = l.replace(/[.!?]+$/, ""); return K[l] || K[s] || C[l] || C[s] || A[l] || A[s] || ""; };
   const tasks = [], phrases = [];
-  Ls.forEach((L) => { if (!L) return; for (const b of L.blocks) {
-    if (b.type === "task") tasks.push({ ...b, id: L.n + ":" + b.id });
-    if (b.type === "gloss" && b.ru && /[.!?]$/.test(b.et)) phrases.push({ et: b.et, ru: b.ru, src: b.src, n: L.n });
-    if (b.type === "dialog") for (const l of b.lines) phrases.push({ et: l.et, ru: l.ru, src: l.src, n: L.n });
-  } });
+  Ls.forEach((L) => { if (!L) return;
+    (L.tasks || []).forEach((t) => tasks.push({ rq: t.why, ...t }));
+    for (const m of String(L.prosto || "").matchAll(/^>\s*(.+?)\s*::\s*(.+)$/gm)) {
+      const et = m[1].trim(), ru = m[2].split(" — ")[0].replace(/\s*\([^)]*\)\s*/g, " ").trim();
+      if (/[.!?]$/.test(et) && !/[→+]|\w-\w/.test(et) && /[А-Яа-яЁё]/.test(ru)) phrases.push({ et, ru, src: src(et), n: L.n });
+    } });
   const seen = new Set();
   return { ns, tasks, phrases: phrases.filter((p) => !seen.has(p.ru) && seen.add(p.ru)) };
 }
@@ -47,18 +51,17 @@ function trainDone(mode, score, text, pts) {
     <button class="btn gold" id="tragain">Ещё раз</button><a class="btn" href="#/тренировки">Все тренировки</a></div></div>`;
   $("#tragain").onclick = () => route();
 }
-// задания через движок урока: в #trn подставляем контейнер #lsn
+// задания — общий движок js/alt-tasks.js (как в уроках самоучителя)
 function runTasks(mode, tasks, label) {
-  $("#trn").innerHTML = `<div id="lsn"></div>`;
-  LS = { n: 0, L: { check: true, blocks: [] }, tasks, train: (correct, total, pct) => trainDone(mode, correct, `${label}: верно с первого раза ${correct} из ${total} (${pct}%).`, correct) };
-  startTasks();
+  $("#trn").innerHTML = `<div class="k">${esc(label)}</div><div class="aud-note" style="margin:0 0 10px">🔊 Аудио синтезировано — возможны неточности</div><div class="alt-qs" id="trq"></div>`; window.__trTasks = tasks;   // для автотеста
+  AltT.mount($("#trq"), tasks, { onDone: (r) => { const pct = Math.round(r.first / r.total * 100);
+    trainDone(mode, r.first, `${label}: верно с первого раза ${r.first} из ${r.total} (${pct}%).`, r.first); window.scrollTo({ top: 0, behavior: "smooth" }); } });
 }
 
 // ---------------------------------------------------------------- набор из 15
 function trainSet(P) {
-  const pool = P.tasks.filter((t) => t.taskType !== "matching" || Math.random() < .4);
-  const tasks = pick(pool, 13);
-  pick(P.phrases.filter((p) => p.src && p.et.split(" ").length <= 6), 2).forEach((p, i) => tasks.splice(3 + i * 6, 0, { type: "task", id: "d" + i, taskType: "dictation", data: { src: p.src, et: p.et } }));
+  const tasks = pick(P.tasks, 13);
+  pick(P.phrases.filter((p) => p.src && p.et.split(" ").length <= 6), 2).forEach((p, i) => tasks.splice(3 + i * 6, 0, { k: "listen", say: p.et, q: "Послушай и напиши", a: [p.et], why: p.ru, rq: p.ru }));
   runTasks("набор", tasks, "Набор из 15");
 }
 
@@ -67,10 +70,8 @@ function trainListen(P) {
   const ph = P.phrases.filter((p) => p.src);
   const items = pick(ph.length >= 10 ? ph : P.phrases, 10);
   const tasks = items.map((p, i) => i % 3 === 2 && p.et.split(" ").length <= 7
-    ? { type: "task", id: "l" + i, taskType: "dictation", data: { src: p.src, et: p.et } }
-    : { type: "task", id: "l" + i, taskType: "listening", data: { src: p.src, transcript: p.et, question: "Послушай и выбери перевод",
-        options: shuffle([p.ru, ...pick(P.phrases.filter((x) => x.ru !== p.ru), 3).map((x) => x.ru)]).map((t, k) => ({ id: "o" + k, text: t })), correctOptionId: null, _ru: p.ru } });
-  tasks.forEach((t) => { if (t.data._ru) t.data.correctOptionId = t.data.options.find((o) => o.text === t.data._ru).id; });
+    ? { k: "listen", say: p.et, q: "Послушай и напиши", a: [p.et], why: p.ru }
+    : { k: "listen", say: p.et, q: "Послушай и выбери перевод", opts: [p.ru, ...pick(P.phrases.filter((x) => x.ru !== p.ru), 3).map((x) => x.ru)], a: p.ru, lang: "x", why: p.et });
   runTasks("аудирование", tasks, "Аудирование");
 }
 

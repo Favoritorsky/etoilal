@@ -119,7 +119,7 @@ const AltT = (() => {
       body = `<div class="row alt-in"><input class="in${lang === "et" ? " et-in" : ""}" value="${esc(pre)}" placeholder="${lang === "ru" ? "По-русски…" : lang === "rd" ? "Русскими буквами…" : "На Etoilal…"}" autocomplete="off" spellcheck="false"><button class="btn gold" data-go>Проверить</button></div>`;
     }
     const q = item.k === "fix" ? `<span class="et">${esc(item.q)}</span>` : item.k === "listen" && !item.q ? "Что прозвучало?" : esc(item.q || "");
-    return `<div class="card alt-q alt-task" id="${id}" data-n="${n}"><div class="alt-qh">${head}</div><div class="alt-qt"><span class="alt-qn">${n + 1}</span><span>${q}</span>${sayBtn}</div>${body}<div class="alt-fb"></div></div>`;
+    return `<div class="card alt-q alt-task" id="${id}" data-n="${n}"><div class="alt-qh">${head}${item.rq ? `<button class="qbtn" data-rq title="Какое правило здесь нужно?">?</button>` : ""}</div><div class="alt-qt"><span class="alt-qn">${n + 1}</span><span>${q}</span>${sayBtn}</div>${body}<div class="alt-fb"></div></div>`;
   }
 
   // set: { el, items, onAnswer(item, firstTry, ok), onDone(stats) }
@@ -158,6 +158,8 @@ const AltT = (() => {
     const reset = (box) => { box.querySelector("[data-out]").innerHTML = ""; box.querySelectorAll("[data-tile]").forEach((b) => b.hidden = false); };
     el.addEventListener("click", (e) => {
       const box = e.target.closest(".alt-task"); if (!box) return;
+      if (e.target.closest("[data-rq]")) { const old = box.querySelector(".alt-rqpop"); if (old) { old.remove(); return; }
+        box.querySelector(".alt-qh").insertAdjacentHTML("afterend", `<div class="alt-rqpop">📌 ${esc(items[+box.dataset.n].rq)}<span class="muted"> · шпаргалка урока — на доске сбоку</span></div>`); return; }
       const c = e.target.closest("[data-c]"); if (c && !c.disabled) { box.querySelectorAll("[data-c]").forEach((b) => b.classList.toggle("on", b === c)); answer(box, c.dataset.c); return; }
       const t = e.target.closest("[data-tile]"); if (t && !t.disabled) { t.hidden = true; box.querySelector("[data-out]").insertAdjacentHTML("beforeend", `<button class="btn et" data-back="${t.dataset.tile}">${esc(t.textContent)}</button>`); return; }
       const bk = e.target.closest("[data-back]"); if (bk) { box.querySelector(`[data-tile="${bk.dataset.back}"]`).hidden = false; bk.remove(); return; }

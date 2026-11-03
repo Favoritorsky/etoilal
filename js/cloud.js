@@ -77,6 +77,10 @@ const Cloud = (() => {
     if (a.created && b.created) o.created = a.created < b.created ? a.created : b.created;
     o.senses = bNewer ? { ...(a.senses || {}), ...(b.senses || {}) } : { ...(b.senses || {}), ...(a.senses || {}) };
     o.myWords = [...new Set([...(a.myWords || []), ...(b.myWords || [])])];
+    // новый самоучитель (3.11.2026): уроки берём только у копий нового курса, старые — в lessonsOld
+    const nl = (x) => (x.courseV === 2 ? x.lessons || {} : {}), ol = (x) => (x.courseV === 2 ? x.lessonsOld || {} : { ...(x.lessonsOld || {}), ...(x.lessons || {}) });
+    o.lessons = mergeAny(nl(a), nl(b), bNewer); o.lessonsOld = mergeAny(ol(a), ol(b), bNewer); o.courseV = 2;
+    o.board = bNewer ? (b.board || a.board) : (a.board || b.board);                 // доска шпаргалок — целиком с более нового устройства
     return o;
   }
 

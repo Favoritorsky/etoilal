@@ -6,7 +6,7 @@
 let usefulQ = "";
 function pageUseful() {
   return `<div class="k">Полезное</div><h1 class="page">Фразы на <i>каждый день</i></h1>
-  <p class="lead">${ET_USEFUL.situations.reduce((a, s) => a + s.phrases.length, 0)} фраз для знакомства, кафе, магазина, города и переписки. Нажми ▶ и повтори вслух; нажми на слово — разбор.</p>
+  <p class="lead">${ET_USEFUL.situations.reduce((a, s) => a + s.phrases.length, 0)} фраз для знакомства, кафе, магазина, города и переписки. Нажми ▶ и повтори вслух; нажми на слово — разбор.</p><div class="aud-note" style="margin:-10px 0 14px">🔊 Аудио синтезировано — возможны неточности</div>
   <input class="in" id="uq" placeholder="Найти фразу: кофе, где, спасибо…" value="${esc(usefulQ)}" autocomplete="off" style="max-width:520px;margin-bottom:14px">
   <div class="sits" id="sits"></div>`;
 }
@@ -89,7 +89,7 @@ async function bindLibrary(args) {
     <h1 class="page"><span class="et" style="font-size:inherit">${esc(t.title)}</span> <i>«${esc(t.ru)}»</i></h1>
     <div class="row sctl"><div class="seg" id="lmode"><button data-m="par">рядом</button><button data-m="under">под строкой</button><button data-m="hide">спрятать перевод</button></div>
       <span class="muted">Нажми на слово — разбор, на ▶ — строка голосом.</span></div>
-    ${t.audio ? `<div class="card splayer"><span class="muted">Вся запись:</span><audio controls preload="none" src="${t.audio}" style="flex:1;min-width:0"></audio></div>` : ""}
+    ${t.audio ? `<div class="card splayer"><span class="muted">Вся запись:</span><audio controls preload="none" src="${t.audio}" style="flex:1;min-width:0"></audio></div><div class="aud-note" style="margin:-6px 0 10px">🔊 Аудио синтезировано — возможны неточности</div>` : ""}
     <div class="card libt" id="libt">${t.paras.map((p) => `<div class="lp">${p.map((l) => `<div class="ll${l.d ? " dlg" : ""}"><div class="le">${playBtn(l.et, 1)} <span class="et">${l.d ? "— " : ""}${l.et.split(/\s+/).map((w) => `<span class="sw">${esc(w)}</span>`).join(" ")}</span></div>
       <div class="lr">${esc(l.ru)}</div></div>`).join("")}</div>`).join("")}</div>`;
   const setMode = (m) => { $("#libt").className = "card libt m-" + m; $("#lmode").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.m === m)); localStorage.setItem("etoilal-lib-mode", m); };

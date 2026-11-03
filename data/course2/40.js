@@ -1,0 +1,23 @@
+window.ET_C2 = window.ET_C2 || {};
+ET_C2[40] = { n: 40, sec: 5, check: true, t: "Итоговая контрольная", s: "весь язык",
+  words: [], gram: [],
+  sut: "Финал! Задания по всему курсу. Если пройдёшь на три звезды — ты знаешь всю грамматику Etoilal.",
+  rule: `<p>Звуки · le/un · z · прилагательные · глагол: основа + время + (ri/se/pe) + кто · pa · mo/mey · предлоги · ki/ke · plu · числа · суффиксы</p>`,
+  tasks: [
+    { k: "choice", q: "Как читается chanson?", opts: ["чансон", "шансон", "шанзон"], a: "шансон", lang: "x", why: "ch — «ш», s — всегда «с»" },
+    { k: "input", q: "Соедини: le + oizo", a: ["l'oizo"], why: "oi — гласная" },
+    { k: "input", q: "Мои друзья здесь.", a: ["Maz ami esel isi."], why: "maz + esel" },
+    { k: "input", q: "Вчера я увидел море.", a: ["Yer je voiyim le mer."], why: "i — было" },
+    { k: "input", q: "Я читал, когда ты пришёл.", a: ["Je lizam kan tu venis."], why: "a — фон, i — событие" },
+    { k: "input", q: "Я тебе его не дам.", a: ["Je lo tey donrem pa."], why: "кого → кому → глагол → pa" },
+    { k: "input", q: "Кошка спит под столом.", a: ["Le cha dormet sou le tabl."], why: "sou — под" },
+    { k: "input", q: "Если бы у меня было время, я бы учил языки.", a: ["Si j'averim le tan, j'aprenerim lez lang."], why: "ri в обеих частях" },
+    { k: "input", q: "Он, наверное, спит.", a: ["Il dormepet."], why: "pe — наверное" },
+    { k: "input", q: "Песня была спета ребёнком.", a: ["Le chanson esit chantey par l'anfan."], why: "esit + -ey + par" },
+    { k: "input", q: "книга, которую я читаю", a: ["le livr ke je lizem"], why: "ke — с ней делают" },
+    { k: "input", q: "Он выше меня.", a: ["Il eset plu ot ke moi."], why: "plu … ke moi" },
+    { k: "input", q: "70", a: ["setdis"], why: "семь-десять" },
+    { k: "input", q: "котёнок", a: ["chaou"], why: "-ou — маленький" },
+    { k: "tiles", q: "Я хочу, чтобы ты пел.", a: "Je voulem ke tu chanteses", d: ["chantes", "ki"], why: "ke + se" },
+    { k: "listen", say: "Ou ales tu, dous etoil?", q: "Послушай и напиши", a: ["Ou ales tu, dous etoil?"], why: "«Куда идёшь ты, нежная звезда?»" },
+  ] };

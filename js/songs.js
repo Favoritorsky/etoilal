@@ -53,7 +53,7 @@ async function bindSongs(args) {
   $("#song").innerHTML = `<a class="muted" href="#/песни">← Все песни</a><div class="k" style="margin-top:10px">Песня ${s.n}</div><h1 class="page"><span class="et" style="font-size:inherit">${esc(s.title)}</span> <i>«${esc(s.ru)}»</i></h1>
     ${s.about ? `<p class="lead">${esc(s.about.replace(/\*\*/g, ""))}</p>` : ""}
     <div class="row sctl"><label class="gltog"><input type="checkbox" id="sru" ${showRu ? "checked" : ""}> перевод</label>${s.audio ? "" : `<span class="muted">Записи пока нет — строки читает голос браузера ▶</span>`}</div>
-    ${s.audio ? `<div class="card splayer"><button class="play" id="splay">▶</button><input type="range" id="sseek" min="0" max="1000" value="0"><span class="muted" id="stime">0:00</span><audio id="saudio" src="${s.audio}" preload="metadata"></audio></div>` : ""}
+    ${s.audio ? `<div class="card splayer"><button class="play" id="splay">▶</button><input type="range" id="sseek" min="0" max="1000" value="0"><span class="muted" id="stime">0:00</span><audio id="saudio" src="${s.audio}" preload="metadata"></audio></div><div class="aud-note" style="margin:-6px 0 10px">🎵 Песня сгенерирована нейросетью — возможны неточности в произношении</div>` : ""}
     <div class="card${showRu ? "" : " noru"}" id="stext">${body}</div>`;
   $("#sru").onchange = (e) => { localStorage.setItem("etoilal-song-ru", e.target.checked ? "1" : "0"); $("#stext").classList.toggle("noru", !e.target.checked); };
   bindSongWords();

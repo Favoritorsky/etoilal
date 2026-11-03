@@ -7,7 +7,9 @@ function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add
 function speak(text) {
   const low = text.toLowerCase().trim(), C = window.ET_AUDIO_C || {};
   const A = window.ET_AUDIO_A || {};                 // записи раздела «Альтернативное обучение» (tools/build_alt_audio.py)
-  const f = C[low] || C[low.replace(/[.!?]+$/, "")] || A[low] || A[low.replace(/[.!?]+$/, "")] || (window.ET_AUDIO && window.ET_AUDIO[low.replace(/[.!?]+$/, "")]);
+  const K = window.ET_AUDIO_C2 || {};                // записи нового самоучителя (tools/build_course2_audio.py)
+  const s = low.replace(/[.!?]+$/, "");
+  const f = K[low] || K[s] || C[low] || C[s] || A[low] || A[s] || (window.ET_AUDIO && window.ET_AUDIO[s]);
   if (f) { new Audio(f).play().catch(() => speakTTS(text)); return; }
   speakTTS(text);
 }
@@ -49,13 +51,10 @@ function renderNav(cur) {
 
 // ---------------------------------------------------------------- главная
 function dayIndex(n) { const d = new Date(); const k = d.getFullYear() * 400 + d.getMonth() * 31 + d.getDate(); return k % n; }
-function sections() {                         // разделы курса: контрольные делят курс на блоки
-  const out = []; let cur = [];
-  for (const l of ET_TOC) { cur.push(l); if (/^Контрольная/.test(l[1])) { out.push(cur); cur = []; } }
-  if (cur.length) out.push(cur);
-  return out;
+function sections() {                         // разделы нового самоучителя (ET_C2I) → строки ET_TOC
+  return ET_C2I.sections.map((_, k) => ET_TOC.filter((l) => (ET_C2I.lessons.find((x) => x.n === l[0]) || {}).sec === k));
 }
-const SECTION_NAMES = ["Первые шаги", "Живые глаголы", "Время и мир", "Каждый день", "Тонкости", "Песни и тексты", "Мастер"];
+const SECTION_NAMES = ET_C2I.sections;
 function pageHome() {
   const S = Store.get(), done = (n) => S.lessons[n] && S.lessons[n].stars > 0;
   const next = (ET_TOC.find((l) => !done(l[0])) || ET_TOC[0]);
@@ -127,6 +126,7 @@ function wordCard(w) {
     <div class="row">${playBtn(w[0])}<button class="btn sm" data-my="${esc(w[0])}">${Store.hasWord(w[0]) ? "★ в карточках" : "☆ в карточки"}</button></div></div>
     <div style="font-size:19px;margin-top:10px">${esc(w[2])}</div>
     ${w[5] ? `<div class="muted" style="margin-top:6px">Образовано по правилам: ${esc(w[5])}</div>` : ""}
+    <div class="aud-note">🔊 Аудио синтезировано — возможны неточности</div>
     ${der.length ? `<div style="margin-top:10px"><span class="muted">Родственные: </span>${der.map((d) => `<span class="tag"><span class="et">${esc(d[0])}</span> — ${esc(d[2])}</span>`).join("")}</div>` : ""}
     ${ex.length ? `<div style="margin-top:12px"><div class="k">Примеры из курса</div>${ex.map((e) => `<div class="ex"><span class="et">${esc(e[0])}</span> ${playBtn(e[0], 1)}<div class="muted">${esc(e[2])}</div></div>`).join("")}</div>` : ""}</div>`;
 }
@@ -288,7 +288,7 @@ const soon = (ic, t, s) => () => `<div class="card soon"><div class="ic">${ic}</
 // ---------------------------------------------------------------- маршруты
 const PAGES = {
   "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [pageTranslate, bindTranslate], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
-  "учиться": [pageLearn], "урок": [pageLesson, bindLesson], "экспресс": [pageExpress, bindExpress],
+  "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
   "тренировки": [pageTrain, bindTrain],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
   "проверка": [pageCheck, bindCheck],

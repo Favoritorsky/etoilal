@@ -1,0 +1,20 @@
+window.ET_C2 = window.ET_C2 || {};
+ET_C2[26] = { n: 26, sec: 3, check: true, t: "Контрольная: кого, кому, где", s: "mo/mey, цепочка, moi/toi, предлоги",
+  words: [], gram: [],
+  sut: "Проверь себя по урокам 20–25. Таблицы «кого», «кому» и предлогов — на доске, если закрепил.",
+  rule: `<p>кого: mo to lo la no vo loz laz · кому: mey tey ley ney vey leyz · кто → кого → кому → глагол</p>`,
+  tasks: [
+    { k: "input", q: "Я тебя жду.", a: ["Je to atandem."], why: "to перед глаголом" },
+    { k: "input", q: "Он мне звонит.", a: ["Il mey telefonet."], why: "кому — mey" },
+    { k: "input", q: "Я тебе его даю.", a: ["Je lo tey donem."], why: "кого → кому → глагол" },
+    { k: "fix", q: "Il donit mey lo.", a: ["Il lo mey donit."], why: "всё — перед глаголом" },
+    { k: "input", q: "для неё", a: ["pour ela"], why: "после предлога — ela" },
+    { k: "input", q: "Кошка под столом.", a: ["Le cha eset sou le tabl."], why: "sou — под" },
+    { k: "input", q: "Мы идём на рынок.", a: ["Nou alen a le marche."], why: "куда — a" },
+    { k: "choice", q: "«после работы»", opts: ["apre le travay", "avant le travay", "pandant le travay"], a: "apre le travay", why: "apre — после" },
+    { k: "input", q: "Я его не понимаю.", a: ["Je lo konprenem pa."], why: "lo перед, pa после" },
+    { k: "tiles", q: "Он показал нам сад.", a: "Il ney montrit le jarden", d: ["no", "montret"], why: "ney — нам; i — было" },
+    { k: "input", q: "Мы у тебя.", a: ["Nou esen che toi."], why: "che — у (кого-то)" },
+    { k: "choice", q: "«их» (кого?)", opts: ["loz", "leyz", "leur"], a: "loz", why: "кого — loz, кому — leyz, после предлога — leur" },
+    { k: "listen", say: "Je to oublirem jame.", q: "Что прозвучало?", opts: ["Je to oublirem jame.", "Je tey oublirem jame.", "Je to oublirem pa."], a: "Je to oublirem jame.", why: "«Я тебя никогда не забуду»" },
+  ] };
