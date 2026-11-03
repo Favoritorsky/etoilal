@@ -80,7 +80,9 @@ const Cloud = (() => {
     // новый самоучитель (3.11.2026): уроки берём только у копий нового курса, старые — в lessonsOld
     const nl = (x) => (x.courseV === 2 ? x.lessons || {} : {}), ol = (x) => (x.courseV === 2 ? x.lessonsOld || {} : { ...(x.lessonsOld || {}), ...(x.lessons || {}) });
     o.lessons = mergeAny(nl(a), nl(b), bNewer); o.lessonsOld = mergeAny(ol(a), ol(b), bNewer); o.courseV = 2;
-    o.board = bNewer ? (b.board || a.board) : (a.board || b.board);                 // доска шпаргалок — целиком с более нового устройства
+    o.board = bNewer ? (b.board || a.board) : (a.board || b.board);
+    o.c2ans = { ...(a.c2ans || {}) };                                          // ответы уроков: урок целиком — где отвечали позже
+    for (const [k, v] of Object.entries(b.c2ans || {})) { const x = o.c2ans[k]; if (!x || (v.at || "") > (x.at || "")) o.c2ans[k] = v; }                 // доска шпаргалок — целиком с более нового устройства
     return o;
   }
 

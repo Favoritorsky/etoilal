@@ -39,14 +39,23 @@ function trReady() {
 const NAV = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["словарь", "Словарь", "📚"], ["карточки", "Карточки", "🃏"], ["переводчик", "Переводчик", "⇄"],
   ["проверка", "Проверь текст", "✅"], ["справочник", "Справочник", "📐"], ["песни", "Песни", "🎤"], ["библиотека", "Библиотека", "📜"]];
 const TABS = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["проверка", "Проверка", "✅"], ["переводчик", "Перевод", "⇄"], ["ещё", "Ещё", "☰"]];
+// каждая вкладка меню помнит, где ты в ней был (урок, слово в словаре, загадку…): вкладка ведёт туда; повторное нажатие на
+// уже открытую вкладку — к её началу. Хранится в браузере, переживает перезаход на сайт.
+let TAB_LAST = {}; try { TAB_LAST = JSON.parse(localStorage.getItem("etoilal-tabs") || "{}"); } catch (e) {}
+function tabRemember(navId, raw) {
+  TAB_LAST[navId] = "#/" + raw; if (!TABS.some((x) => x[0] === navId)) TAB_LAST["ещё"] = "#/" + raw;
+  try { localStorage.setItem("etoilal-tabs", JSON.stringify(TAB_LAST)); } catch (e) {}
+}
+const tabHref = (id, cur) => (id === cur || id === "главная" || !TAB_LAST[id] ? "#/" + id : TAB_LAST[id]);
 function renderNav(cur) {
   const st = Store.streak(), pts = Store.get().points;
   $("#topnav").innerHTML = `<a class="logo" href="#/главная">✦ Etoil<b>al</b></a>` +
-    NAV.map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="#/${id}">${t}</a>`).join("") +
+    NAV.map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="${esc(tabHref(id, cur))}">${t}</a>`).join("") +
     `<div class="sp"></div><span class="chip f" title="Дней подряд">🔥 ${st}</span><span class="chip" title="Очки">✦ ${pts}</span>` +
     (Cloud.user() ? `<a class="chip cl nk" href="#/профиль" title="Профиль · прогресс в облаке">👤 ${esc(Cloud.user().nick)}</a>`
       : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">☁ Войти</a><a class="chip" href="#/профиль" title="Профиль">👤</a>`);
-  $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && !TABS.some((x) => x[0] === cur)) ? "on" : ""}" href="#/${id}"><i>${i}</i>${t}</a>`).join("");
+  const moreOn = !TABS.some((x) => x[0] === cur);
+  $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST["ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${i}</i>${t}</a>`).join("");
 }
 
 // ---------------------------------------------------------------- главная
@@ -318,7 +327,9 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  renderNav(["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id);
+  const navId = ["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id;
+  if (id !== "ещё") tabRemember(navId, raw || "главная");
+  renderNav(navId);
   const kept = fromNav === true && PAGE_CACHE.get(key);
   pageKey = key;
   if (kept) {                                           // вернуться к отложенной странице как была

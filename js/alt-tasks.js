@@ -127,18 +127,19 @@ const AltT = (() => {
     el.innerHTML = items.map((it, n) => card(it, n)).join("");
     const st = items.map(() => ({ tries: 0, done: false, ok: false }));
     const finish = () => { if (st.every((s) => s.done) && opt.onDone) opt.onDone({ first: st.filter((s) => s.ok && s.tries === 1).length, total: st.length, ok: st.filter((s) => s.ok).length }); };
+    let replaying = false;
     const answer = (box, val) => {
       const n = +box.dataset.n, item = items[n], s = st[n]; if (s.done) return;
       const r = judge(item, val), fb = box.querySelector(".alt-fb");
       if (r.empty) { fb.innerHTML = `<div class="note">Сначала ответь 🙂</div>`; return; }
-      s.tries++;
+      s.tries++; if (opt.onTry && !replaying) opt.onTry(n, val);
       if (r.ok) {
         s.done = s.ok = true; box.classList.add("ok"); lock(box);
         const shown = [].concat(item.a)[0];
         fb.innerHTML = `<div class="note fixn">✓ Верно${r.typo ? ` — но опечатка: <b class="et">${esc(r.typo[0][0])}</b> → <b class="et">${esc(r.typo[0][1])}</b>` : ""}${norm(val) !== norm(shown) && item.k !== "choice" ? `. Вариант из ответа: <span class="et">${esc(shown)}</span>` : ""}${item.why ? ". " + esc(item.why) : ""}${(item.lang || "et") === "et" && /[a-z]/.test(shown) ? " " + playBtn(shown, 1) : ""}</div>`;
         if (opt.onAnswer) opt.onAnswer(item, s.tries === 1, true); finish(); return;
       }
-      box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake");
+      if (!replaying) { box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); }
       if (s.tries === 1) {
         const hint = item.hint || item.why || "Посмотри ещё раз на правило главы.";
         fb.innerHTML = `<div class="note unk">Пока не так. Подсказка: ${esc(hint)}. Попробуй ещё раз.</div>`;
@@ -169,6 +170,14 @@ const AltT = (() => {
         answer(box, out ? [...out.children].map((b) => b.textContent).join(" ") : box.querySelector("input").value); }
     });
     el.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches(".alt-task input")) answer(e.target.closest(".alt-task"), e.target.value); });
+    // сохранённые попытки (opt.restore: номер задания → [ответ, ответ…]) — повторяем, как будто ответили заново
+    if (opt.restore) { replaying = true;
+      for (const [k, vals] of Object.entries(opt.restore)) { const box = el.querySelector(`.alt-task[data-n="${k}"]`); if (!box) continue;
+        for (const v of vals) { const it = items[+k];
+          if (it.opts) box.querySelectorAll("[data-c]").forEach((b) => b.classList.toggle("on", b.dataset.c === v));
+          else { const inp = box.querySelector("input"); if (inp) inp.value = v; }
+          answer(box, v); } }
+      replaying = false; }
     return st;
   }
   return { mount, judge, variants, verbParts, explain, norm, shuffle };

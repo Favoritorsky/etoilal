@@ -19,7 +19,7 @@ function altMountTasks(el, items, store, key, after) {
   AltT.mount(el, items, { onAnswer: altRecord, onDone: (r) => {
     const A = altS(), first = A[store][key] === undefined;
     A[store][key] = Math.max(A[store][key] || 0, r.first);
-    if (first && r.first) { Store.addPoints(r.first * 2); toast(`+${r.first * 2} очков ✦`); renderNav("альтернатива"); } else Store.save();
+    if (first && r.first) { Store.addPoints(r.first * 2); toast(`+${r.first * 2} очков ✦`); renderNav("учиться"); } else Store.save();
     el.insertAdjacentHTML("beforeend", `<div class="card alt-sum"><b>Готово!</b> С первой попытки: ${r.first} из ${r.total}. ${r.first === r.total ? "Отлично ✦" : r.first >= r.total * .7 ? "Хорошо!" : "Стоит перечитать главу и попробовать ещё раз."} <button class="btn sm" data-again>Ещё раз</button></div>`);
     el.querySelector("[data-again]").onclick = () => { route(); };
     if (after) after(r);
@@ -167,7 +167,7 @@ function altBindText(n) {
   });
   if ($("#altex")) altMountTasks($("#altex"), ET_ALT.textEx[n], "tex", n);
   $("#altsayall").onclick = () => altPlayAll(x.lines.map((l) => l[0]));
-  $("#altdone").onclick = () => { const A = altS(); if (!A.texts[n]) { A.texts[n] = 1; Store.addPoints(5); toast("+5 очков ✦"); renderNav("альтернатива"); } else Store.save();
+  $("#altdone").onclick = () => { const A = altS(); if (!A.texts[n]) { A.texts[n] = 1; Store.addPoints(5); toast("+5 очков ✦"); renderNav("учиться"); } else Store.save();
     location.hash = n < ET_ALT.texts.length ? altH("текст", n + 1) : altH("загадка", 1); };
 }
 window.addEventListener("hashchange", () => { altHint = null; if (altPlayAll.cur) altPlayAll.cur.pause(); });
@@ -259,7 +259,7 @@ function altBindPractice() {
   const el = $("#altex");
   AltT.mount(el, altPracticeSet(), { onAnswer: altRecord, onDone: (r) => {
     const A = altS(); A.prac.sets++; A.prac.best = Math.max(A.prac.best, r.first);
-    Store.addPoints(r.first); toast(`+${r.first} очков ✦`); renderNav("альтернатива");
+    Store.addPoints(r.first); toast(`+${r.first} очков ✦`); renderNav("учиться");
     el.insertAdjacentHTML("beforeend", `<div class="card alt-sum"><b>Набор пройден!</b> С первой попытки: ${r.first} из ${r.total}. <button class="btn gold sm" data-again>Новый набор ▶</button></div>`);
     el.querySelector("[data-again]").onclick = () => { route(); };
   } });

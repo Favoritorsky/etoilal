@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611032126`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611032227`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -81,16 +81,23 @@ async function c2BindLesson(args) {
     <div id="c2end"></div>`;
   Board.render();
   // группы заданий: запоминание слов, задания урока, повторение
-  const mem = c2MemItems(L), rev = c2ReviewItems(n), tasks = (L.tasks || []).map((t) => ({ rq: t.why, ...t }));
+  // ответы урока хранятся вместе с прогрессом: Store.c2ans[N] = { at, items: {mem, rev} (случайные задания — те же), a: {mem, tasks, rev}: {номер: [попытки]}, res }
+  const Sx = Store.get(); Sx.c2ans = Sx.c2ans || {};
+  const saved = Sx.c2ans[n] && Sx.c2ans[n].items ? Sx.c2ans[n] : null;
+  const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = (L.tasks || []).map((t) => ({ rq: t.why, ...t }));
+  const rec = saved || { at: "", items: { mem, rev }, a: { mem: {}, tasks: {}, rev: {} } };
+  const onTry = (g) => (k, v) => { (rec.a[g][k] = rec.a[g][k] || []).push(v); rec.at = new Date().toISOString(); Store.get().c2ans = Store.get().c2ans || {}; Store.get().c2ans[n] = rec; Store.save(); };
   if (!rev.length) { $("#c2revh").remove(); $("#c2rev").remove(); }
-  const S2 = C2 = { n, L, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
+  const S2 = C2 = { n, L, rec, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
   const each = (item, first, ok) => { S2.done++; if (first && ok) S2.first++; $("#c2bar").style.width = Math.round(S2.done / S2.total * 100) + "%"; if (S2.done >= S2.total) c2Finish(S2); };
   const bInfo = Board.current();                         // при возвращении к уроку — вернуть его шпаргалки на доску
   PageHook.onShow = () => { C2 = S2; Board.setLesson(bInfo); Board.render(); };
-  if (mem.length) AltT.mount($("#c2mem"), mem, { onAnswer: each });
-  if (tasks.length) AltT.mount($("#c2tasks"), tasks, { onAnswer: each });
-  if (rev.length) AltT.mount($("#c2rev"), rev, { onAnswer: each });
+  if (mem.length) AltT.mount($("#c2mem"), mem, { onAnswer: each, onTry: onTry("mem"), restore: rec.a.mem });
+  if (tasks.length) AltT.mount($("#c2tasks"), tasks, { onAnswer: each, onTry: onTry("tasks"), restore: rec.a.tasks });
+  if (rev.length) AltT.mount($("#c2rev"), rev, { onAnswer: each, onTry: onTry("rev"), restore: rec.a.rev });
+  if (saved && S2.done && !S2.finished) toast("Продолжаешь с того места, где остановился ✦");
 }
+function c2Again(n) { const S = Store.get(); if (S.c2ans) delete S.c2ans[n]; Store.save(); route(); window.scrollTo(0, 0); }
 // «Запомни»: по одному заданию на каждое новое слово (то перевод → слово, то слово → перевод)
 function c2MemItems(L) {
   const W = L.words || []; if (!W.length) return [];
@@ -127,8 +134,11 @@ function c2PinOffer(L, end) {
 function c2Finish(st = C2) {
   if (st.finished) return; st.finished = true; const C2 = st;
   const { n, L } = C2, pct = Math.round(C2.first / C2.total * 100), stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
-  const r = Store.finishLesson(n, stars, pct, C2.first);
-  let added = 0; for (const [w] of L.words || []) if (!Store.hasWord(w)) { Store.toggleWord(w); added++; }
+  let r = { pts: 0 }, added = 0; const again = !!(C2.rec && C2.rec.res);
+  if (C2.rec && C2.rec.res) { r = C2.rec.res.r; added = C2.rec.res.added; }      // урок уже был закончен — просто показываем итог (очки второй раз не даём)
+  else { r = Store.finishLesson(n, stars, pct, C2.first);
+    for (const [w] of L.words || []) if (!Store.hasWord(w)) { Store.toggleWord(w); added++; }
+    if (C2.rec) { C2.rec.res = { r, added }; C2.rec.at = new Date().toISOString(); Store.get().c2ans[n] = C2.rec; Store.save(); } }
   renderNav("учиться");
   const next = ET_C2I.lessons.find((l) => l.n === n + 1);
   $("#c2end").innerHTML = `<div class="card c2res"><div class="bigstars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</div>
@@ -137,6 +147,6 @@ function c2Finish(st = C2) {
     ${c2PinOffer(L, true)}
     ${stars < 3 ? `<p class="muted">Хочешь три звезды? Пройди урок ещё раз — засчитается лучший результат.</p>` : ""}
     <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : `<a class="btn gold" href="#/учиться">Курс пройден! 🎓</a>`}
-    <a class="btn" href="#/карточки">🃏 Повторить слова</a><button class="btn" onclick="route()">↻ Пройти снова</button></div></div>`;
-  $("#c2end").scrollIntoView({ behavior: "smooth", block: "center" });
+    <a class="btn" href="#/карточки">🃏 Повторить слова</a><button class="btn" onclick="c2Again(${n})">↻ Пройти снова</button></div></div>`;
+  if (!again) $("#c2end").scrollIntoView({ behavior: "smooth", block: "center" });
 }
