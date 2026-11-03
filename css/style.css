@@ -486,3 +486,13 @@ details.c2sec summary::before { content: "▸ "; } details.c2sec[open] summary::
 @media (max-width: 1400px) { .c2lay { grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: "main R" "main L"; } .board.bL { position: static; max-height: none; } }
 @media (max-width: 980px) { .c2lay { grid-template-columns: 1fr; grid-template-areas: "main"; } .board { display: none; } .bfab { display: inline-flex; } }
 @media (max-width: 980px) { .bsheet { padding-bottom: 96px; z-index: 60; } .bsheetbg { z-index: 59; } }
+/* доска шпаргалок: 4 колонки на широком экране (≥1880px) — урок по центру, по две колонки с каждой стороны */
+.board.bL2 { grid-area: L2; display: none; } .board.bR2 { grid-area: R2; display: none; }
+@media (min-width: 1880px) {
+  .c2lay { grid-template-columns: 270px 270px minmax(0, 1fr) 290px 290px; grid-template-areas: "L2 L main R R2";
+    width: calc(100vw - 64px); margin-left: calc((100% - 100vw + 64px) / 2); }
+  .board.bL2, .board.bR2 { display: grid; }
+}
+.bw { display: flex; gap: 6px; align-items: center; padding: 3px 0; } .bw .et { font-size: 15px; }
+.c2offer { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 14px; border-color: rgba(241,201,122,.45); background: rgba(241,201,122,.06); text-align: left; }
+.c2offb { display: flex; flex-direction: column; gap: 6px; } .c2offi { display: flex; gap: 10px; align-items: center; justify-content: flex-end; font-weight: 700; font-size: 14px; }

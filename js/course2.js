@@ -53,7 +53,16 @@ async function c2BindLesson(args) {
   let L; try { L = await c2Load(n); } catch (e) { $("#c2l").innerHTML = `<div class="card">Не удалось загрузить урок.</div>`; return; }
   await trReady();
   const I = ET_C2I.lessons.find((l) => l.n === n), sec = ET_C2I.sections[I.sec];
-  Board.setLesson({ title: L.t, html: `<div class="brule"><b class="btitle">${esc(L.t)}</b>${altRich(L.rule || L.sut)}</div>`, pins: L.pins || [] });
+  // 4 шпаргалки урока для доски: правило, слова, примеры (первые 5 из «Простыми словами»), частые ошибки (тот же раздел)
+  const exL = String(L.prosto || "").split("\n").filter((x) => /^>\s*.+::/.test(x) && !/\w-\w/.test(x.split("::")[0])).slice(0, 5).join("\n");
+  const errM = String(L.prosto || "").match(/<h3>Частые ошибки<\/h3>([\s\S]*?)(?=<h3>|$)/);
+  const sec2 = ET_C2I.lessons.filter((l) => l.sec === ET_C2I.lessons.find((x) => x.n === L.n).sec && l.n < L.n).flatMap((l) => l.words);
+  const wl = (W) => W.map(([w, m]) => `<div class="bw">${playBtn(w, 1)}<b class="et">${esc(w)}</b> <span class="muted">${esc(m)}</span></div>`).join("");
+  Board.setLesson({ title: L.t, pins: L.pins || [],
+    html: `<div class="brule"><b class="btitle">${esc(L.t)}</b>${altRich(L.rule || L.sut)}</div>`,
+    words: (L.words || []).length ? wl(L.words) : sec2.length ? `<div class="muted">Новых слов нет — слова раздела:</div>${wl(sec2.slice(-12))}` : "",
+    ex: exL ? altRich(exL) : "",
+    err: errM ? altRich(errM[1]) : "" });
   const groups = [];
   const wordsHTML = L.words && L.words.length ? `<h2 class="c2h">🆕 Новые слова <small class="muted">${L.words.length}</small></h2>
     <div class="card c2words">${L.words.map(([w, m]) => `<div class="c2w">${playBtn(w, 1)}<div><b class="et">${esc(w)}</b> <span class="muted">«${esc(rd(w))}»</span><div>${esc(m)}</div></div></div>`).join("")}${C2_AUD_NOTE}
@@ -63,6 +72,7 @@ async function c2BindLesson(args) {
     <div class="k">Урок ${n}${L.check ? " · контрольная" : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
     <div class="c2prog"><i id="c2bar"></i></div>
     ${L.sut ? `<div class="card c2sut"><div class="k">⚡ Суть за 30 секунд</div><div class="c2big">${c2Rich(L.sut, L)}</div></div>` : ""}
+    ${c2PinOffer(L)}
     ${L.prosto ? `<details class="card c2sec" open><summary>📖 Простыми словами</summary>${c2Rich(L.prosto, L)}${C2_AUD_NOTE}</details>` : ""}
     ${L.lub ? `<details class="card c2sec"><summary>🔭 Для любопытных</summary>${c2Rich(L.lub, L)}</details>` : ""}
     ${wordsHTML}
@@ -104,6 +114,14 @@ function c2ReviewItems(n) {
       : { k: "choice", q: `Как будет «${m}»?`, opts: [w, ...others.map((x) => x[0])], a: w, lang: "et", why, rq: why };
   });
 }
+// предложение закрепить важные таблицы урока на доске насовсем (они остаются и в следующих уроках, пока сам не уберёшь)
+function c2PinOffer(L, end) {
+  const P = (L.pins || []).filter((p) => !(Store.get().board || { cards: [] }).cards.some((c) => c.id === p.id));
+  if (!P.length) return "";
+  return `<div class="card c2offer"><div><b>📌 ${end ? "Не забудь закрепить" : "В этом уроке важная таблица"}${P.length > 1 ? "ы" : ""}</b>
+    <div class="muted">${end ? "Закреплённая таблица останется на доске шпаргалок во всех следующих уроках — не придётся листать назад." : "Закрепи её на доске шпаргалок — она останется сбоку во всех следующих уроках, пока сам не уберёшь."}</div></div>
+    <div class="c2offb">${P.map((p) => `<span class="c2offi"><span>${esc(p.t)}</span>${Board.pinButton(p.id)}</span>`).join("")}</div></div>`;
+}
 function c2Finish() {
   if (C2.finished) return; C2.finished = true;
   const { n, L } = C2, pct = Math.round(C2.first / C2.total * 100), stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
@@ -114,6 +132,7 @@ function c2Finish() {
   $("#c2end").innerHTML = `<div class="card c2res"><div class="bigstars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</div>
     <h2>Урок ${n} пройден!</h2><p>С первой попытки: <b>${C2.first} из ${C2.total}</b> (${pct}%). ${r.pts ? `+${r.pts} очков ✦` : ""}${r.chest ? " · 💎 сундук!" : ""}</p>
     ${added ? `<p class="muted">Новые слова (${added}) добавлены в «Карточки» — повторяй их там, и они не забудутся.</p>` : ""}
+    ${c2PinOffer(L, true)}
     ${stars < 3 ? `<p class="muted">Хочешь три звезды? Пройди урок ещё раз — засчитается лучший результат.</p>` : ""}
     <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : `<a class="btn gold" href="#/учиться">Курс пройден! 🎓</a>`}
     <a class="btn" href="#/карточки">🃏 Повторить слова</a><button class="btn" onclick="route()">↻ Пройти снова</button></div></div>`;
