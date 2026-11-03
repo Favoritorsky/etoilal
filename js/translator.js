@@ -512,7 +512,7 @@ function sentence(toks, opts = {}) {
 
 // ------------------------------------------------------------------ слияние, регистр, пунктуация
 const ELIDE = new Set(["le", "de", "se", "ke", "je", "me"]);
-function startsVowel(w) { const p = parse(w.toLowerCase()); return p.length > 0 && "aeioUYQ".includes(p[0]); }
+function startsVowel(w) { const p = parse(w.toLowerCase()); return p.length > 0 && "aeioUYQw".includes(p[0]); }   // w = oi («уа»): l'oizo (3.11)
 function finish(items, endPunct) {
   const res = [];
   for (let i = 0; i < items.length; i++) {
