@@ -6,7 +6,8 @@ function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add
 // ---------------------------------------------------------------- озвучка: записи курса (ET_AUDIO_C), слова словаря (ET_AUDIO), иначе голос браузера
 function speak(text) {
   const low = text.toLowerCase().trim(), C = window.ET_AUDIO_C || {};
-  const f = C[low] || C[low.replace(/[.!?]+$/, "")] || (window.ET_AUDIO && window.ET_AUDIO[low.replace(/[.!?]+$/, "")]);
+  const A = window.ET_AUDIO_A || {};                 // записи раздела «Альтернативное обучение» (tools/build_alt_audio.py)
+  const f = C[low] || C[low.replace(/[.!?]+$/, "")] || A[low] || A[low.replace(/[.!?]+$/, "")] || (window.ET_AUDIO && window.ET_AUDIO[low.replace(/[.!?]+$/, "")]);
   if (f) { new Audio(f).play().catch(() => speakTTS(text)); return; }
   speakTTS(text);
 }
@@ -277,7 +278,7 @@ function bindCheck() {
 
 // ---------------------------------------------------------------- профиль и «ещё»
 function pageMore() {
-  const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
+  const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["альтернатива", "🧠", "Альтернативное обучение", "весь язык сразу: шпаргалка, тексты, загадки"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
     ["песни", "🎤", "Песни", "караоке"], ["библиотека", "📜", "Библиотека", "рассказы"], ["полезное", "💬", "Полезное", "фразы по ситуациям"], ["тексты", "✍", "Тексты", "переведи — я проверю"], ["о-языке", "✦", "О языке", "история"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"], ["магазин", "🛍", "Магазин", "темы, песни, секреты"]];
   return `<h1 class="page">Ещё</h1><div class="tools">${items.map(([h, i, t, s]) => `<a class="card tool" href="#/${h}"><div class="ic">${i}</div><b>${t}</b><span>${s}</span></a>`).join("")}</div>`;
 }
@@ -295,6 +296,7 @@ const PAGES = {
   "песни": [pageSongs, bindSongs], "библиотека": [pageLibrary, bindLibrary], "полезное": [pageUseful, bindUseful], "тексты": [pageTexts, bindTexts],
   "магазин": [pageShop, bindShop], "секрет": [pageSecret, bindSecret],
   "о-языке": [pageAbout],
+  "альтернатива": [altPage, altBind],
   "вход": [cloudPageLogin, cloudBindLogin], "игрок": [cloudPagePlayer, cloudBindPlayer],
 };
 async function route() {
@@ -303,7 +305,7 @@ async function route() {
   const id = PAGES[parts[0]] ? parts[0] : "главная";
   const [view, bind] = PAGES[id];
   if (id === "главная") await trReady();               // фраза дня с чтением
-  renderNav(["урок", "экспресс", "тренировки"].includes(id) ? "учиться" : id);
+  renderNav(["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id);
   $("#app").innerHTML = view(parts.slice(1));
   if (bind) await bind(parts.slice(1));
   checkAchievements();

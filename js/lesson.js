@@ -54,6 +54,7 @@ function pageLearn() {
     <a class="btn gold" href="#/урок/${next[0]}">${total ? "Продолжить" : "Начать"}: урок ${next[0]} ▶</a></div>
   <a class="card xban" href="#/экспресс${S.express && S.express < ET_EXPRESS.screens.length ? "/" + (S.express + 1) : ""}"><span class="xic">⚡</span><span><b>Экспресс-курс: минимум, чтобы заговорить</b>
     <small>10 экранов, 15 минут${S.express ? ` · пройдено ${Math.min(S.express, ET_EXPRESS.screens.length)} из ${ET_EXPRESS.screens.length}` : " — если хочется начать говорить прямо сегодня"}</small></span><span class="lst">▶</span></a>
+  <a class="card xban" href="#/альтернатива"><span class="xic">🧠</span><span><b>Альтернативное обучение: весь язык сразу</b><small>шпаргалка по всему языку (подробно — звуки), тексты с подсказками под каждым кусочком слова, загадки</small></span><span class="lst">▶</span></a>
   <a class="card xban trban" href="#/тренировки"><span class="xic">🎯</span><span><b>Тренировки</b><small>набор из 15 заданий, «успей перевести», аудирование, произношение</small></span><span class="lst">▶</span></a>
   ${sections().map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${SECTION_NAMES[k] || "Раздел " + (k + 1)}</h2><div class="llist">
     ${sec.map((l) => { const st = (S.lessons[l[0]] || {}).stars || 0, chk = l[3];
