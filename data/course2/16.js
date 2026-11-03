@@ -22,7 +22,7 @@ ET_C2[16] = { n: 16, sec: 2, t: "Один раз или долго: i и a", s: 
     { k: "choice", q: "«Вчера я прочитал книгу» (дочитал)", opts: ["Yer je lizim un livr.", "Yer je lizam un livr."], a: "Yer je lizim un livr.", why: "что сделал? — i" },
     { k: "choice", q: "«Я часто читал» (привычка)", opts: ["Je lizim souvan.", "Je lizam souvan."], a: "Je lizam souvan.", why: "что делал? — a" },
     { k: "input", q: "я мечтал (долго, бывало)", a: ["Je revam."], why: "rev + a + m" },
-    { k: "input", q: "Я читал, когда ты пришёл.", a: ["Je lizam kan tu venis."], why: "читал — фон (a), пришёл — событие (i)" },
+    {"k": "input", "q": "Я спал, когда ты пришёл.", "a": ["Je dormam kan tu venis."], "why": "спал — фон (a), пришёл — событие (i)"},
     { k: "choice", q: "Что значит dansal?", opts: ["они танцевали (долго)", "они станцевали", "они танцуют"], a: "они танцевали (долго)", lang: "x", why: "a — долго, l — они" },
     { k: "fix", q: "Il parlit toujour.", a: ["Il parlat toujour."], why: "«всегда» — повторялось — a" },
     { k: "input", q: "Когда я был ребёнком…", a: ["Kan j'esam anfan"], why: "был (долго) — esam" },

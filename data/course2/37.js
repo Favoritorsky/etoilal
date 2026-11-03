@@ -25,12 +25,12 @@ ET_C2[37] = { n: 37, sec: 5, t: "Большие числа", s: "строго п
   tasks: [
     { k: "input", q: "20", a: ["deudis"], why: "два-десять, слитно" },
     { k: "input", q: "70", a: ["setdis"], why: "семь-десять" },
-    { k: "input", q: "15", a: ["dis senk"], why: "десять + пять, раздельно" },
-    { k: "input", q: "99", a: ["neufdis neuf"], why: "девять-десять девять" },
-    { k: "input", q: "345", a: ["troi sent katrdis senk"], why: "сотни — десятки — единицы" },
+    {"k": "input", "q": "17", "a": ["dis set"], "why": "десять + семь, раздельно"},
+    {"k": "input", "q": "88", "a": ["uitdis uit"], "why": "восемь-десять восемь"},
+    {"k": "input", "q": "256", "a": ["deu sent senkdis sis"], "why": "сотни — десятки — единицы"},
     { k: "choice", q: "Что значит uitdis?", opts: ["80", "18", "800"], a: "80", lang: "x", why: "восемь-десять" },
-    { k: "input", q: "два часа", a: ["deu eur"], why: "после числа слово не меняется" },
-    { k: "fix", q: "deu dis un", a: ["deudis un"], why: "десятки — слитно" },
+    {"k": "input", "q": "три минуты", "a": ["troi minut"], "why": "после числа слово не меняется"},
+    {"k": "fix", "q": "troi dis deu", "a": ["troidis deu"], "why": "десятки — слитно"},
     { k: "input", q: "1000", a: ["mil"], why: "mil — тысяча" },
     { k: "choice", q: "Что значит konter?", opts: ["считать", "число", "час"], a: "считать", lang: "x", why: "konter — считать, nonbr — число" },
   ] };

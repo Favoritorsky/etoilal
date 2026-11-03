@@ -26,9 +26,9 @@ ET_C2[39] = { n: 39, sec: 5, t: "Два стиля и песня", s: "разг�
     { k: "choice", q: "Какой вопрос — высокого стиля?", opts: ["Tu chantes?", "Chantes tu?"], a: "Chantes tu?", why: "глагол вперёд — высокий стиль" },
     { k: "input", q: "Куда идёшь ты? (высокий стиль)", a: ["Ou ales tu?"], why: "глагол вперёд" },
     { k: "choice", q: "«мрачная ночь» (образно)", opts: ["le nui sonbr", "le sonbr nui"], a: "le sonbr nui", why: "прилагательное перед словом — образно" },
-    { k: "input", q: "Вижу звёзды. (разговорный, без «я»)", a: ["Voiyem lez etoil."], why: "подлежащее можно опустить" },
-    { k: "input", q: "Моё сердце танцует с луной.", a: ["Ma keur danset avek le lun."], why: "строка из песни" },
-    { k: "input", q: "и моя мечта вернётся завтра", a: ["e ma rev revnret demen"], why: "revn + re + t" },
+    {"k": "input", "q": "Вижу луну. (разговорный, без «я»)", "a": ["Voiyem le lun."], "why": "подлежащее можно опустить"},
+    {"k": "input", "q": "Моё сердце поёт со звездой.", "a": ["Ma keur chantet avek l'etoil."], "why": "avek + l'etoil"},
+    {"k": "input", "q": "и мой голос вернётся завтра", "a": ["e ma voi revnret demen"], "why": "revn + re + t"},
     { k: "choice", q: "Что значит isl?", opts: ["остров", "озеро", "голос"], a: "остров", lang: "x", why: "isl — остров" },
-    { k: "listen", say: "Le sonbr nui chantet pour toi.", q: "Послушай и напиши", a: ["Le sonbr nui chantet pour toi."], why: "строка из песни" },
+    {"k": "listen", "say": "Le dous voi chantet pour toi.", "q": "Послушай и напиши", "a": ["Le dous voi chantet pour toi."], "why": "«Нежный голос поёт для тебя» — прилагательное впереди, высокий стиль"},
   ] };

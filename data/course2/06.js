@@ -25,10 +25,10 @@ ET_C2[6] = { n: 6, sec: 1, t: "Предметы: le и un", s: "слово не 
     { k: "input", q: "(та самая) кошка", a: ["le cha"], why: "le — тот самый" },
     { k: "input", q: "(тот самый) друг", a: ["l'ami"], why: "le + ami → l'ami" },
     { k: "choice", q: "Впервые говоришь о яблоке: «Там (какое-то) яблоко»", opts: ["Le pom eset laba.", "Un pom eset laba."], a: "Un pom eset laba.", why: "впервые — un" },
-    { k: "input", q: "Кошка здесь. (та самая)", a: ["Le cha eset isi."], why: "le cha + eset" },
-    { k: "fix", q: "Cha eset isi.", a: ["Le cha eset isi.", "Un cha eset isi."], why: "перед существительным нужен le или un" },
+    {"k": "input", "q": "Собака здесь. (та самая)", "a": ["Le chyen eset isi."], "why": "le chyen + eset"},
+    {"k": "fix", "q": "Fleur eset isi.", "a": ["Le fleur eset isi.", "Un fleur eset isi."], "why": "перед существительным нужен le или un"},
     { k: "tiles", q: "Цветок там. (тот самый)", a: "Le fleur eset laba", d: ["un", "esel"], why: "le fleur + eset" },
     { k: "choice", q: "Как сказать «стол — он» в Etoilal?", opts: ["il", "el"], a: "il", lang: "et", why: "у вещей рода нет — всё il" },
     { k: "choice", q: "Что значит vil?", opts: ["город", "цветок", "стол"], a: "город", lang: "x", why: "vil — город" },
-    { k: "input", q: "Собака счастлива. (та самая)", a: ["Le chyen eset eureu."], why: "слово eureu не меняется" },
+    {"k": "input", "q": "Кошка счастлива. (та самая)", "a": ["Le cha eset eureu."], "why": "слово eureu не меняется"},
   ] };

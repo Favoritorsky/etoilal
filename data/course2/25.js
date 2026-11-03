@@ -18,13 +18,13 @@ ET_C2[25] = { n: 25, sec: 3, t: "Без, до, после, во время", s: 
   lub: `<p>[[juska]] — французское <i>jusqu'à</i>, слитое в одно слово; [[depui]] — <i>depuis</i>; [[pandant]] — <i>pendant</i>, но с a, чтобы не совпадало с формами глаголов (в Etoilal ни одно слово не совпадает с формой глагола).</p>`,
   tasks: [
     { k: "input", q: "без тебя", a: ["sans toi"], why: "sans + toi" },
-    { k: "input", q: "После отпуска мы вернёмся.", a: ["Apre le konje nou revnren."], why: "apre — после" },
-    { k: "input", q: "До работы я читаю.", a: ["Avant le travay je lizem."], why: "avant — до" },
+    {"k": "input", "q": "После работы мы вернёмся.", "a": ["Apre le travay nou revnren."], "why": "apre — после"},
+    {"k": "input", "q": "До ночи я читаю.", "a": ["Avant le nui je lizem."], "why": "avant — до"},
     { k: "choice", q: "«до моста» (дошли до самого моста)", opts: ["avant le pon", "juska le pon"], a: "juska le pon", why: "juska — вплоть до места" },
-    { k: "input", q: "Ночью он спит. (во время ночи)", a: ["Pandant le nui il dormet."], why: "pandant — во время" },
-    { k: "tiles", q: "Со вчерашнего дня я знаю.", a: "Depui yer je savem", d: ["avant", "apre"], why: "depui — с (времени)" },
+    {"k": "input", "q": "Во время отпуска он спит.", "a": ["Pandant le konje il dormet."], "why": "pandant — во время"},
+    {"k": "tiles", "q": "С сегодняшнего дня я знаю.", "a": "Depui ojourdui je savem", "d": ["avant", "apre"], "why": "depui — с (времени)"},
     { k: "fix", q: "Je partem sans mo.", a: ["Je partem sans moi."], why: "после предлога — moi" },
     { k: "choice", q: "Что значит fore?", opts: ["лес", "поле", "река"], a: "лес", lang: "x", why: "fore — лес, chan — поле, rivyer — река" },
     { k: "input", q: "Мы дошли до реки.", a: ["Nou alin juska le rivyer."], why: "juska + le rivyer" },
-    { k: "listen", say: "Apre le konje, nou revnren.", q: "Послушай и напиши", a: ["Apre le konje, nou revnren."], why: "«После отпуска мы вернёмся»" },
+    {"k": "listen", "say": "Nou alin juska le fore.", "q": "Послушай и напиши", "a": ["Nou alin juska le fore."], "why": "«Мы дошли до леса»"},
   ] };

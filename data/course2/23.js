@@ -22,13 +22,13 @@ ET_C2[23] = { n: 23, sec: 3, t: "Выделенные: moi, toi + для, с, у
   pins: [{ id: "moi", t: "Выделенные: moi, toi…", html: `<table class="tbl"><tbody><tr><td>я</td><td class="et">moi</td><td>мы</td><td class="et">nou</td></tr><tr><td>ты</td><td class="et">toi</td><td>вы</td><td class="et">vou</td></tr><tr><td>он</td><td class="et">lui</td><td>они</td><td class="et">leur</td></tr><tr><td>она</td><td class="et">ela</td><td></td><td></td></tr></tbody></table><p>После предлогов: <span class="et">pour toi</span>, <span class="et">avek moi</span>, <span class="et">che lui</span></p>` }],
   tasks: [
     { k: "input", q: "для тебя", a: ["pour toi"], why: "после предлога — toi" },
-    { k: "input", q: "Она танцует с ним.", a: ["El danset avek lui."], why: "avek lui" },
+    {"k": "input", "q": "Он танцует с ней.", "a": ["Il danset avek ela."], "why": "avek ela"},
     { k: "fix", q: "Le kado eset pour mo.", a: ["Le kado eset pour moi."], why: "после предлога — moi" },
-    { k: "input", q: "Мы у неё.", a: ["Nou esen che ela."], why: "che — у (кого-то)" },
+    {"k": "input", "q": "Мы у него.", "a": ["Nou esen che lui."], "why": "che — у (кого-то)"},
     { k: "choice", q: "«для них»", opts: ["pour leur", "pour loz", "pour leyz"], a: "pour leur", why: "после предлога — leur" },
-    { k: "input", q: "Я работаю, а ты спишь.", a: ["Moi, je travayem. Toi, tu dormes."], why: "moi, toi — выделение" },
-    { k: "tiles", q: "Гости у меня.", a: "Lez ost esel che moi", d: ["mo", "avek"], why: "che moi — у меня" },
-    { k: "input", q: "с нами", a: ["avek nou"], why: "nou не меняется" },
+    {"k": "input", "q": "Ты читаешь, а я сплю.", "a": ["Toi, tu lizes. Moi, je dormem."], "why": "toi, moi — выделение"},
+    {"k": "tiles", "q": "Друзья у нас.", "a": "Lez ami esel che nou", "d": ["no", "avek"], "why": "che nou — у нас"},
+    {"k": "input", "q": "с ними", "a": ["avek leur"], "why": "после предлога — leur"},
     { k: "choice", q: "Что значит kuizinye?", opts: ["повар", "кухня", "гость"], a: "повар", lang: "x", why: "kuizinye — повар" },
     { k: "input", q: "Деньги — для работы.", a: ["Le mone eset pour le travay."], why: "pour + le travay" },
   ] };

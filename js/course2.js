@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611032247`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611040009`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -86,6 +86,10 @@ async function c2BindLesson(args) {
   const saved = Sx.c2ans[n] && Sx.c2ans[n].items ? Sx.c2ans[n] : null;
   const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = (L.tasks || []).map((t) => ({ rq: t.why, ...t }));
   const rec = saved || { at: "", items: { mem, rev }, a: { mem: {}, tasks: {}, rev: {} } };
+  // задание на этом месте заменили (поправили урок) — его старые ответы не подставляем: сверяем «отпечатки» заданий
+  const sigs = tasks.map(c2Sig), was = rec.sigs || (window.ET_C2_OLDSIG || {})[n] || sigs;
+  for (const k of Object.keys(rec.a.tasks)) if (was[k] !== sigs[k]) delete rec.a.tasks[k];
+  rec.sigs = sigs;
   const onTry = (g) => (k, v) => { (rec.a[g][k] = rec.a[g][k] || []).push(v); rec.at = new Date().toISOString(); Store.get().c2ans = Store.get().c2ans || {}; Store.get().c2ans[n] = rec; Store.save(); };
   if (!rev.length) { $("#c2revh").remove(); $("#c2rev").remove(); }
   const S2 = C2 = { n, L, rec, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
@@ -97,6 +101,7 @@ async function c2BindLesson(args) {
   if (rev.length) AltT.mount($("#c2rev"), rev, { onAnswer: each, onTry: onTry("rev"), restore: rec.a.rev });
   if (saved && S2.done && !S2.finished) toast("Продолжаешь с того места, где остановился ✦");
 }
+function c2Sig(t) { const s = t.q + "|" + JSON.stringify(t.a); let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); }
 function c2Again(n) { const S = Store.get(); if (S.c2ans) delete S.c2ans[n]; Store.save(); route(); window.scrollTo(0, 0); }
 // «Запомни»: по одному заданию на каждое новое слово (то перевод → слово, то слово → перевод)
 function c2MemItems(L) {
