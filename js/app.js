@@ -141,9 +141,9 @@ function wordCard(w) {
 }
 function pageDict() {
   return `<div class="k">Словарь</div><h1 class="page">Все слова <i>Etoilal</i></h1>
-  <p class="lead">${ET_DICT.words.length.toLocaleString("ru")} слов: из словаря языка и образованные по его правилам. Ищи по-русски или на этуале.</p>
+  <p class="lead">${ET_DICT.words.length.toLocaleString("ru")} слов — все слова языка: обычные и образованные по правилам, служебные (артикли, местоимения, предлоги, союзы), числа, имена и языки. Ищи по-русски или на этуале.</p>
   <div class="dhead"><input class="in" id="dq" placeholder="Например: звезда, или etoil" value="${esc(dictState.q)}" autocomplete="off">
-  <div class="seg" id="dpos">${[["", "все"], ["n", "сущ."], ["v", "глаголы"], ["a", "прил."], ["adv", "нареч."]].map(([p, t]) => `<button data-p="${p}" class="${p === dictState.pos ? "on" : ""}">${t}</button>`).join("")}</div></div>
+  <div class="seg" id="dpos">${[["", "все"], ["n", "сущ."], ["v", "глаголы"], ["a", "прил."], ["adv", "нареч."], ["f", "служебные"], ["num", "числа"], ["name", "имена"], ["lang", "языки"]].map(([p, t]) => `<button data-p="${p}" class="${p === dictState.pos ? "on" : ""}">${t}</button>`).join("")}</div></div>
   <div id="dres"></div>`;
 }
 function dictRender() {
