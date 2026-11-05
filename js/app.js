@@ -29,7 +29,7 @@ function trReady() {
   if (!TR_READY) TR_READY = (async () => {
     const bin = Uint8Array.from(atob(window.ET_TR_B64), (c) => c.charCodeAt(0));
     const txt = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
-    init(JSON.parse(txt));
+    init(JSON.parse(txt)); Mat.tr();
     for (const [k, v] of Object.entries(Store.get().senses)) choose(k, v);
   })();
   return TR_READY;
@@ -37,7 +37,7 @@ function trReady() {
 
 // ---------------------------------------------------------------- меню
 const NAV = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["словарь", "Словарь", "📚"], ["карточки", "Карточки", "🃏"], ["переводчик", "Переводчик", "⇄"],
-  ["проверка", "Проверь текст", "✅"], ["справочник", "Справочник", "📐"], ["песни", "Песни", "🎤"], ["библиотека", "Библиотека", "📜"]];
+  ["проверка", "Проверь текст", "✅"], ["справочник", "Справочник", "📐"], ["песни", "Песни", "🎤"], ["библиотека", "Библиотека", "📜"], ["чат", "Чат", "💬"]];
 const TABS = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["проверка", "Проверка", "✅"], ["переводчик", "Перевод", "⇄"], ["ещё", "Ещё", "☰"]];
 // каждая вкладка меню помнит, где ты в ней был (урок, слово в словаре, загадку…): вкладка ведёт туда; повторное нажатие на
 // уже открытую вкладку — к её началу. Хранится в браузере, переживает перезаход на сайт.
@@ -65,44 +65,43 @@ function sections() {                         // разделы нового с�
 }
 const SECTION_NAMES = ET_C2I.sections;
 function pageHome() {
-  const S = Store.get(), done = (n) => S.lessons[n] && S.lessons[n].stars > 0;
-  const next = (ET_TOC.find((l) => !done(l[0])) || ET_TOC[0]);
-  const secs = sections();
-  const curSec = secs.findIndex((s) => s.some((l) => l[0] === next[0]));
+  const S = Store.get(), L = ET_C2I.lessons, next = Lv.firstOpen(S) || L[L.length - 1], lv = Lv.level(S);
   const ph = ET_PHRASES[dayIndex(ET_PHRASES.length)];
   const words = ET_DICT.words.filter((w) => w[4] && w[4] < 1200 && w[1] === "n");
   const wd = words[dayIndex(words.length)];
-  const mapHtml = secs.map((s, k) => {
-    const cls = "ucard" + (k === curSec ? " cur" : k > curSec ? " lockd" : "");
-    const nDone = s.filter((l) => done(l[0])).length;
-    const dots = s.map((l) => `<a href="#/урок/${l[0]}" class="${done(l[0]) ? "d" : l[0] === next[0] ? "c" : ""}" title="${esc(l[0] + ". " + l[1])}">${done(l[0]) ? "★" : l[0] === next[0] ? "▶" : l[0]}</a>`).join("");
-    const note = nDone === s.length ? `${nDone} / ${s.length} ★ · пройден` : k === curSec ? `урок ${nDone + 1} из ${s.length}` : k > curSec ? "откроется после предыдущего раздела" : `${nDone} / ${s.length}`;
-    return `<div class="${cls}"><small>Раздел ${k + 1}</small><b>${SECTION_NAMES[k] || "Раздел " + (k + 1)}</b><div class="dots">${dots}</div><div class="mini">${note}</div></div>`;
+  const doneN = L.filter((l) => Lv.done(l.n, S)).length, pad = (n) => String(n).padStart(2, "0");
+  const secs = ET_C2I.sections.map((name, k) => {
+    const ls = Lv.secLessons(k), nd = ls.filter((l) => Lv.done(l.n, S)).length, passed = Lv.secPassed(k, S), cur = next.sec === k && !passed;
+    const lock = !passed && !cur && ls[0].n > next.n, first = ls.find((l) => !Lv.done(l.n, S)) || ls[0];
+    return `<${lock ? "div" : "a"} class="gsec${passed ? " done" : cur ? " cur" : lock ? " lock" : ""}"${lock ? "" : ` href="#/урок/${first.n}"`}><span class="no">${pad(k + 1)}${cur ? " · сейчас" : lock ? " · 🔒" : ""}</span>
+      <h3>${esc(name)}</h3><span class="u">уроки ${ls[0].n}–${ls[ls.length - 1].n} · пройдено ${nd} из ${ls.length}</span>
+      <div class="rank"><b class="et">${LEVELS[k].w}</b><span>${LEVELS[k].ru}${passed ? " ✓" : ""}</span></div><div class="bar"><i style="width:${Math.round(nd / ls.length * 100)}%"></i></div></${lock ? "div" : "a"}>`;
   }).join("");
-  const task = Math.min(S.myWords.length, 10);
-  return `<div class="home"><div>
-    <div class="unit"><div><small>Раздел ${curSec + 1} · урок ${next[0]}</small><b>${esc(next[1])}</b></div><a class="btn" href="#/справочник">📖 Справочник</a></div>
-    <div class="map">${mapHtml}</div>
-    <div class="card" style="margin-top:16px"><h3>Сейчас: урок ${next[0]} «${esc(next[1])}»</h3>
-      <div class="muted">${next[2].length ? "Новые слова: <span class='et' style='font-size:17px'>" + next[2].map(esc).join(", ") + "</span>" : next[3] ? "Проверь себя по прошлым урокам" : next[0] === 1 ? "Первые слова и фразы — начни отсюда" : "Объяснение, примеры и задания"}</div>
-      <div style="margin-top:14px"><a class="btn gold" href="#/урок/${next[0]}">Начать урок ▶</a></div></div>
-    <div class="tools">
-      <a class="card tool" href="#/переводчик"><div class="ic">⇄</div><b>Переводчик</b><span>Русский ⇄ Etoilal, 9 000 слов</span></a>
+  const secL = Lv.secLessons(next.sec);
+  return `<div class="ghome"><section class="gh"><h1>Язык, который<br><span>звучит</span> как звёзды.</h1>
+    <div><p>Сорок уроков по порядку. Шесть разделов — шесть уровней: от <b class="et">elev</b> до <b class="et">etoil</b>. Каждый уровень подтверждает контрольная.</p>
+      <a class="btn gold" href="#/урок/${next.n}">${doneN ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} →</a></div></section>
+  <section class="gstats"><div><div class="n"><i>🔥</i>${Store.streak()}</div><div class="l">дней огонёк</div></div><div><div class="n"><i>✦</i>${S.points}</div><div class="l">очков</div></div>
+    <div><div class="n">${doneN}/${L.length}</div><div class="l">уроков пройдено</div></div><div><div class="n"><i>💎</i>${S.chests}</div><div class="l">сундуков</div></div></section>
+  <div class="gcap"><span>Карта разделов · уровни</span><span>Твой уровень: ${lv ? Lv.badge(lv) + " " + LEVELS[lv - 1].ru : "пока нет — пройди уроки 1–3"}</span></div>
+  <section class="ggrid">${secs}</section>
+  <div class="gtwo"><div>
+    <div class="gcap" style="margin-top:0"><span>Раздел ${pad(next.sec + 1)} — ${esc(ET_C2I.sections[next.sec])}</span><a href="#/учиться">все уроки →</a></div>
+    ${secL.map((l) => `<a class="grow${l.n === next.n ? " cur" : ""}" href="${Lv.isOpen(l.n, S) ? "#/урок/" + l.n : "#/урок/" + next.n}"><span class="kk">${pad(l.n)}</span><b>${esc(l.t)}</b><span>${Lv.done(l.n, S) ? "★".repeat(S.lessons[l.n].stars) : l.n === next.n ? "→" : Lv.isOpen(l.n, S) ? "" : "🔒"}</span></a>`).join("")}
+    <div class="tools" style="margin-top:22px">
+      <a class="card tool" href="#/переводчик"><div class="ic">⇄</div><b>Переводчик</b><span>Русский ⇄ Etoilal</span></a>
       <a class="card tool" href="#/проверка"><div class="ic">✅</div><b>Проверь текст</b><span>Найдёт ошибки и объяснит</span></a>
-      <a class="card tool" href="#/словарь"><div class="ic">📚</div><b>Словарь</b><span>${ET_DICT.words.length.toLocaleString("ru")} слов с чтением</span></a>
-      <a class="card tool" href="#/справочник"><div class="ic">📐</div><b>Справочник</b><span>Грамматика и спряжение</span></a>
+      <a class="card tool" href="#/чат"><div class="ic">💬</div><b>Чат</b><span>Общайся со всеми</span></a>
+      <a class="card tool" href="#/книги"><div class="ic">📕</div><b>Книги читателей</b><span>Пиши с уровня artizan</span></a>
     </div></div>
   <aside class="rail">
-    <div class="stats"><div class="st">🔥 ${Store.streak()}<small>дней</small></div><div class="st">✦ ${S.points}<small>очков</small></div><div class="st">💎 ${S.chests}<small>сундука</small></div></div>
     ${dailyCard()}
-    <div class="card"><div class="row"><h3 style="margin:0">Фраза дня</h3>${playBtn(ph[0])}</div>
-      <div class="ph" style="margin-top:8px">${esc(ph[0])}</div><div class="rd">${esc(rd(ph[0]))}</div><div class="muted" style="margin-top:4px">${esc(ph[2])}</div></div>
-    <div class="card"><div class="k">Слово дня</div><div class="row"><div class="ph" style="font-size:34px">${esc(wd[0])}</div>${playBtn(wd[0])}</div>
-      <div class="muted">${esc(wd[2])} · «${esc(wd[3] || rd(wd[0]))}»</div></div>
-    <div class="card"><h3>✅ Проверь свой текст</h3><div class="muted">Je <span class="err">pa savem</span> → Je <span class="fix">savem pa</span></div>
-      <div style="margin-top:12px"><a class="btn gold" href="#/проверка">Проверить свой текст</a></div></div>
+    <div class="card"><div class="k">Слово дня</div><div class="row"><div class="gword">${esc(wd[0])}</div>${playBtn(wd[0])}</div>
+      <div class="muted" style="margin-top:6px">${esc(wd[2])} · «${esc(wd[3] || rd(wd[0]))}»</div></div>
+    <div class="card"><div class="row"><div class="k">Фраза дня</div>${playBtn(ph[0])}</div>
+      <div class="ph et" style="margin-top:8px;font-size:22px">${esc(ph[0])}</div><div class="rd">${esc(rd(ph[0]))}</div><div class="muted" style="margin-top:4px">${esc(ph[2])}</div></div>
     <div id="ctop"></div>
-  </aside></div>`;
+  </aside></div></div>`;
 }
 
 // ---------------------------------------------------------------- словарь
@@ -144,7 +143,7 @@ function pageDict() {
   <p class="lead">${ET_DICT.words.length.toLocaleString("ru")} слов — все слова языка: обычные и образованные по правилам, служебные (артикли, местоимения, предлоги, союзы), числа, имена и языки. Ищи по-русски или на этуале.</p>
   <div class="dhead"><input class="in" id="dq" placeholder="Например: звезда, или etoil" value="${esc(dictState.q)}" autocomplete="off">
   <div class="seg" id="dpos">${[["", "все"], ["n", "сущ."], ["v", "глаголы"], ["a", "прил."], ["adv", "нареч."], ["f", "служебные"], ["num", "числа"], ["name", "имена"], ["lang", "языки"]].map(([p, t]) => `<button data-p="${p}" class="${p === dictState.pos ? "on" : ""}">${t}</button>`).join("")}</div></div>
-  <div id="dres"></div>`;
+  <div id="dres"></div>${Mat.toggle("adtd")}`;
 }
 function dictRender() {
   const res = dictSearch(dictState.q, dictState.pos);
@@ -157,6 +156,7 @@ function dictRender() {
     (res.length > list.length ? `<div class="more"><button class="btn" id="dmore">Показать ещё</button></div>` : "");
 }
 function bindDict() {
+  Mat.bindToggle("adtd");
   trReady().then(dictRender); dictRender();
   let t; $("#dq").addEventListener("input", (e) => { clearTimeout(t); t = setTimeout(() => { dictState.q = e.target.value; dictState.shown = 60; dictState.open = null; dictRender(); }, 120); });
   $("#dpos").addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; dictState.pos = b.dataset.p; dictState.shown = 60; $("#dpos").querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); dictRender(); });
@@ -170,12 +170,12 @@ function bindDict() {
 // ---------------------------------------------------------------- переводчик
 let trDir = "ru", trItems = [];
 const TR_EX = { ru: ["Привет! Как дела?", "Я живу в Москве, а мой друг — в Париже.", "Мне 15 лет.", "Скачай этот файл и отправь его мне.", "Ночь тиха, и звёзды поют.", "Если бы я мог, я бы полетел к звёздам."],
-  et: ["Salu! Koman tu ales?", "Je to emem.", "Le nui eset trankil e lez etoil chantel.", "Yer je trouvim le livr dans le mezon gran.", "Etoilal eset le lang le plu joli dans le mond."] };
+  et: ["Salu! Qoman tu ales?", "Je to emem.", "Le nui eset tranqil e lez etoil chantel.", "Yer je trouvim le livr dans le mezon gran.", "Etoilal eset le lang le plu joli dans le mond."] };
 function pageTranslate() {
   return `<div class="k">Переводчик</div><h1 class="page">Русский <i>⇄</i> Etoilal</h1>
   <p class="lead">Опечатки исправляются сами, цифры остаются цифрами, страны и города узнаются. Слова с точечным подчёркиванием — нажми и выбери другой смысл.</p>
   <div class="row" style="margin-bottom:12px;justify-content:flex-start;flex-wrap:wrap"><div class="seg" id="trdir"><button data-d="ru">Русский → Etoilal</button><button data-d="et">Etoilal → Русский</button></div>
-  <button class="btn sm" id="trreset" hidden>Сбросить выбор смыслов</button></div>
+  <button class="btn sm" id="trreset" hidden>Сбросить выбор смыслов</button>${Mat.toggle("adtt")}</div>
   <div class="two"><div class="card"><textarea class="in" id="trsrc" spellcheck="false"></textarea><div class="exs" id="trex"></div></div>
   <div class="card"><div class="row"><div class="k" id="trdst">Etoilal</div><div class="row"><button class="btn sm" id="trsay">▶ Послушать</button><button class="btn sm" id="trcopy">Копировать</button></div></div>
   <div class="out" id="trout"><span class="dim">Здесь будет перевод.</span></div><div class="rd" id="trread" style="margin-top:8px"></div><div id="trnotes"></div></div></div>`;
@@ -208,6 +208,7 @@ async function trRun() {
 }
 let pop = null; const closePop = () => { if (pop) { pop.remove(); pop = null; } };
 function bindTranslate() {
+  Mat.bindToggle("adtt");
   const setDir = (d) => {
     trDir = d; $("#trdir").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.d === d));
     $("#trdst").textContent = d === "ru" ? "Etoilal" : "Русский"; $("#trsay").hidden = d === "et";
@@ -237,11 +238,11 @@ function bindTranslate() {
 document.addEventListener("click", closePop);
 
 // ---------------------------------------------------------------- «Проверь свой текст»
-const CK_EX = ["Je pa savem koi fezer.", "Il tre joli.", "Le ami chantet un chanson.", "Je chantet avek le joli fleur.", "Ma ami chantel e je danset.", "Yer je trouvit le livr dans le mezon.", "Tu eses ma etoil."];
+const CK_EX = ["Je pa savem qoi fezer.", "Il tre joli.", "Le ami chantet un chanson.", "Je chantet aveq le joli fleur.", "Ma ami chantel e je danset.", "Yer je trouvit le livr dans le mezon.", "Tu eses ma etoil."];
 function pageCheck() {
   return `<div class="k">Проверь свой текст</div><h1 class="page">Найду ошибки и <i>объясню</i></h1>
   <p class="lead">Напиши что-нибудь на Etoilal. Я подчеркну ошибки, объясню каждую и исправлю в один щелчок. Внизу — как это читается и что получилось по-русски.</p>
-  <div class="two"><div class="card"><textarea class="in" id="cksrc" spellcheck="false" placeholder="Например: Je pa savem koi fezer."></textarea>
+  <div class="two"><div class="card"><textarea class="in" id="cksrc" spellcheck="false" placeholder="Например: Je pa savem qoi fezer."></textarea>
     <div class="exs" id="ckex">${CK_EX.map((x) => `<button>${esc(x)}</button>`).join("")}</div></div>
   <div class="card"><div class="row"><div class="k" id="ckstat">Результат</div><button class="btn sm gold" id="ckall" hidden>Исправить всё</button></div>
     <div class="out" id="ckout" style="font-size:20px"><span class="dim">Здесь появится твой текст с подсказками.</span></div>
@@ -288,7 +289,7 @@ function bindCheck() {
 // ---------------------------------------------------------------- профиль и «ещё»
 function pageMore() {
   const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["альтернатива", "🧠", "Альтернативное обучение", "весь язык сразу: шпаргалка, тексты, загадки"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
-    ["песни", "🎤", "Песни", "караоке"], ["библиотека", "📜", "Библиотека", "рассказы"], ["полезное", "💬", "Полезное", "фразы по ситуациям"], ["тексты", "✍", "Тексты", "переведи — я проверю"], ["о-языке", "✦", "О языке", "история"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"], ["магазин", "🛍", "Магазин", "темы, песни, секреты"]];
+    ["песни", "🎤", "Песни", "караоке"], ["библиотека", "📜", "Библиотека", "рассказы и книги читателей"], ["чат", "💬", "Чат", "общение со всеми"], ["мат", "🔞", "Мат 18+", "с уровня filozof"], ["полезное", "💬", "Полезное", "фразы по ситуациям"], ["тексты", "✍", "Тексты", "переведи — я проверю"], ["о-языке", "✦", "О языке", "история"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"], ["магазин", "🛍", "Магазин", "темы, песни, секреты"]];
   return `<h1 class="page">Ещё</h1><div class="tools">${items.map(([h, i, t, s]) => `<a class="card tool" href="#/${h}"><div class="ic">${i}</div><b>${t}</b><span>${s}</span></a>`).join("")}</div>`;
 }
 // профиль, достижения и магазин — js/profile.js
@@ -296,17 +297,17 @@ const soon = (ic, t, s) => () => `<div class="card soon"><div class="ic">${ic}</
 
 // ---------------------------------------------------------------- маршруты
 const PAGES = {
-  "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [pageTranslate, bindTranslate], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
+  "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [(a) => Lv.examActive() ? Lv.lockedPage("Переводчик") : pageTranslate(a), (a) => !Lv.examActive() && bindTranslate(a)], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
   "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
   "тренировки": [pageTrain, bindTrain],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
-  "проверка": [pageCheck, bindCheck],
+  "проверка": [(a) => Lv.examActive() ? Lv.lockedPage("«Проверь текст»") : pageCheck(a), (a) => !Lv.examActive() && bindCheck(a)],
   "справочник": [pageRef, bindRef],
   "песни": [pageSongs, bindSongs], "библиотека": [pageLibrary, bindLibrary], "полезное": [pageUseful, bindUseful], "тексты": [pageTexts, bindTexts],
   "магазин": [pageShop, bindShop], "секрет": [pageSecret, bindSecret],
   "о-языке": [pageAbout],
   "альтернатива": [altPage, altBind],
-  "вход": [cloudPageLogin, cloudBindLogin], "игрок": [cloudPagePlayer, cloudBindPlayer],
+  "вход": [cloudPageLogin, cloudBindLogin], "чат": [pageChat, bindChat], "мат": [pageMat, bindMat], "книги": [pageBooks, bindBooks], "игрок": [cloudPagePlayer, cloudBindPlayer],
 };
 // Открытые страницы запоминаются: при переходе в другой раздел страница не уничтожается, а откладывается (вместе с ответами,
 // введённым текстом, открытыми блоками и прокруткой) и при возвращении показывается как была. Главная, профиль, карточки,
@@ -316,21 +317,21 @@ const PAGE_CACHE = new Map();                          // ключ (адрес) 
 const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
 let pageKey = null;
 async function route(fromNav) {
-  closePop();
+  closePop(); if (typeof examLeave === "function") examLeave();
   const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")), parts = raw.split("/");
   const id = PAGES[parts[0]] ? parts[0] : "главная", key = id + "/" + parts.slice(1).join("/");
   const [view, bind] = PAGES[id];
   const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
-  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key) {        // отложить уходящую страницу
+  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key && !app.querySelector("#exbox, .nokeep")) {        // отложить уходящую страницу
     app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
     PAGE_CACHE.delete(pageKey); PAGE_CACHE.set(pageKey, { el: cur, y: scrollY, onShow: PageHook.onShow });
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = ["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id;
+  const navId = ["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
-  const kept = fromNav === true && PAGE_CACHE.get(key);
+  const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);
   pageKey = key;
   if (kept) {                                           // вернуться к отложенной странице как была
     app.replaceChildren(...kept.el); PAGE_CACHE.delete(key); PageHook.onShow = kept.onShow;
@@ -346,6 +347,9 @@ async function route(fromNav) {
   if (id === "главная") cloudFillTop();
 }
 window.addEventListener("hashchange", () => route(true));
+// контрольная началась/закончилась в другой вкладке — переводчик и «Проверь текст» закрываются/открываются и здесь
+window.addEventListener("storage", (e) => { if (e.key === "etoilal-exam" && /^(переводчик|проверка)/.test(pageKey || "")) { PAGE_CACHE.clear(); route(); } });
 Store.touchDay();
+Mat.dict();
 route();
 if (Cloud.user()) Cloud.sync().then((changed) => { if (changed) { applyTheme(); route(); } });

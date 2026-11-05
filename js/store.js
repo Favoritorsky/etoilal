@@ -5,6 +5,29 @@ const Store = (() => {
   let S = blank();
   try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch (e) {}
   if (S.courseV !== 2) { if (Object.keys(S.lessons || {}).length) S.lessonsOld = S.lessons; S.lessons = {}; S.courseV = 2; }   // новый самоучитель (3.11.2026)
+  // 5.11.2026: буква k заменена на q — переводим сохранённые слова, карточки и ответы уроков (один раз; и для данных из облака)
+  function migQ(o) {
+    if (!o || o.qV) return o;
+    const fx = (v) => typeof v === "string" ? v.replace(/[A-Za-zÀ-ÿ]*[kK][A-Za-zÀ-ÿ]*/g, (w) => w.replace(/k/g, "q").replace(/K/g, "Q"))
+      : Array.isArray(v) ? v.map(fx) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, k === "k" ? x : fx(x)])) : v;
+    if (Array.isArray(o.myWords)) o.myWords = o.myWords.map(fx);
+    if (o.cards) o.cards = Object.fromEntries(Object.entries(o.cards).map(([w, c]) => [fx(w), c]));
+    if (o.c2ans) o.c2ans = fx(o.c2ans);
+    o.qV = 1; return migExam(o);
+  }
+  // 5.11.2026: новые контрольные (таймер, без подсказок, уровни) — ранее сданные контрольные надо пересдать.
+  // Старый результат не теряется: S.checksOld[N]. Остальной прогресс (уроки, очки, карточки) остаётся.
+  function migExam(o) {
+    if (!o || o.examV) return o;
+    const checks = (window.ET_C2I ? ET_C2I.lessons.filter((l) => l.check).map((l) => l.n) : [13, 19, 26, 33, 40]);
+    o.checksOld = o.checksOld || {};
+    for (const n of checks) {
+      if (o.lessons && o.lessons[n]) { o.checksOld[n] = o.lessons[n]; delete o.lessons[n]; }
+      if (o.c2ans && o.c2ans[n]) delete o.c2ans[n];
+    }
+    o.examV = 1; return o;
+  }
+  migQ(S); migExam(S);
   let hook = null;                                       // js/cloud.js: отправить прогресс в облако (с задержкой)
   const monday = () => { const d = new Date(); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.toISOString().slice(0, 10); };
   const write = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
@@ -24,10 +47,10 @@ const Store = (() => {
     return n;
   }
   return {
-    get: () => S, save, touchDay, streak, monday,
+    get: () => S, save, touchDay, streak, monday, migQ: (o) => migExam(migQ(o)),
     setHook(f) { hook = f; },
     load(obj) {                                          // без hook: так облако подставляет объединённый прогресс
-      const n = Object.assign(blank(), obj);             // на месте — у открытой страницы ссылка на S остаётся верной
+      const n = migExam(migQ(Object.assign(blank(), obj)));             // на месте — у открытой страницы ссылка на S остаётся верной
       for (const k of Object.keys(S)) delete S[k];
       Object.assign(S, n); write();
     },
@@ -64,6 +87,6 @@ const Store = (() => {
       const b = new Blob([JSON.stringify(S, null, 1)], { type: "application/json" });
       const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "etoilal-прогресс-" + today() + ".json"; a.click();
     },
-    importText(t) { S = Object.assign(blank(), JSON.parse(t)); save(); },
+    importText(t) { S = migExam(migQ(Object.assign(blank(), JSON.parse(t)))); save(); },
   };
 })();

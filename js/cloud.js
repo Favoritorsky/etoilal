@@ -102,6 +102,8 @@ const Cloud = (() => {
       await call("/rest/v1/weekly?on_conflict=user_id,week", { method: "POST", prefer: "resolution=merge-duplicates,return=minimal", body: { user_id: id, week: Store.monday(), points: Store.weekPoints() } });
       st.last = new Date(); st.err = "";
     } catch (e) { st.err = e.message; }
+    // уровень — отдельно: если колонки level ещё нет (не выполнен supabase_3_чат_книги.sql), остальное всё равно сохранится
+    try { await call(`/rest/v1/profiles?id=eq.${id}`, { method: "PATCH", prefer: "return=minimal", body: { level: Lv.level() } }); } catch (e) {}
   }
   async function sync() {                                    // забрать с сервера → объединить → сохранить у себя и отправить обратно
     if (!sess) return false;
@@ -110,7 +112,7 @@ const Cloud = (() => {
     try {
       const rows = await call(`/rest/v1/progress?select=data,updated_at&user_id=eq.${sess.id}`);
       if (rows && rows[0] && rows[0].data) {
-        const before = JSON.stringify(Store.get()), m = merge(Store.get(), rows[0].data);
+        const before = JSON.stringify(Store.get()), m = merge(Store.get(), Store.migQ(rows[0].data));
         Store.load(m); changed = JSON.stringify(m) !== before;
       }
       await push();
@@ -169,16 +171,16 @@ const Cloud = (() => {
   // ---------------------------------------------------------- топ недели и игроки
   async function top(n = 10) {
     if (+localStorage.getItem("etoilal-cloud-missing") > Date.now()) throw new Error("нет таблиц");
-    const r = await call(`/rest/v1/weekly?select=points,user_id,profiles(nick)&week=eq.${Store.monday()}&points=gt.0&order=points.desc&limit=${n}`, { auth: false });
-    return r.map((x) => ({ nick: x.profiles ? x.profiles.nick : "?", points: x.points, me: sess && x.user_id === sess.id }));
+    const r = await call(`/rest/v1/weekly?select=points,user_id,profiles(*)&week=eq.${Store.monday()}&points=gt.0&order=points.desc&limit=${n}`, { auth: false });
+    return r.map((x) => ({ nick: x.profiles ? x.profiles.nick : "?", level: x.profiles ? x.profiles.level || 0 : 0, points: x.points, me: sess && x.user_id === sess.id }));
   }
   async function player(nick) {
-    const r = await call(`/rest/v1/profiles?select=nick,points,lessons,stars,streak,updated_at,created_at&nick=ilike.${likeEsc(nick)}`, { auth: false });
+    const r = await call(`/rest/v1/profiles?select=*&nick=ilike.${likeEsc(nick)}`, { auth: false });
     return r[0] || null;
   }
 
   Store.setHook(schedule);
-  return { user: () => sess, state: st, signUp, signIn, signOut, sync, push, top, player, merge, schedule };
+  return { user: () => sess, state: st, signUp, signIn, signOut, sync, push, top, player, merge, schedule, api: call };
 })();
 
 // ---------------------------------------------------------------- страницы: #/вход, #/игрок/ник, карточка в профиле, топ на главной
@@ -234,7 +236,7 @@ async function cloudFillTop() {
   try {
     const r = await Cloud.top(8);
     if (!$("#ctop")) return;
-    el.innerHTML = `<div class="card"><h3>🏆 Топ недели</h3>${r.length ? `<ol class="topw">${r.map((x) => `<li class="${x.me ? "me" : ""}"><a href="#/игрок/${encodeURIComponent(x.nick)}">${esc(x.nick)}</a><b>✦ ${x.points}</b></li>`).join("")}</ol>`
+    el.innerHTML = `<div class="card"><h3>🏆 Топ недели</h3>${r.length ? `<ol class="topw">${r.map((x) => `<li class="${x.me ? "me" : ""}"><a href="#/игрок/${encodeURIComponent(x.nick)}">${esc(x.nick)}</a>${Lv.badge(x.level)}<b>✦ ${x.points}</b></li>`).join("")}</ol>`
       : `<p class="muted">На этой неделе ещё никого — стань первым!</p>`}
       ${Cloud.user() ? "" : `<div class="muted" style="margin-top:8px"><a href="#/вход">Войди</a>, чтобы попасть в топ.</div>`}</div>`;
   } catch (e) { el.innerHTML = ""; }                         // нет таблиц или сети — топ просто не показываем
@@ -246,7 +248,7 @@ async function cloudBindPlayer(a) {
   if (!$("#cplayer")) return;
   if (!p) { el.innerHTML = `<div class="card soon"><div class="ic">🔭</div><h2>${err ? esc(err) : "Игрок «" + esc(a[0] || "") + "» не найден"}</h2><a class="btn gold" href="#/главная">На главную</a></div>`; return; }
   const k = typeof rankIdx === "function" ? rankIdx(p.points) : 0, R = typeof RANKS !== "undefined" ? RANKS[k] : ["", "✦", ""];
-  el.innerHTML = `<div class="k">Игрок</div><h1 class="page">${esc(p.nick)}</h1>
+  el.innerHTML = `<div class="k">Игрок</div><h1 class="page">${esc(p.nick)}</h1>${p.level ? `<p>Уровень: ${Lv.badge(p.level)} · ${esc(LEVELS[p.level - 1].ru)}</p>` : ""}
     <div class="card rankc"><div class="rki">${R[1]}</div><div style="flex:1 1 200px;min-width:0"><div class="k">Звание</div><div class="rkn">${esc(R[2])}</div>
       <div class="muted">${p.updated_at ? "занимался " + new Date(p.updated_at).toLocaleDateString("ru") : ""}</div></div></div>
     <div class="pstats">${[["✦", p.points, "очков"], ["📖", p.lessons, "уроков"], ["⭐", p.stars, "звёзд"], ["🔥", p.streak, "дней подряд"]].map(([i, n, t]) => `<div class="st">${i} ${n || 0}<small>${t}</small></div>`).join("")}</div>`;

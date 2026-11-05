@@ -9,7 +9,7 @@ ET_C2[29] = { n: 29, sec: 4, t: "Если бы: si + ri", s: "Si j'averim le tan
 <h3>Если бы (сейчас)</h3>
 <p>Когда это мечта или неправда, «бы» (ri) ставят <b>в обе части</b>:</p>
 > Si j'averim le tan, j'aprenerim lez lang. :: Если бы у меня было время, я бы учил языки.
-> Si il eserit for, il kourerit. :: Если бы он был сильным, он бы бежал.
+> Si il eserit for, il qourerit. :: Если бы он был сильным, он бы бежал.
 <h3>Если бы (тогда, в прошлом)</h3>
 <p>Про прошлое — <b>i + ri</b>: «если бы тогда…»:</p>
 > Si tu veniris, je chantirim. :: Если бы ты пришёл, я бы спел.
@@ -24,9 +24,9 @@ ET_C2[29] = { n: 29, sec: 4, t: "Если бы: si + ri", s: "Si j'averim le tan
     {"k": "input", "q": "Если бы у меня был дом, я был бы счастлив.", "a": ["Si j'averim un mezon, j'eserim eureu."], "why": "ri в обеих частях"},
     {"k": "input", "q": "Если бы ты позвонил, я бы ответил.", "a": ["Si tu telefoniris, je repondirim."], "why": "про прошлое — i + ri"},
     { k: "choice", q: "«Если бы мы знали (тогда), мы бы ушли»", opts: ["Si nou saverin, nou parterin.", "Si nou savirin, nou partirin."], a: "Si nou savirin, nou partirin.", why: "тогда — i + ri" },
-    {"k": "fix", "q": "Si j'avem un kle, j'ouvrerim le port.", "a": ["Si j'averim un kle, j'ouvrerim le port."], "why": "ri — в обеих частях"},
-    {"k": "tiles", "q": "Если бы она была сильной, она бы бежала.", "a": "Si el eserit for el kourerit", "d": ["eset", "kouret"], "why": "ri в обеих частях"},
-    { k: "choice", q: "Что значит si?", opts: ["если", "когда", "потом"], a: "если", lang: "x", why: "si — если, kan — когда" },
+    {"k": "fix", "q": "Si j'avem un qle, j'ouvrerim le port.", "a": ["Si j'averim un qle, j'ouvrerim le port."], "why": "ri — в обеих частях"},
+    {"k": "tiles", "q": "Если бы она была сильной, она бы бежала.", "a": "Si el eserit for el qourerit", "d": ["eset", "qouret"], "why": "ri в обеих частях"},
+    { k: "choice", q: "Что значит si?", opts: ["если", "когда", "потом"], a: "если", lang: "x", why: "si — если, qan — когда" },
     { k: "choice", q: "Что значит nej?", opts: ["снег", "дождь", "время"], a: "снег", lang: "x", why: "nej — снег, plui — дождь" },
     { k: "input", q: "Если бы я был богат, я бы путешествовал. (путешествие — un voiyaj, «хотел бы путешествие»)", a: ["Si j'eserim rich, je voulerim un voiyaj."], why: "ri в обеих частях" },
   ] };

@@ -3,8 +3,8 @@
 // понимается и слитная запись «troisent»), спряжение любого глагола по готовым формам словаря (E[i].f: 36 времён×лиц,
 // 18 наклонений в настоящем, приказ, инфинитив) + наклонения в любом времени и причастия по тем же правилам.
 const RefCore = (() => {
-  const U = ["", "un", "deu", "troi", "katr", "senk", "sis", "set", "uit", "neuf"];
-  const VAL = { un: 1, deu: 2, troi: 3, katr: 4, senk: 5, sis: 6, set: 7, uit: 8, neuf: 9, dis: 10, sent: 100, mil: 1000, milyon: 1000000, zero: 0 };
+  const U = ["", "un", "deu", "troi", "qatr", "senq", "sis", "set", "uit", "neuf"];
+  const VAL = { un: 1, deu: 2, troi: 3, qatr: 4, senq: 5, sis: 6, set: 7, uit: 8, neuf: 9, dis: 10, sent: 100, mil: 1000, milyon: 1000000, zero: 0 };
   const ROOTS = Object.keys(VAL).sort((a, b) => b.length - a.length);
   const MAX = 999999999;
 

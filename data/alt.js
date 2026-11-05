@@ -7,19 +7,19 @@ window.ET_ALT = {
 // ---------------------------------------------------------------- звуки
 sounds: [
   // буквы, как звучит, на что похоже / ошибка, примеры
-  ["a", "а", "всегда чёткое «а»", "ami gran kafe"],
+  ["a", "а", "всегда чёткое «а»", "ami gran qafe"],
   ["e", "э", "всегда твёрдое «э», как в «этот»: le — «лэ», а не «ле». Никогда не «е» и не «и»", "le mer frer"],
   ["i", "и", "как русское «и»; согласную перед собой смягчает, как в русском", "isi livr vil"],
   ["o", "о", "всегда «о», даже без ударения — никакого «аканья»: mezon — «мэзон», не «мэзан»", "bo mezon soley"],
   ["ou", "у", "две буквы — один звук «у». Не «оу»!", "jour amour nou"],
   ["u", "ю", "как «ю» в слове «люк»: согласную перед собой смягчает. Не «у»!", "lun nui tu"],
-  ["eu", "ё", "две буквы — один звук «ё», как в «тётя». Не «эу»!", "keur feu bleu"],
+  ["eu", "ё", "две буквы — один звук «ё», как в «тётя». Не «эу»!", "qeur feu bleu"],
   ["oi", "уа", "две буквы — «уа», быстро, в один слог: etoil — «э-туаль». Не «ой»!", "etoil soir voi"],
   ["y", "й", "«й» — и перед гласной, и после неё. Не «ы» и не «у»!", "yer soley syel"],
-  ["ch", "ш", "две буквы — «ш». Не «ч»!", "cha chanson chak"],
+  ["ch", "ш", "две буквы — «ш». Не «ч»!", "cha chanson chaq"],
   ["j", "ж", "всегда «ж». Не английское «дж»", "jour je jarden"],
   ["gn", "нь", "две буквы — мягкое «нь», как в «Испания». Не «гн»!", "montagn"],
-  ["k", "к", "всегда «к»", "kafe kan"],
+  ["q", "к", "всегда «к»", "qafe qan"],
   ["g", "г", "всегда «г» (твёрдое, даже перед e и i)", "gran gar"],
   ["s", "с", "всегда «с», даже между гласными (никогда не «з»)", "sel syel isi"],
   ["z", "з", "всегда «з»", "oizo lez rizer"],
@@ -37,7 +37,7 @@ cheat: [
 <p>Читай <b>сначала двухбуквенное сочетание</b>, а не отдельные буквы: [[ou]] = у, [[eu]] = ё, [[oi]] = уа, [[ch]] = ш, [[gn]] = нь.</p>
 > lun :: луна — «люн»: u = ю
 > jour :: день — «жур»: ou = у
-> keur :: сердце — «кёр»: eu = ё
+> qeur :: сердце — «кёр»: eu = ё
 > soir :: вечер — «суар»: oi = уа
 > chyen :: собака — «шйэн»: ch = ш, y = й
 > montagn :: гора — «монтань»: gn = нь
@@ -49,7 +49,7 @@ cheat: [
 > Le soley briyet. :: Солнце светит. — слоги ровные «лэ-со-лэй-бри-йЭт», ударение слышно только на самом последнем
 <p>Не дави на первый слог, как в русском «мАма»: в Etoilal ударение никогда не бывает в начале слова (кроме односложных).</p>
 <h3>Мелодия фразы</h3>
-<p>Фраза течёт ровно и <b>чуть поднимается в конце каждой группы</b>, а в самом конце утверждения — опускается. В вопросе без <b>eske</b> голос в конце <b>поднимается</b> — только так и понятно, что это вопрос.</p>
+<p>Фраза течёт ровно и <b>чуть поднимается в конце каждой группы</b>, а в самом конце утверждения — опускается. В вопросе без <b>esqe</b> голос в конце <b>поднимается</b> — только так и понятно, что это вопрос.</p>
 > Tu chantes. :: Ты поёшь. — в конце голос вниз
 > Tu chantes? :: Ты поёшь? — в конце голос вверх
 <h3>Гласные не «съедаются»</h3>
@@ -57,11 +57,11 @@ cheat: [
 <h3>Звонкие не оглушаются</h3>
 <p>Русские привыкли говорить «дуп» вместо «дуб». В Etoilal (как во французском) звонкая согласная на конце слова <b>остаётся звонкой</b>: [[nej]] — «нэж», а не «нэш»; [[rouj]] — «руж», [[rev]] — «рэв», а не «рэф».</p>
 <h3>Слияние (апостроф)</h3>
-<p>Короткие слова <b>le, de, se, ke, je, me</b> перед гласной теряют свою «e» и прилипают к следующему слову. Это правило <b>обязательное и без исключений</b> — на письме ставится апостроф:</p>
+<p>Короткие слова <b>le, de, se, qe, je, me</b> перед гласной теряют свою «e» и прилипают к следующему слову. Это правило <b>обязательное и без исключений</b> — на письме ставится апостроф:</p>
 > l'ami :: друг (le + ami)
 > j'emem :: я люблю (je + emem)
 > d'etoil :: о звёздах (de + etoil)
-> k'il :: что он (ke + il)
+> q'il :: что он (qe + il)
 <h3>Связка через z</h3>
 <p>Во множественном числе маленькие слова получают <b>z</b>. Эта z <b>прилипает к следующей гласной</b>, и два слова звучат как одно:</p>
 > lez ami :: друзья — «лэзами»
@@ -76,7 +76,7 @@ cheat: [
 <tr><td><span class="et">lun</span></td><td>«лун»</td><td>«люн» — u = ю</td></tr>
 <tr><td><span class="et">feu</span></td><td>«фэу»</td><td>«фё» — eu = ё</td></tr>
 <tr><td><span class="et">soir</span></td><td>«сойр»</td><td>«суар» — oi = уа</td></tr>
-<tr><td><span class="et">chak</span></td><td>«чак»</td><td>«шак» — ch = ш</td></tr>
+<tr><td><span class="et">chaq</span></td><td>«чак»</td><td>«шак» — ch = ш</td></tr>
 <tr><td><span class="et">montagn</span></td><td>«монтагн»</td><td>«монтань» — gn = нь</td></tr>
 <tr><td><span class="et">nej</span></td><td>«нэш» (оглушение)</td><td>«нэж»</td></tr>
 <tr><td><span class="et">isi</span></td><td>«изи»</td><td>«иси» — s всегда «с»</td></tr>
@@ -131,9 +131,9 @@ cheat: [
 > un ami vyeu :: пожилой друг
 > un vyeu ami :: давний, старый друг
 <h3>Сравнение — без исключений</h3>
-<p><b>plu</b> «более», <b>mouen</b> «менее», <b>le plu</b> «самый», <b>ke</b> «чем». Никаких «лучше / хуже» отдельными словами — всё через plu.</p>
-> Le lun eset plu bo ke le soley. :: Луна прекраснее солнца.
-> Il eset mouen rapid ke moi. :: Он менее быстрый, чем я.
+<p><b>plu</b> «более», <b>mouen</b> «менее», <b>le plu</b> «самый», <b>qe</b> «чем». Никаких «лучше / хуже» отдельными словами — всё через plu.</p>
+> Le lun eset plu bo qe le soley. :: Луна прекраснее солнца.
+> Il eset mouen rapid qe moi. :: Он менее быстрый, чем я.
 > le plu bo etoil :: самая прекрасная звезда
 <h3>Наречие</h3>
 <p>Из любого прилагательного: + <b>-man</b>. [[rapid]] быстрый → [[rapidman]] быстро, [[dous]] мягкий → [[dousman]] мягко.</p>` },
@@ -176,15 +176,15 @@ cheat: [
 > J'esem Leo. :: Я Лео.
 > Il eset metr. :: Он учитель.
 > Maz ami esel isi. :: Мои друзья здесь.
-> Kan j'esam anfan… :: Когда я был ребёнком…
+> Qan j'esam anfan… :: Когда я был ребёнком…
 <p>Формы: сейчас — esem, eses, eset, esen, esez, esel; было — esim / esam…; будет — esrem…</p>
 <p><b>«Иметь»</b> — <b>aver</b> (основа <b>av</b>). «У меня есть» = «я имею»:</p>
 > J'avem troi frer. :: У меня три брата.
-> Konbyen d'an tu aves? :: Сколько тебе лет? (сколько лет ты имеешь)
+> Qonbyen d'an tu aves? :: Сколько тебе лет? (сколько лет ты имеешь)
 > J'avem deudis un an. :: Мне двадцать один год.
-<p>Другие частые глаголы — все по той же схеме: [[aler]] идти, [[vener]] приходить, [[fezer]] делать, [[dizer]] сказать, [[voiyer]] видеть, [[saver]] знать, [[vouler]] хотеть, [[pouver]] мочь, [[parler]] говорить, [[manjer]] есть, [[buver]] пить, [[dormer]] спать, [[emer]] любить, [[doner]] давать, [[lizer]] читать, [[ekriver]] писать.</p>` },
+<p>Другие частые глаголы — все по той же схеме: [[aler]] идти, [[vener]] приходить, [[fezer]] делать, [[dizer]] сказать, [[voiyer]] видеть, [[saver]] знать, [[vouler]] хотеть, [[pouver]] мочь, [[parler]] говорить, [[manjer]] есть, [[buver]] пить, [[dormer]] спать, [[emer]] любить, [[doner]] давать, [[lizer]] читать, [[eqriver]] писать.</p>` },
 
-{ id: "ne", ic: "🚫", t: "Не, никогда и вопросы", s: "одно слово после глагола; eske", body: `
+{ id: "ne", ic: "🚫", t: "Не, никогда и вопросы", s: "одно слово после глагола; esqe", body: `
 <p><b>Отрицание — одно слово ПОСЛЕ глагола.</b> Это главное отличие от русского: не «я не знаю», а «я знаю не».</p>
 <table class="tbl"><tbody><tr><td class="et">pa</td><td>не</td></tr><tr><td class="et">jame</td><td>никогда</td></tr><tr><td class="et">ryen</td><td>ничего</td></tr><tr><td class="et">persone</td><td>никто — стоит на месте «кто»</td></tr></tbody></table>
 > Je savem pa. :: Я не знаю.
@@ -195,58 +195,58 @@ cheat: [
 <h3>Вопрос «да или нет»</h3>
 <p>Три способа, все правильные:</p>
 > Tu chantes? :: Ты поёшь? — просто голосом (голос вверх в конце)
-> Eske tu chantes? :: Ты поёшь? — с частицей eske в начале
+> Esqe tu chantes? :: Ты поёшь? — с частицей esqe в начале
 > Chantes tu? :: Поёшь ли ты? — высокий стиль: глагол вперёд
 <p>Ответ: <b>oui</b> да, <b>non</b> нет.</p>
 <h3>Вопросительные слова</h3>
 <table class="tbl"><tbody>
-<tr><td class="et">ki</td><td>кто</td><td class="et">koi</td><td>что</td><td class="et">ou</td><td>где, куда</td></tr>
-<tr><td class="et">dou</td><td>откуда</td><td class="et">kan</td><td>когда</td><td class="et">koman</td><td>как</td></tr>
-<tr><td class="et">pourkoi</td><td>почему</td><td class="et">konbyen</td><td>сколько</td><td class="et">kel</td><td>какой</td></tr></tbody></table>
+<tr><td class="et">qi</td><td>кто</td><td class="et">qoi</td><td>что</td><td class="et">ou</td><td>где, куда</td></tr>
+<tr><td class="et">dou</td><td>откуда</td><td class="et">qan</td><td>когда</td><td class="et">qoman</td><td>как</td></tr>
+<tr><td class="et">pourqoi</td><td>почему</td><td class="et">qonbyen</td><td>сколько</td><td class="et">qel</td><td>какой</td></tr></tbody></table>
 > Ou tu vives? :: Где ты живёшь?
-> Kel livr tu lizes? :: Какую книгу ты читаешь?
-> Koman tu ales? :: Как дела? (как ты идёшь)` },
+> Qel livr tu lizes? :: Какую книгу ты читаешь?
+> Qoman tu ales? :: Как дела? (как ты идёшь)` },
 
 { id: "mal", ic: "🔗", t: "Маленькие слова: предлоги и союзы", s: "в, на, с, и, но, если, который", body: `
 <h3>Предлоги</h3>
 <table class="tbl"><tbody>
 <tr><td class="et">a</td><td>к, в (куда)</td><td class="et">de</td><td>из, от, о; чей</td></tr>
 <tr><td class="et">dans</td><td>в, внутри</td><td class="et">sur</td><td>на</td></tr>
-<tr><td class="et">sou</td><td>под</td><td class="et">avek</td><td>с (вместе)</td></tr>
+<tr><td class="et">sou</td><td>под</td><td class="et">aveq</td><td>с (вместе)</td></tr>
 <tr><td class="et">sans</td><td>без</td><td class="et">pour</td><td>для, ради</td></tr>
 <tr><td class="et">che</td><td>у (кого-то), к (кому-то)</td><td class="et">antr</td><td>между</td></tr>
 <tr><td class="et">apre</td><td>после</td><td class="et">avant</td><td>до (по времени)</td></tr>
 <tr><td class="et">devant</td><td>перед</td><td class="et">deryer</td><td>за, позади</td></tr>
 <tr><td class="et">otour</td><td>вокруг</td><td class="et">par</td><td>через, по; кем</td></tr>
-<tr><td class="et">kontr</td><td>против</td><td class="et">depui</td><td>с (какого времени)</td></tr>
-<tr><td class="et">juska</td><td>до (куда, когда)</td><td class="et">pre</td><td>возле</td></tr>
+<tr><td class="et">qontr</td><td>против</td><td class="et">depui</td><td>с (какого времени)</td></tr>
+<tr><td class="et">jusqa</td><td>до (куда, когда)</td><td class="et">pre</td><td>возле</td></tr>
 <tr><td class="et">pandant</td><td>во время</td><td class="et">selon</td><td>согласно</td></tr></tbody></table>
 > Le cha dormet sur le tabl. :: Кошка спит на столе.
 > Demen nou alren che ma granmer. :: Завтра мы пойдём к бабушке.
 <h3>Союзы</h3>
 <table class="tbl"><tbody>
 <tr><td class="et">e</td><td>и</td><td class="et">oubyen</td><td>или</td><td class="et">me</td><td>но</td></tr>
-<tr><td class="et">ke</td><td>что, чтобы, чем</td><td class="et">si</td><td>если</td><td class="et">pask</td><td>потому что</td></tr>
-<tr><td class="et">kan</td><td>когда</td><td class="et">kom</td><td>как</td><td class="et">donk</td><td>значит</td></tr>
-<tr><td class="et">byenke</td><td>хотя</td><td class="et">tanke</td><td>пока</td><td></td><td></td></tr></tbody></table>
-> Je savem ke tu reves. :: Я знаю, что ты мечтаешь.
-> Je chantem pask j'esem eureu. :: Я пою, потому что я счастлив.
-> Byenke le plui tonbet, nou promnen. :: Хотя идёт дождь, мы гуляем.
-<p><b>«Чтобы»</b> — ke + глагол с <b>se</b> («пусть»): [[Je voulem ke tu chanteses.]] «Я хочу, чтобы ты пел».</p>
+<tr><td class="et">qe</td><td>что, чтобы, чем</td><td class="et">si</td><td>если</td><td class="et">pasq</td><td>потому что</td></tr>
+<tr><td class="et">qan</td><td>когда</td><td class="et">qom</td><td>как</td><td class="et">donq</td><td>значит</td></tr>
+<tr><td class="et">byenqe</td><td>хотя</td><td class="et">tanqe</td><td>пока</td><td></td><td></td></tr></tbody></table>
+> Je savem qe tu reves. :: Я знаю, что ты мечтаешь.
+> Je chantem pasq j'esem eureu. :: Я пою, потому что я счастлив.
+> Byenqe le plui tonbet, nou promnen. :: Хотя идёт дождь, мы гуляем.
+<p><b>«Чтобы»</b> — qe + глагол с <b>se</b> («пусть»): [[Je voulem qe tu chanteses.]] «Я хочу, чтобы ты пел».</p>
 <h3>«Который»</h3>
-<p><b>ki</b> — если «который» сам делает действие, <b>ke</b> — если действие делают с ним.</p>
-> L'ami ki chantet eset ma frer. :: Друг, который поёт, — мой брат.
-> Le livr ke je lizem eset bo. :: Книга, которую я читаю, прекрасна.` },
+<p><b>qi</b> — если «который» сам делает действие, <b>qe</b> — если действие делают с ним.</p>
+> L'ami qi chantet eset ma frer. :: Друг, который поёт, — мой брат.
+> Le livr qe je lizem eset bo. :: Книга, которую я читаю, прекрасна.` },
 
 { id: "chis", ic: "🔢", t: "Числа", s: "1–10 и дальше строго по десяткам", body: `
 <table class="tbl"><tbody>
 <tr><td>0</td><td class="et">zero</td><td>1</td><td class="et">un</td><td>2</td><td class="et">deu</td><td>3</td><td class="et">troi</td></tr>
-<tr><td>4</td><td class="et">katr</td><td>5</td><td class="et">senk</td><td>6</td><td class="et">sis</td><td>7</td><td class="et">set</td></tr>
+<tr><td>4</td><td class="et">qatr</td><td>5</td><td class="et">senq</td><td>6</td><td class="et">sis</td><td>7</td><td class="et">set</td></tr>
 <tr><td>8</td><td class="et">uit</td><td>9</td><td class="et">neuf</td><td>10</td><td class="et">dis</td><td>100</td><td class="et">sent</td></tr>
 <tr><td>1000</td><td class="et">mil</td><td>1 000 000</td><td class="et">milyon</td><td></td><td></td><td></td><td></td></tr></tbody></table>
 <p><b>Десятки</b> пишутся слитно: «сколько» + dis. 20 = [[deudis]] («два-десять»), 70 = [[setdis]] («семь-десять»), 90 = [[neufdis]]. Никаких французских «четыре-двадцать».</p>
 <p><b>Единицы</b> после десятка — отдельным словом: 11 = [[dis un]], 21 = [[deudis un]], 99 = [[neufdis neuf]].</p>
-<p><b>Сотни и тысячи</b> — раздельно: 345 = [[troi sent katrdis senk]], 2026 = [[deu mil deudis sis]], 2 000 000 = [[deu milyon]].</p>
+<p><b>Сотни и тысячи</b> — раздельно: 345 = [[troi sent qatrdis senq]], 2026 = [[deu mil deudis sis]], 2 000 000 = [[deu milyon]].</p>
 <p>После числа слово не меняется и артикль не нужен: [[troi etoil]] — три звезды. На сайте в справочнике есть переводчик чисел.</p>` },
 
 { id: "slova", ic: "🧩", t: "Новые слова из кусочков", s: "суффиксы и приставки", body: `
@@ -256,8 +256,8 @@ cheat: [
 <tr><td class="et">-ach</td><td>большой, грубый</td><td><span class="et">mezonach</span> домище, <span class="et">poisonach</span> рыбина</td></tr>
 <tr><td class="et">-ela</td><td>женский род (только живые)</td><td><span class="et">amiela</span> подруга, <span class="et">omela</span> женщина, <span class="et">chanteurela</span> певица</td></tr>
 <tr><td class="et">-eur</td><td>тот, кто делает</td><td><span class="et">chanteur</span> певец, <span class="et">danseur</span> танцор</td></tr>
-<tr><td class="et">-ite</td><td>свойство («-ость, -ота»)</td><td><span class="et">kourite</span> краткость, <span class="et">froiite</span> холод(ность)</td></tr>
-<tr><td class="et">-ik</td><td>относящийся к («-ный, -ский»)</td><td><span class="et">mezonik</span> домашний, <span class="et">syelik</span> небесный, <span class="et">jourik</span> дневной</td></tr>
+<tr><td class="et">-ite</td><td>свойство («-ость, -ота»)</td><td><span class="et">qourite</span> краткость, <span class="et">froiite</span> холод(ность)</td></tr>
+<tr><td class="et">-iq</td><td>относящийся к («-ный, -ский»)</td><td><span class="et">mezoniq</span> домашний, <span class="et">syeliq</span> небесный, <span class="et">jouriq</span> дневной</td></tr>
 <tr><td class="et">-man</td><td>наречие («-о»)</td><td><span class="et">rapidman</span> быстро, <span class="et">dousman</span> мягко</td></tr>
 <tr><td class="et">-aj</td><td>действие, процесс («-ние»)</td><td><span class="et">lavaj</span> мытьё</td></tr>
 <tr><td class="et">-ri</td><td>место, мастерская</td><td><span class="et">boulanjri</span> пекарня</td></tr>
@@ -267,7 +267,7 @@ cheat: [
 <tr><td class="et">in-</td><td>не-</td><td><span class="et">inutil</span> бесполезный, <span class="et">inbon</span> нехороший</td></tr>
 <tr><td class="et">re-</td><td>снова, обратно, пере-</td><td><span class="et">relizer</span> перечитывать, <span class="et">refezer</span> переделывать</td></tr>
 <tr><td class="et">de-</td><td>обратное действие («раз-»)</td><td><span class="et">delyer</span> развязывать (lyer — связывать)</td></tr>
-<tr><td class="et">kontr-</td><td>против</td><td>редкий кусочек</td></tr></tbody></table>
+<tr><td class="et">qontr-</td><td>против</td><td>редкий кусочек</td></tr></tbody></table>
 <p><b>Важное правило языка:</b> ни одно слово не совпадает с формой глагола. Поэтому суффиксы подобраны так, чтобы не кончаться на «гласная + m, s, t, n, z, l» — иначе их можно было бы спутать с «кто делает».</p>` },
 
 { id: "obih", ic: "💬", t: "Частые слова", s: "сегодня, здесь, очень, спасибо…", body: `
@@ -278,15 +278,15 @@ cheat: [
 <tr><td class="et">ojourdui</td><td>сегодня</td><td class="et">demen</td><td>завтра</td></tr>
 <tr><td class="et">yer</td><td>вчера</td><td class="et">mentnant</td><td>сейчас, теперь</td></tr>
 <tr><td class="et">toujour</td><td>всегда</td><td class="et">deja</td><td>уже</td></tr>
-<tr><td class="et">ankor</td><td>ещё</td><td class="et">pui</td><td>потом</td></tr>
+<tr><td class="et">anqor</td><td>ещё</td><td class="et">pui</td><td>потом</td></tr>
 <tr><td class="et">alor</td><td>тогда</td><td class="et">isi / laba</td><td>здесь / там</td></tr>
-<tr><td class="et">tre</td><td>очень</td><td class="et">boku</td><td>много</td></tr>
+<tr><td class="et">tre</td><td>очень</td><td class="et">boqu</td><td>много</td></tr>
 <tr><td class="et">osi</td><td>тоже</td><td class="et">seulman</td><td>только</td></tr>
-<tr><td class="et">meme</td><td>даже</td><td class="et">preske</td><td>почти</td></tr>
+<tr><td class="et">meme</td><td>даже</td><td class="et">presqe</td><td>почти</td></tr>
 <tr><td class="et">ansanbl</td><td>вместе</td><td class="et">tou</td><td>все, всё, весь</td></tr>
-<tr><td class="et">chak</td><td>каждый</td><td class="et">ensi</td><td>так</td></tr>
+<tr><td class="et">chaq</td><td>каждый</td><td class="et">ensi</td><td>так</td></tr>
 <tr><td class="et">byensur</td><td>конечно</td><td class="et">voila</td><td>вот</td></tr></tbody></table>
-> Koman tu ales? Tre byen, mersi! :: Как дела? Очень хорошо, спасибо!` },
+> Qoman tu ales? Tre byen, mersi! :: Как дела? Очень хорошо, спасибо!` },
 
 { id: "stil", ic: "🎭", t: "Два стиля", s: "разговорный и высокий", body: `
 <p>Грамматика одна, но звучать можно по-разному.</p>
@@ -301,12 +301,12 @@ cheat: [
 <tr><td><b>Чтение</b></td><td>1 буква/сочетание = 1 звук; ou=у, u=ю, eu=ё, oi=уа, ch=ш, j=ж, gn=нь, y=й; ударение в конце</td></tr>
 <tr><td><b>Существительное</b></td><td>не меняется; le/lez, un/unz; много = +z у всех слов перед ним</td></tr>
 <tr><td><b>Род</b></td><td>только у живых: -ela</td></tr>
-<tr><td><b>Прилагательное</b></td><td>не меняется; после — факт, перед — образ; plu / mouen / le plu … ke</td></tr>
+<tr><td><b>Прилагательное</b></td><td>не меняется; после — факт, перед — образ; plu / mouen / le plu … qe</td></tr>
 <tr><td><b>Глагол</b></td><td>основа + e/i/a/re/o/u + (ri/se/pe) + m/s/t/n/z/l; приказ: основа + e</td></tr>
 <tr><td><b>Местоимения</b></td><td>кто → кого → кому → глагол: Je lo tey donem</td></tr>
 <tr><td><b>Отрицание</b></td><td>pa / jame / ryen после глагола; persone — вместо «кто»</td></tr>
-<tr><td><b>Вопрос</b></td><td>голосом, eske в начале или глагол вперёд</td></tr>
-<tr><td><b>Слияние</b></td><td>le, de, se, ke, je, me перед гласной → l', d', s', k', j', m'</td></tr>
+<tr><td><b>Вопрос</b></td><td>голосом, esqe в начале или глагол вперёд</td></tr>
+<tr><td><b>Слияние</b></td><td>le, de, se, qe, je, me перед гласной → l', d', s', q', j', m'</td></tr>
 <tr><td><b>Числа</b></td><td>1–10 + dis/sent/mil/milyon: 70 = setdis</td></tr>
 <tr><td><b>Исключения</b></td><td>нет</td></tr></tbody></table>` },
 ],
@@ -316,10 +316,10 @@ texts: [
 { t: "Лео", s: "сейчас: я, он, мы", hint: "all", note: "Посмотри на глаголы: последняя буква — кто делает (m — я, t — он, n — мы), а e перед ней — «сейчас».", lines: [
   ["Bonjour! J'esem Leo.", "Привет! Я Лео.", "Bonjour J'+es-e-m Leo", "здравствуй я+быть-сейчас-я Лео"],
   ["Je vivem dans un vil gran.", "Я живу в большом городе.", "Je viv-e-m dans un vil gran", "я жить-сейчас-я в какой_то город большой"],
-  ["Le maten, je buvem le kafe e lizem un livr.", "Утром я пью кофе и читаю книгу.", "Le maten je buv-e-m le kafe e liz-e-m un livr", "тот утро я пить-сейчас-я тот кофе и читать-сейчас-я какой_то книга"],
-  ["Ma frer travayet dans un ekol.", "Мой брат работает в школе.", "Ma frer travay-e-t dans un ekol", "мой брат работать-сейчас-он в какой_то школа"],
+  ["Le maten, je buvem le qafe e lizem un livr.", "Утром я пью кофе и читаю книгу.", "Le maten je buv-e-m le qafe e liz-e-m un livr", "тот утро я пить-сейчас-я тот кофе и читать-сейчас-я какой_то книга"],
+  ["Ma frer travayet dans un eqol.", "Мой брат работает в школе.", "Ma frer travay-e-t dans un eqol", "мой брат работать-сейчас-он в какой_то школа"],
   ["Il eset metr.", "Он учитель.", "Il es-e-t metr", "он быть-сейчас-он учитель"],
-  ["Le soir, nou promnen dans le park.", "Вечером мы гуляем в парке.", "Le soir nou promn-e-n dans le park", "тот вечер мы гулять-сейчас-мы в тот парк"]] },
+  ["Le soir, nou promnen dans le parq.", "Вечером мы гуляем в парке.", "Le soir nou promn-e-n dans le parq", "тот вечер мы гулять-сейчас-мы в тот парк"]] },
 { t: "Дома", s: "много: z; прилагательные", hint: "all", note: "Слово (anfan, ami, etoil) не меняется — «много» показывает z у маленького слова впереди. Прилагательное стоит после слова: chyen gran.", lines: [
   ["Nota mezon eset peti, me joli.", "Наш дом маленький, но красивый.", "Nota mezon es-e-t peti me joli", "наш дом быть-сейчас-он маленький но красивый"],
   ["Le cha dormet sur le tabl.", "Кошка спит на столе.", "Le cha dorm-e-t sur le tabl", "тот кошка спать-сейчас-она на тот стол"],
@@ -332,7 +332,7 @@ texts: [
   ["Le soley briyat, e lez oizo chantal.", "Солнце светило, и птицы пели.", "Le soley briy-a-t e le-z oizo chant-a-l", "тот солнце светить-бывало-он и тот-много птица петь-бывало-они"],
   ["Nou manjin ansanbl.", "Мы поели вместе.", "Nou manj-i-n ansanbl", "мы есть-было-мы вместе"],
   ["Ma seur chantit un chanson.", "Моя сестра спела песню.", "Ma seur chant-i-t un chanson", "мой сестра петь-было-она какой_то песня"],
-  ["Kan j'esam anfan, je revam d'etoil.", "Когда я был ребёнком, я мечтал о звёздах.", "Kan j'+es-a-m anfan je rev-a-m d'+etoil", "когда я+быть-бывало-я ребёнок я мечтать-бывало-я о+звезда"]] },
+  ["Qan j'esam anfan, je revam d'etoil.", "Когда я был ребёнком, я мечтал о звёздах.", "Qan j'+es-a-m anfan je rev-a-m d'+etoil", "когда я+быть-бывало-я ребёнок я мечтать-бывало-я о+звезда"]] },
 { t: "Завтра", s: "будет, вот-вот, только что", hint: "new", note: "re — будет, o — вот-вот, сейчас начну, u — только что. Подсказки теперь только под новыми словами — остальные открываются нажатием.", lines: [
   ["Demen nou alren che ma granmer.", "Завтра мы пойдём к бабушке.", "Demen nou al-re-n che ma granmer", "завтра мы идти-будет-мы к мой бабушка"],
   ["Ma seur venut.", "Моя сестра только что пришла.", "Ma seur ven-u-t", "мой сестра прийти-только_что-она"],
@@ -340,8 +340,8 @@ texts: [
   ["Non, me je manjom!", "Нет, но сейчас поем!", "Non me je manj-o-m", "нет но я есть-вот_вот-я"],
   ["Elz chantrel ansanbl.", "Они (девушки) будут петь вместе.", "El-z chant-re-l ansanbl", "она-много петь-будет-они вместе"],
   ["Je partom!", "Я ухожу!", "Je part-o-m", "я уходить-вот_вот-я"]] },
-{ t: "Нет и вопросы", s: "pa, jame, ryen, eske", hint: "new", note: "«Не» стоит после глагола: emem pa — «люблю не». Вопрос — голосом или с eske в начале.", lines: [
-  ["Eske tu emes le nej?", "Ты любишь снег?", "Eske tu em-e-s le nej", "(вопрос) ты любить-сейчас-ты тот снег"],
+{ t: "Нет и вопросы", s: "pa, jame, ryen, esqe", hint: "new", note: "«Не» стоит после глагола: emem pa — «люблю не». Вопрос — голосом или с esqe в начале.", lines: [
+  ["Esqe tu emes le nej?", "Ты любишь снег?", "Esqe tu em-e-s le nej", "(вопрос) ты любить-сейчас-ты тот снег"],
   ["Oui, je lo emem.", "Да, я его люблю.", "Oui je lo em-e-m", "да я его любить-сейчас-я"],
   ["J'emem pa le plui.", "Я не люблю дождь.", "J'+em-e-m pa le plui", "я+любить-сейчас-я не тот дождь"],
   ["Ou tu vives?", "Где ты живёшь?", "Ou tu viv-e-s", "где ты жить-сейчас-ты"],
@@ -353,38 +353,38 @@ texts: [
   ["Voila le livr. Je lo tey donem.", "Вот книга. Я тебе её даю.", "Voila le livr Je lo tey don-e-m", "вот тот книга я его тебе давать-сейчас-я"],
   ["Ma frer lo mey donit.", "Мой брат мне её дал.", "Ma frer lo mey don-i-t", "мой брат его мне давать-было-он"],
   ["Moi, je lizem pa.", "А я не читаю.", "Moi je liz-e-m pa", "а_я я читать-сейчас-я не"]] },
-{ t: "Сравнения и числа", s: "plu, le plu; avem", hint: "new", note: "«У меня есть» = «я имею» (aver). Сравнение — plu … ke.", lines: [
+{ t: "Сравнения и числа", s: "plu, le plu; avem", hint: "new", note: "«У меня есть» = «я имею» (aver). Сравнение — plu … qe.", lines: [
   ["J'avem troi frer.", "У меня три брата.", "J'+av-e-m troi frer", "я+иметь-сейчас-я три брат"],
-  ["Konbyen d'an tu aves?", "Сколько тебе лет?", "Konbyen d'+an tu av-e-s", "сколько из+год ты иметь-сейчас-ты"],
+  ["Qonbyen d'an tu aves?", "Сколько тебе лет?", "Qonbyen d'+an tu av-e-s", "сколько из+год ты иметь-сейчас-ты"],
   ["J'avem deudis un an.", "Мне двадцать один год.", "J'+av-e-m deu-dis un an", "я+иметь-сейчас-я два-десять один год"],
-  ["Il eset plu gran ke moi.", "Он больше меня.", "Il es-e-t plu gran ke moi", "он быть-сейчас-он более большой чем я"],
-  ["Le lun eset plu bo ke le soley.", "Луна прекраснее солнца.", "Le lun es-e-t plu bo ke le soley", "тот луна быть-сейчас-она более прекрасный чем тот солнце"]] },
+  ["Il eset plu gran qe moi.", "Он больше меня.", "Il es-e-t plu gran qe moi", "он быть-сейчас-он более большой чем я"],
+  ["Le lun eset plu bo qe le soley.", "Луна прекраснее солнца.", "Le lun es-e-t plu bo qe le soley", "тот луна быть-сейчас-она более прекрасный чем тот солнце"]] },
 { t: "Бы, пусть, наверное", s: "ri, se, pe", hint: "none", note: "Подсказок больше нет — нажми на слово, если нужна помощь.", lines: [
   ["Il dormepet.", "Он, наверное, спит.", "Il dorm-e-pe-t", "он спать-сейчас-наверное-он"],
   ["Il dormeset!", "Пусть спит!", "Il dorm-e-se-t", "он спать-сейчас-пусть-он"],
   ["Si tu veniris, je chantirim.", "Если бы ты пришёл, я бы спел.", "Si tu ven-i-ri-s je chant-i-ri-m", "если ты прийти-было-бы-ты я петь-было-бы-я"],
   ["Si j'averim le tan, j'aprenerim lez lang.", "Если бы у меня было время, я бы учил языки.", "Si j'+av-e-ri-m le tan j'+apren-e-ri-m le-z lang", "если я+иметь-сейчас-бы-я тот время я+учить-сейчас-бы-я тот-много язык"],
   ["Le cha manjipet le poison.", "Кошка, наверное, съела рыбу.", "Le cha manj-i-pe-t le poison", "тот кошка есть-было-наверное-она тот рыба"],
-  ["Je voulem ke tu chanteses.", "Я хочу, чтобы ты пел.", "Je voul-e-m ke tu chant-e-se-s", "я хотеть-сейчас-я что ты петь-сейчас-пусть-ты"]] },
-{ t: "Который, потому что, хотя", s: "сложные предложения", hint: "none", note: "ki — «который» сам делает; ke — с ним делают.", lines: [
-  ["L'ami ki chantet eset ma frer.", "Друг, который поёт, — мой брат.", "L'+ami ki chant-e-t es-e-t ma frer", "тот+друг кто петь-сейчас-он быть-сейчас-он мой брат"],
-  ["Le livr ke je lizem eset bo.", "Книга, которую я читаю, прекрасна.", "Le livr ke je liz-e-m es-e-t bo", "тот книга что я читать-сейчас-я быть-сейчас-она прекрасный"],
-  ["Je chantem pask j'esem eureu.", "Я пою, потому что я счастлив.", "Je chant-e-m pask j'+es-e-m eureu", "я петь-сейчас-я потому_что я+быть-сейчас-я счастливый"],
-  ["Byenke le plui tonbet, nou promnen.", "Хотя идёт дождь, мы гуляем.", "Byenke le plui tonb-e-t nou promn-e-n", "хотя тот дождь падать-сейчас-он мы гулять-сейчас-мы"],
+  ["Je voulem qe tu chanteses.", "Я хочу, чтобы ты пел.", "Je voul-e-m qe tu chant-e-se-s", "я хотеть-сейчас-я что ты петь-сейчас-пусть-ты"]] },
+{ t: "Который, потому что, хотя", s: "сложные предложения", hint: "none", note: "qi — «который» сам делает; qe — с ним делают.", lines: [
+  ["L'ami qi chantet eset ma frer.", "Друг, который поёт, — мой брат.", "L'+ami qi chant-e-t es-e-t ma frer", "тот+друг кто петь-сейчас-он быть-сейчас-он мой брат"],
+  ["Le livr qe je lizem eset bo.", "Книга, которую я читаю, прекрасна.", "Le livr qe je liz-e-m es-e-t bo", "тот книга что я читать-сейчас-я быть-сейчас-она прекрасный"],
+  ["Je chantem pasq j'esem eureu.", "Я пою, потому что я счастлив.", "Je chant-e-m pasq j'+es-e-m eureu", "я петь-сейчас-я потому_что я+быть-сейчас-я счастливый"],
+  ["Byenqe le plui tonbet, nou promnen.", "Хотя идёт дождь, мы гуляем.", "Byenqe le plui tonb-e-t nou promn-e-n", "хотя тот дождь падать-сейчас-он мы гулять-сейчас-мы"],
   ["Le chanson esit chantey par l'anfan.", "Песня была спета ребёнком.", "Le chanson es-i-t chant-ey par l'+anfan", "тот песня быть-было-она петь-нный через тот+ребёнок"]] },
 { t: "Звёздная сказка", s: "всё вместе", hint: "none", note: "Целая история без подсказок. Прочитай вслух, следя за мелодией: голос поднимается к концу каждой группы.", lines: [
   ["Un nui, un anfan regardat le syel.", "Однажды ночью ребёнок смотрел на небо.", "Un nui un anfan regard-a-t le syel", "какой_то ночь какой_то ребёнок смотреть-бывало-он тот небо"],
   ["Unz etoil briyal, e un etoil chantat.", "Звёзды светили, а одна звезда пела.", "Un-z etoil briy-a-l e un etoil chant-a-t", "какой_то-много звезда светить-бывало-они и какой_то звезда петь-бывало-она"],
-  ["L'anfan demandit: «Ki chantet?»", "Ребёнок спросил: «Кто поёт?»", "L'+anfan demand-i-t Ki chant-e-t", "тот+ребёнок спросить-было-он кто петь-сейчас-он"],
+  ["L'anfan demandit: «Qi chantet?»", "Ребёнок спросил: «Кто поёт?»", "L'+anfan demand-i-t Qi chant-e-t", "тот+ребёнок спросить-было-он кто петь-сейчас-он"],
   ["L'etoil dizit: «Moi! Je chantem pour toi.»", "Звезда сказала: «Я! Я пою для тебя».", "L'+etoil diz-i-t Moi Je chant-e-m pour toi", "тот+звезда сказать-было-она я! я петь-сейчас-я для тебя"],
-  ["L'anfan rizit e chantit ansanbl avek l'etoil.", "Ребёнок засмеялся и спел вместе со звездой.", "L'+anfan riz-i-t e chant-i-t ansanbl avek l'+etoil", "тот+ребёнок смеяться-было-он и петь-было-он вместе с тот+звезда"],
-  ["Depui se nui, il regardet le syel chak soir.", "С той ночи он смотрит на небо каждый вечер.", "Depui se nui il regard-e-t le syel chak soir", "с этот ночь он смотреть-сейчас-он тот небо каждый вечер"]] },
+  ["L'anfan rizit e chantit ansanbl aveq l'etoil.", "Ребёнок засмеялся и спел вместе со звездой.", "L'+anfan riz-i-t e chant-i-t ansanbl aveq l'+etoil", "тот+ребёнок смеяться-было-он и петь-было-он вместе с тот+звезда"],
+  ["Depui se nui, il regardet le syel chaq soir.", "С той ночи он смотрит на небо каждый вечер.", "Depui se nui il regard-e-t le syel chaq soir", "с этот ночь он смотреть-сейчас-он тот небо каждый вечер"]] },
 ],
 // ---------------------------------------------------------------- загадки
 // ex — примеры [Etoilal, перевод]; q — [вопрос, [принимаемые ответы], пояснение]; choice — варианты (тогда ответ — один из них)
 puzzles: [
 { t: "Как это читается?", s: "звуки", rule: "ou = у, u = ю, eu = ё, oi = уа, ch = ш, j = ж, gn = нь, y = й; e — всегда «э»; ударение в конце.",
-  ex: [["jour", "«жур» — день"], ["lun", "«люн» — луна"], ["keur", "«кёр» — сердце"], ["soir", "«суар» — вечер"], ["chak", "«шак» — каждый"], ["montagn", "«монтань» — гора"], ["soley", "«солэй» — солнце"]],
+  ex: [["jour", "«жур» — день"], ["lun", "«люн» — луна"], ["qeur", "«кёр» — сердце"], ["soir", "«суар» — вечер"], ["chaq", "«шак» — каждый"], ["montagn", "«монтань» — гора"], ["soley", "«солэй» — солнце"]],
   q: [["Как читается amour (любовь)?", ["амур"], "ou — всегда «у»", ["амоур", "амур", "эмур"]],
       ["Как читается nui (ночь)?", ["нюи"], "u — всегда «ю»", ["нуи", "нюи", "ний"]],
       ["Как читается feu (огонь)?", ["фё"], "eu — всегда «ё»", ["фэу", "фу", "фё"]],
@@ -400,9 +400,9 @@ puzzles: [
 { t: "Один или много?", s: "z у маленьких слов", rule: "Много = z у всех маленьких слов перед существительным (le → lez, un → unz, ma → maz, se → sez). Само слово не меняется.",
   ex: [["l'etoil", "звезда"], ["lez etoil", "звёзды"], ["un ami", "какой-то друг"], ["unz ami", "какие-то друзья"], ["ma frer", "мой брат"], ["maz frer", "мои братья"], ["se nui", "эта ночь"], ["sez nui", "эти ночи"]],
   q: [["мои звёзды", ["maz etoil"], "ma + z, etoil не меняется"], ["эти друзья", ["sez ami"], "se + z"], ["какие-то ночи", ["unz nui"], "un + z"], ["(те самые) братья", ["lez frer"], "le + z"]] },
-{ t: "Нет и вопрос", s: "pa после глагола", rule: "pa (не), jame (никогда), ryen (ничего) — после глагола. Вопрос: eske в начале или просто голосом.",
-  ex: [["Je savem.", "Я знаю."], ["Je savem pa.", "Я не знаю."], ["Il chantet pa.", "Он не поёт."], ["Il chantet jame.", "Он никогда не поёт."], ["Voiyem ryen.", "Ничего не вижу."], ["Eske tu danses?", "Ты танцуешь?"]],
-  q: [["я не танцую", ["je dansem pa", "dansem pa"], "pa — после глагола"], ["он ничего не поёт", ["il chantet ryen", "chantet ryen"], "ryen — после глагола, второе «не» не нужно"], ["ты никогда не танцуешь", ["tu danses jame", "danses jame"], "jame — после глагола"], ["ты поёшь? (с частицей)", ["eske tu chantes"], "eske — в начале"]] },
+{ t: "Нет и вопрос", s: "pa после глагола", rule: "pa (не), jame (никогда), ryen (ничего) — после глагола. Вопрос: esqe в начале или просто голосом.",
+  ex: [["Je savem.", "Я знаю."], ["Je savem pa.", "Я не знаю."], ["Il chantet pa.", "Он не поёт."], ["Il chantet jame.", "Он никогда не поёт."], ["Voiyem ryen.", "Ничего не вижу."], ["Esqe tu danses?", "Ты танцуешь?"]],
+  q: [["я не танцую", ["je dansem pa", "dansem pa"], "pa — после глагола"], ["он ничего не поёт", ["il chantet ryen", "chantet ryen"], "ryen — после глагола, второе «не» не нужно"], ["ты никогда не танцуешь", ["tu danses jame", "danses jame"], "jame — после глагола"], ["ты поёшь? (с частицей)", ["esqe tu chantes"], "esqe — в начале"]] },
 { t: "Его, тебе", s: "порядок местоимений", rule: "Порядок: кто → кого (mo, to, lo, la) → кому (mey, tey, ley) → глагол.",
   ex: [["Je to emem.", "Я тебя люблю."], ["Il mo emet.", "Он меня любит."], ["Tu lo emes.", "Ты его любишь."], ["Je lo tey donem.", "Я тебе его даю."], ["Il la mey donit.", "Он мне её дал."]],
   q: [["я его люблю", ["je lo emem"], "lo — его, перед глаголом"], ["ты меня любишь", ["tu mo emes"], "mo — меня"], ["он тебя любит", ["il to emet"], "to — тебя"], ["я тебе её дал", ["je la tey donim"], "кого (la) → кому (tey) → глагол; i — было"]] },
@@ -418,7 +418,7 @@ puzzles: [
       ["Как сказать «ночь без света» (просто факт)?", ["un nui sonbr"], "после слова — факт", ["un nui sonbr", "un sonbr nui"]],
       ["«самая прекрасная звезда»", ["le plu bo etoil"], "le plu + прилагательное"]] },
 { t: "Числа", s: "по десяткам", rule: "Десятки слитно: «сколько» + dis (20 = deudis). Единицы — отдельным словом (21 = deudis un).",
-  ex: [["dis", "10"], ["deudis", "20"], ["deudis un", "21"], ["setdis", "70"], ["sent", "100"], ["troi sent katrdis senk", "345"]],
-  q: [["30", ["troidis"], "troi + dis"], ["44", ["katrdis katr"], "katr + dis, потом katr"], ["99", ["neufdis neuf"], "neuf + dis, потом neuf"], ["200", ["deu sent"], "сотни — раздельно"]] },
+  ex: [["dis", "10"], ["deudis", "20"], ["deudis un", "21"], ["setdis", "70"], ["sent", "100"], ["troi sent qatrdis senq", "345"]],
+  q: [["30", ["troidis"], "troi + dis"], ["44", ["qatrdis qatr"], "qatr + dis, потом qatr"], ["99", ["neufdis neuf"], "neuf + dis, потом neuf"], ["200", ["deu sent"], "сотни — раздельно"]] },
 ],
 };

@@ -94,33 +94,33 @@ const POSS = [[/^мо(й|я|е|и|его|ей|ему|им|их|ими|ем|ю|е
 const POSS_PLUR = /^(мои|моих|моим|моими|твои|твоих|твоим|твоими|наши|наших|нашим|нашими|ваши|ваших|вашим|вашими|свои|своих|своим|своими)$/;
 const DEM = [[/^(этот|эта|это|эти|этого|этой|этому|этим|этих|этими|этом|эту)$/, "se"], [/^(тот|та|те|того|той|тому|тем|тех|теми|том|ту)$/, "sela"]];
 const DEM_PLUR = /^(эти|этих|этим|этими|те|тех|теми)$/;
-const PREP = { в: "dans", во: "dans", на: "sur", под: "sou", с: "avek", со: "avek", без: "sans", для: "pour", у: "che", между: "antr",
-  после: "apre", до: "juska", перед: "devant", за: "deryer", вокруг: "otour", через: "par", около: "pre", возле: "pre", к: "a", ко: "a",
+const PREP = { в: "dans", во: "dans", на: "sur", под: "sou", с: "aveq", со: "aveq", без: "sans", для: "pour", у: "che", между: "antr",
+  после: "apre", до: "jusqa", перед: "devant", за: "deryer", вокруг: "otour", через: "par", около: "pre", возле: "pre", к: "a", ко: "a",
   из: "de", от: "de", о: "de", об: "de", обо: "de", по: "par", про: "de", среди: "antr", над: "sur", во_время: "pandant" };
-const CONJ = { чем: "ke", и: "e", или: "oubyen", но: "me", а: "e", если: "si", хотя: "byenke", значит: "donk", чтобы: "ke" };
-const QW = { кто: "ki", где: "ou", куда: "ou", откуда: "dou", когда: "kan", почему: "pourkoi", зачем: "pourkoi", сколько: "konbyen" };
+const CONJ = { чем: "qe", и: "e", или: "oubyen", но: "me", а: "e", если: "si", хотя: "byenqe", значит: "donq", чтобы: "qe" };
+const QW = { кто: "qi", где: "ou", куда: "ou", откуда: "dou", когда: "qan", почему: "pourqoi", зачем: "pourqoi", сколько: "qonbyen" };
 const KEL = /^(какой|какая|какое|какие|какого|какой|какому|каким|каких|какую|каком)$/;
 const ADV = { сегодня: "ojourdui", завтра: "demen", вчера: "yer", сейчас: "mentnant", теперь: "mentnant", всегда: "toujour",
-  здесь: "isi", тут: "isi", там: "laba", очень: "tre", много: "boku", уже: "deja", еще: "ankor", тоже: "osi", также: "osi",
-  только: "seulman", даже: "meme", почти: "preske", вместе: "ansanbl", так: "ensi", потом: "pui", затем: "pui", тогда: "alor",
+  здесь: "isi", тут: "isi", там: "laba", очень: "tre", много: "boqu", уже: "deja", еще: "anqor", тоже: "osi", также: "osi",
+  только: "seulman", даже: "meme", почти: "presqe", вместе: "ansanbl", так: "ensi", потом: "pui", затем: "pui", тогда: "alor",
   конечно: "byensur", везде: "partou", нигде: "nulpar", вот: "voila", спасибо: "mersi", привет: "salu", пожалуйста: "silvouple",
   здравствуй: "bonjour", здравствуйте: "bonjour", да: "oui", нет: "non", хорошо: "byen", плохо: "mal", ну: "",
-  поэтому: "donk", намного: "boku", гораздо: "boku", дома: "a le mezon", домой: "a le mezon", вообще: "an jeneral",
-  "что-нибудь": "kelkchoz", "что-либо": "kelkchoz", "кто-нибудь": "kelkun", "кто-либо": "kelkun", "когда-нибудь": "un jour",
-  "где-нибудь": "kelkpar", "где-то": "kelkpar", "куда-нибудь": "kelkpar", "куда-то": "kelkpar", "кое-что": "kelkchoz", назад: "aryer",
-  вперед: "avant", наконец: "anfen", "наконец-то": "anfen", вовремя: "a l'eur", сразу: "tou de suit", вдруг: "sudenman", слишком: "trop", снова: "ankor", опять: "ankor", вместо: "o lyeu de", например: "par egzanpl", кстати: "a propo", правда: "vreman" };
+  поэтому: "donq", намного: "boqu", гораздо: "boqu", дома: "a le mezon", домой: "a le mezon", вообще: "an jeneral",
+  "что-нибудь": "qelqchoz", "что-либо": "qelqchoz", "кто-нибудь": "qelqun", "кто-либо": "qelqun", "когда-нибудь": "un jour",
+  "где-нибудь": "qelqpar", "где-то": "qelqpar", "куда-нибудь": "qelqpar", "куда-то": "qelqpar", "кое-что": "qelqchoz", назад: "aryer",
+  вперед: "avant", наконец: "anfen", "наконец-то": "anfen", вовремя: "a l'eur", сразу: "tou de suit", вдруг: "sudenman", слишком: "trop", снова: "anqor", опять: "anqor", вместо: "o lyeu de", например: "par egzanpl", кстати: "a propo", правда: "vreman" };
 const ALL = /^(все|всё|весь|вся|всех|всем|всеми|всего|всей|всю)$/;
 const EACH = /^(каждый|каждая|каждое|каждого|каждой|каждому|каждым|каждом|каждую)$/;
 const NUM = { один: 1, одна: 1, одно: 1, два: 2, две: 2, три: 3, четыре: 4, пять: 5, шесть: 6, семь: 7, восемь: 8, девять: 9, десять: 10,
   одиннадцать: 11, двенадцать: 12, тринадцать: 13, четырнадцать: 14, пятнадцать: 15, шестнадцать: 16, семнадцать: 17,
   восемнадцать: 18, девятнадцать: 19, двадцать: 20, тридцать: 30, сорок: 40, пятьдесят: 50, шестьдесят: 60, семьдесят: 70,
   восемьдесят: 80, девяносто: 90, сто: 100, тысяча: 1000, тысячи: 1000, тысяч: 1000, ноль: 0, нуль: 0, миллион: 1000000, миллиона: 1000000, миллионов: 1000000 };
-const MULTI = [[["потому", "что"], "pask"], [["так", "как"], "pask"], [["до", "свидания"], "orevoir"], [["доброе", "утро"], "bonjour"],
-  [["добрый", "день"], "bonjour"], [["добрый", "вечер"], "bonjour"], [["кто", "то"], "kelkun"], [["что", "то"], "kelkchoz"],
-  [["во", "время"], "pandant"], [["как", "дела"], "koman tu ales"], [["как", "у", "тебя", "дела"], "koman tu ales"],
-  [["как", "у", "вас", "дела"], "koman vou alez"], [["как", "ты", "?"], "koman tu ales"], [["спасибо", "за"], "mersi pour"], [["сколько", "тебе", "лет"], "konbyen d'an tu aves"],
-  [["сколько", "вам", "лет"], "konbyen d'an vou avez"], [["сколько", "ему", "лет"], "konbyen d'an il avet"], [["сколько", "ей", "лет"], "konbyen d'an el avet"], [["в", "мире"], "dans le mond"], [["может", "быть"], "@наверное"]];
-const UNITS = ["", "un", "deu", "troi", "katr", "senk", "sis", "set", "uit", "neuf", "dis"];
+const MULTI = [[["потому", "что"], "pasq"], [["так", "как"], "pasq"], [["до", "свидания"], "orevoir"], [["доброе", "утро"], "bonjour"],
+  [["добрый", "день"], "bonjour"], [["добрый", "вечер"], "bonjour"], [["кто", "то"], "qelqun"], [["что", "то"], "qelqchoz"],
+  [["во", "время"], "pandant"], [["как", "дела"], "qoman tu ales"], [["как", "у", "тебя", "дела"], "qoman tu ales"],
+  [["как", "у", "вас", "дела"], "qoman vou alez"], [["как", "ты", "?"], "qoman tu ales"], [["спасибо", "за"], "mersi pour"], [["сколько", "тебе", "лет"], "qonbyen d'an tu aves"],
+  [["сколько", "вам", "лет"], "qonbyen d'an vou avez"], [["сколько", "ему", "лет"], "qonbyen d'an il avet"], [["сколько", "ей", "лет"], "qonbyen d'an el avet"], [["в", "мире"], "dans le mond"], [["может", "быть"], "@наверное"]];
+const UNITS = ["", "un", "deu", "troi", "qatr", "senq", "sis", "set", "uit", "neuf", "dis"];
 function numEt(n) {
   if (n === 0) return "zero";
   if (n >= 1000000) { const m = Math.floor(n / 1000000), r = n % 1000000; return (m > 1 ? numEt(m) + " " : "") + "milyon" + (r ? " " + numEt(r) : ""); }
@@ -153,8 +153,8 @@ function tokenize(text) {
 }
 const isWord = (t) => /^[А-Яа-яЁёA-Za-z\d]/.test(t);
 
-const TR = { а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "j", з: "z", и: "i", й: "y", к: "k", л: "l", м: "m", н: "n",
-  о: "o", п: "p", р: "r", с: "s", т: "t", у: "ou", ф: "f", х: "kh", ц: "ts", ч: "tch", ш: "ch", щ: "ch", ъ: "", ы: "i", ь: "", э: "e", ю: "u", я: "ya" };
+const TR = { а: "a", б: "b", в: "v", г: "g", д: "d", е: "e", ё: "yo", ж: "j", з: "z", и: "i", й: "y", к: "q", л: "l", м: "m", н: "n",
+  о: "o", п: "p", р: "r", с: "s", т: "t", у: "ou", ф: "f", х: "qh", ц: "ts", ч: "tch", ш: "ch", щ: "ch", ъ: "", ы: "i", ь: "", э: "e", ю: "u", я: "ya" };
 const translit = (w) => { const t = [...w.toLowerCase()].map((c) => TR[c] ?? c).join(""); return t[0].toUpperCase() + t.slice(1); };
 
 // служебное слово (по таблицам) — не глагол, даже если pymorphy видит форму («мой» ← мыть)
@@ -202,7 +202,7 @@ function sentence(toks, opts = {}) {
     if (hit) { W.push({ raw: hit[0].join(" "), low: hit[0].join(" "), multi: hit[1] }); i += hit[0].length - 1; continue; }
     const mw = (D.MW || []).find(([seq]) => seq.every((x, k) => yo((toks[i + k] || "").toLowerCase()).startsWith(x.slice(0, -2))));
     if (mw) { W.push({ raw: mw[0].join(" "), low: mw[0].join(" "), multi: E[mw[1]].w }); i += mw[0].length - 1; continue; }
-    if (/^(кто|что)-то$/.test(low)) { W.push({ raw: toks[i], low, multi: low.startsWith("кто") ? "kelkun" : "kelkchoz" }); continue; }
+    if (/^(кто|что)-то$/.test(low)) { W.push({ raw: toks[i], low, multi: low.startsWith("кто") ? "qelqun" : "qelqchoz" }); continue; }
     W.push({ raw: toks[i], low });
   }
   const question = W.some((w) => w.raw.includes("?"));
@@ -210,7 +210,7 @@ function sentence(toks, opts = {}) {
   const st = { subj: null, verbAt: -1, neg: null, mood: null, lets: false, futAux: false, pendingObj: [], afterPrep: false,
     det: null, detPlur: false, adjs: [], afterCopula: !!opts.afterCopula, hasVerb: false };
   // есть ли глагол в части предложения начиная с from (до «потому что / если / но / что …»)
-  const BOUND = (w) => w.multi === "pask" || (CONJ[w.low] !== undefined && !["и", "а"].includes(w.low)) || w.low === "что";
+  const BOUND = (w) => w.multi === "pasq" || (CONJ[w.low] !== undefined && !["и", "а"].includes(w.low)) || w.low === "что";
   const verbAhead = (from) => { for (let k = from; k < words.length; k++) { const w = words[k]; if (k > from && BOUND(w)) return false;
     if (!w.multi && !isFunc(w.low) && analyses(w.low).some(isV)) return true; } return false; };
   st.hasVerb = verbAhead(0);
@@ -231,7 +231,7 @@ function sentence(toks, opts = {}) {
     if (st.verbAt >= 0 || st.hasVerb) return;
     // «очень, тоже, уже…» стоят перед прилагательным — связку ставим перед ними: El eset tre joli
     let k = out.length;
-    while (k > 0 && ["tre", "trop", "vreman", "osi", "deja", "ankor", "toujour", "preske", "ensi", "boku", "seulman", "meme"].includes(out[k - 1].t.toLowerCase())) k--;
+    while (k > 0 && ["tre", "trop", "vreman", "osi", "deja", "anqor", "toujour", "presqe", "ensi", "boqu", "seulman", "meme"].includes(out[k - 1].t.toLowerCase())) k--;
     const tail = out.splice(k);
     placeVerb(verbForm(BE(), "наст", subjPerson(), st.mood), "(есть)");
     out.push(...tail);
@@ -241,7 +241,7 @@ function sentence(toks, opts = {}) {
     if (det === "@art") det = null;
     if (det === null && st.afterCopula && !st.adjs.some((a) => a.t.startsWith("le plu"))) { emit(plural ? "unz" : "un", ""); st.afterCopula = false; }
     else if (det === null) emit(plural ? "lez" : "le", "");
-    else if (det !== "") emit(plural && !/^\d|^(un|deu|troi|katr|senk|sis|set|uit|neuf|dis|sent|mil|zero)/.test(det) && !/z$/.test(det) ? det + "z" : det, st.detSrc);
+    else if (det !== "") emit(plural && !/^\d|^(un|deu|troi|qatr|senq|sis|set|uit|neuf|dis|sent|mil|zero)/.test(det) && !/z$/.test(det) ? det + "z" : det, st.detSrc);
     emit(nounT, nounSrc, { noun: true });
     for (const a of st.adjs) emit(a.t, a.src);
     st.det = null; st.adjs = []; st.detPlur = false;
@@ -259,7 +259,7 @@ function sentence(toks, opts = {}) {
     const w = words[i], low = w.low, nxt = words[i + 1] ? words[i + 1].low : "";
     if (w.multi) {
       if (w.multi === "@наверное") { st.mood = "наверное"; continue; }
-      emit(w.multi, w.raw); if (w.multi === "pask") newClause(i); continue;
+      emit(w.multi, w.raw); if (w.multi === "pasq") newClause(i); continue;
     }
     // «мне грустно / холодно / скучно» → Je esem trist (по-этуальски чувствует сам человек)
     if (DAT[low] && words[i + 1] && /о$/.test(nxt) && analyses(nxt).some(isA) && !analyses(nxt).some(isV) && st.verbAt < 0 && !/^(можно|нужно|надо|нельзя|жалко|жаль)$/.test(nxt)) {
@@ -316,15 +316,15 @@ function sentence(toks, opts = {}) {
       if (!st.neg) { st.neg = "pa"; st.negSrc = "не"; } continue;
     }
     // «который»: подлежащее → ki, иначе → ke (как во французском)
-    if (/^котор(ый|ая|ое|ые)$/.test(low)) { emit("ki", w.raw); newClause(i); continue; }
-    if (/^котор(ого|ой|ому|ым|ом|ую|ых|ыми)$/.test(low)) { emit("ke", w.raw); newClause(i); continue; }        // «ничего/никогда не» — остаётся ryen/jame
+    if (/^котор(ый|ая|ое|ые)$/.test(low)) { emit("qi", w.raw); newClause(i); continue; }
+    if (/^котор(ого|ой|ому|ым|ом|ую|ых|ыми)$/.test(low)) { emit("qe", w.raw); newClause(i); continue; }        // «ничего/никогда не» — остаётся ryen/jame
     if (low === "никогда") { st.neg = "jame"; st.negSrc = "никогда"; if (st.verbAt >= 0) { emit("jame", "никогда"); st.neg = null; } continue; }
     if (low === "ничего") { if (st.verbAt >= 0) emit("ryen", "ничего"); else { st.neg = "ryen"; st.negSrc = "ничего"; } continue; }
     if (low === "никто") { st.subj = "он"; emit("persone", "никто"); st.negLock = true; continue; }
     if (st.negLock && st.neg === "pa") st.neg = null;
     if (low === "бы") { st.mood = "бы"; continue; }
-    if (low === "ли") { out.unshift({ t: "eske", src: "ли" }); continue; }
-    if (low === "пусть") { st.mood = "пусть"; emit("ke", "пусть"); continue; }
+    if (low === "ли") { out.unshift({ t: "esqe", src: "ли" }); continue; }
+    if (low === "пусть") { st.mood = "пусть"; emit("qe", "пусть"); continue; }
     if (low === "давай" || low === "давайте") { st.lets = true; continue; }
     if (low === "будет" || low === "буду" || low === "будешь" || low === "будем" || low === "будете" || low === "будут") {
       if (analyses(nxt).some((a) => a.code === "V:inf")) { st.futAux = true; st.futPerson = { буду: "я", будешь: "ты", будем: "мы", будете: "вы", будут: "они" }[low] || "он"; continue; }
@@ -334,10 +334,10 @@ function sentence(toks, opts = {}) {
       emit("se", "это"); st.subj = "он"; placeVerb(verbForm(BE(), "наст", "он", st.mood), "(есть)"); continue;
     }    if (low === "это" && !npAhead && st.verbAt < 0 && !st.subj) { emit("se", "это"); st.subj = "он"; continue; }   // «Это очень красиво» → S'eset tre joli
 
-    if (low === "что") { const q = question && st.verbAt < 0 && out.length < 2; emit(q ? "koi" : "ke", "что"); if (!q) newClause(i); continue; }
-    if (low === "как") { emit(question ? "koman" : "kom", "как"); continue; }
+    if (low === "что") { const q = question && st.verbAt < 0 && out.length < 2; emit(q ? "qoi" : "qe", "что"); if (!q) newClause(i); continue; }
+    if (low === "как") { emit(question ? "qoman" : "qom", "как"); continue; }
     if (QW[low]) { emit(QW[low], w.raw); continue; }
-    if (KEL.test(low)) { emit("kel", w.raw); continue; }
+    if (KEL.test(low)) { emit("qel", w.raw); continue; }
     if (CONJ[low] !== undefined && !(low === "значит" && i > 0 && /^(что|это)$/.test(words[i - 1].low))) { emit(CONJ[low], w.raw); if (low !== "и" && low !== "а") newClause(i); continue; }
     if (low === "на" && st.verbAt >= 0 && /^(regard|smotr|repond)/.test(out[st.verbAt].t) && (st.verbAt === out.length - 1 || (st.verbAt === out.length - 2 && /^(pa|jame|ryen)$/.test(out[out.length - 1].t)))) { st.afterPrep = true; continue; }
     if (low === "по" && st.verbAt >= 0 && /^(anui|ennui)/.test(out[st.verbAt].t)) { emit("de", w.raw); st.afterPrep = true; continue; }   // скучаю по друзьям
@@ -347,7 +347,7 @@ function sentence(toks, opts = {}) {
     if (SUBJ[low] && !(st.afterPrep)) { st.subj = SUBJ[low][1]; emit(SUBJ[low][0], w.raw); continue; }
     if (STRESSED[low]) { emit(STRESSED[low], w.raw); st.afterPrep = false; continue; }
     const CMPP = { меня: "moi", тебя: "toi", его: "lui", ее: "ela", нас: "nou", вас: "vou", их: "leur" };
-    if (st.compare && CMPP[low]) { emit("ke", ""); emit(CMPP[low], w.raw); st.compare = false; continue; }   // лучше меня → plu bon ke moi
+    if (st.compare && CMPP[low]) { emit("qe", ""); emit(CMPP[low], w.raw); st.compare = false; continue; }   // лучше меня → plu bon ke moi
     if (OBJ[low] || DAT[low]) {
       const [cl, stressed] = OBJ[low] || DAT[low];
       const possessive = ["его", "ее", "их"].includes(low) && (analyses(nxt).some(isN) || analyses(nxt).some(isA));
@@ -364,7 +364,7 @@ function sentence(toks, opts = {}) {
     pm = DEM.find(([re]) => re.test(low));
     if (pm && (nextNounAhead(i) || analyses(nxt).some(isA))) { st.det = pm[1]; st.detSrc = w.raw; continue; }
     if (pm && /^(тот|та|те|того|той|тех|теми|тем)$/.test(low)) { emit(DEM_PLUR.test(low) ? "selaz" : "sela", w.raw); continue; }   // «как те» → kom selaz
-    if (EACH.test(low)) { st.det = "chak"; st.detSrc = w.raw; continue; }
+    if (EACH.test(low)) { st.det = "chaq"; st.detSrc = w.raw; continue; }
     if (ALL.test(low)) { emit("tou", w.raw); continue; }
     if (/^\d/.test(low)) {                                                     // цифры — цифрами
       if (nextNounAhead(i)) { st.det = w.raw; st.detSrc = w.raw; } else emit(w.raw, w.raw);
@@ -448,7 +448,7 @@ function sentence(toks, opts = {}) {
     }
     if (isN(pick)) {
       const plural = pick.code === "N:p" || st.detPlur;
-      if (st.compare) { emit("ke", ""); st.compare = false; }
+      if (st.compare) { emit("qe", ""); st.compare = false; }
       if (!prevWasPrep && st.verbAt < 0 && !st.subj) st.subj = plural ? "они" : "он";
       flushNP(e.w, w.raw, plural); st.afterPrep = false; continue;
     }
@@ -494,13 +494,13 @@ function sentence(toks, opts = {}) {
   // нет глагола, есть подлежащее-местоимение и что-то после него («Я из России») → связка после подлежащего
   if (st.verbAt < 0 && !st.hasVerb) {
     const j = out.findIndex((o) => Object.values(SUBJ).some(([w]) => w === o.t.toLowerCase()));
-    if (j >= 0 && j < out.length - 1 && !["ou", "ki", "koi", "kan"].includes(out[0].t.toLowerCase())) {
+    if (j >= 0 && j < out.length - 1 && !["ou", "qi", "qoi", "qan"].includes(out[0].t.toLowerCase())) {
       const per = Object.values(SUBJ).find(([w]) => w === out[j].t.toLowerCase())[1];
       out.splice(j + 1, 0, { t: verbForm(BE(), "наст", per), src: "(есть)" }); st.verbAt = j + 1;
     }
   }
   // вопрос без глагола («Где моя куртка?») — связка после вопросительного слова
-  if (st.verbAt < 0 && out.length > 1 && ["ou", "ki", "koi", "kan", "dou", "konbyen", "kel"].includes(out[0].t.toLowerCase()) && !out.some((o) => o.unk)) {
+  if (st.verbAt < 0 && out.length > 1 && ["ou", "qi", "qoi", "qan", "dou", "qonbyen", "qel"].includes(out[0].t.toLowerCase()) && !out.some((o) => o.unk)) {
     const plur = out.some((o) => o.t === "lez" || /z$/.test(o.t) && ["maz", "taz", "saz", "notaz", "votaz", "leuraz", "sez", "selaz"].includes(o.t));
     out.splice(1, 0, { t: verbForm(BE(), "наст", plur ? "они" : "он"), src: "(есть)" }); st.verbAt = 1;
   }
@@ -511,7 +511,7 @@ function sentence(toks, opts = {}) {
 }
 
 // ------------------------------------------------------------------ слияние, регистр, пунктуация
-const ELIDE = new Set(["le", "de", "se", "ke", "je", "me"]);
+const ELIDE = new Set(["le", "de", "se", "qe", "je", "me"]);
 function startsVowel(w) { const p = parse(w.toLowerCase()); return p.length > 0 && "aeioUYQw".includes(p[0]); }   // w = oi («уа»): l'oizo (3.11)
 function finish(items, endPunct) {
   const res = [];
@@ -560,7 +560,7 @@ function translate(text) {
     let items = [], pred = false, first = true;
     for (const [c, p] of chunks) {
       if (!c.length) continue;
-      const INTERJ = { короче: "bref", блин: "zut", ладно: "dakor", окей: "oke", ок: "oke", вау: "wa", ого: "oh", эх: "ah", ой: "oi", ура: "oura", ну: "be", итак: "alor" };
+      const INTERJ = { короче: "bref", блин: "zut", ладно: "daqor", окей: "oqe", ок: "oqe", вау: "wa", ого: "oh", эх: "ah", ой: "oi", ура: "oura", ну: "be", итак: "alor" };
       if (c.length === 1 && INTERJ[c[0].toLowerCase()] && p) { items.push({ t: INTERJ[c[0].toLowerCase()], src: c[0], punct: p }); first = false; continue; }
       const r = sentence(c.concat(end.includes("?") ? ["?"] : []), { afterCopula: pred, first });
       first = false;
@@ -585,7 +585,7 @@ function render(res) {
 const VOW = "aeioUYQ";
 function parse(lat) {
   const s = lat.toLowerCase(); const out = []; let i = 0;
-  const pairs = [["you", "Y"], ["yo", "Q"], ["ou", "U"], ["eu", "Q"], ["oi", "wa"], ["yi", "i"], ["ch", "S"], ["gn", "N"], ["u", "Y"], ["j", "Z"], ["y", "j"]];
+  const pairs = [["you", "Y"], ["yo", "Q"], ["ou", "U"], ["eu", "Q"], ["oi", "wa"], ["yi", "i"], ["ch", "S"], ["gn", "N"], ["u", "Y"], ["j", "Z"], ["y", "j"], ["q", "k"]];
   while (i < s.length) {
     let done = false;
     for (const [a, b] of pairs) {
@@ -626,20 +626,20 @@ const FN_RU = { je: "я", tu: "ты", il: "он", el: "она", nou: "мы", vou
   mo: "меня", to: "тебя", lo: "его", la: "её", no: "нас", vo: "вас", loz: "их", laz: "их", mey: "мне", tey: "тебе", ley: "ему",
   ney: "нам", vey: "вам", leyz: "им", moi: "я", toi: "ты", lui: "он", ela: "она", leur: "они", soi: "себя",
   ma: "мой", ta: "твой", sa: "его", nota: "наш", vota: "ваш", leura: "их", se: "этот", sela: "тот",
-  ki: "кто", koi: "что", ou: "где", dou: "откуда", kan: "когда", koman: "как", pourkoi: "почему", konbyen: "сколько", kel: "какой",
-  eske: "", e: "и", oubyen: "или", me: "но", ke: "что", si: "если", pask: "потому что", kom: "как", donk: "значит",
-  a: "в", de: "из", dans: "в", sur: "на", sou: "под", avek: "с", sans: "без", pour: "для", che: "у", antr: "между", apre: "после",
-  avant: "до", devant: "перед", deryer: "за", otour: "вокруг", par: "через", kontr: "против", depui: "с", juska: "до", pre: "возле",
+  qi: "кто", qoi: "что", ou: "где", dou: "откуда", qan: "когда", qoman: "как", pourqoi: "почему", qonbyen: "сколько", qel: "какой",
+  esqe: "", e: "и", oubyen: "или", me: "но", qe: "что", si: "если", pasq: "потому что", qom: "как", donq: "значит",
+  a: "в", de: "из", dans: "в", sur: "на", sou: "под", aveq: "с", sans: "без", pour: "для", che: "у", antr: "между", apre: "после",
+  avant: "до", devant: "перед", deryer: "за", otour: "вокруг", par: "через", qontr: "против", depui: "с", jusqa: "до", pre: "возле",
   pandant: "во время", selon: "по", plu: "более", mouen: "менее", oui: "да", non: "нет", persone: "никто",
   ojourdui: "сегодня", demen: "завтра", yer: "вчера", mentnant: "сейчас", toujour: "всегда", isi: "здесь", laba: "там", tre: "очень",
-  boku: "много", deja: "уже", ankor: "ещё", osi: "тоже", seulman: "только", meme: "даже", preske: "почти", ansanbl: "вместе",
-  tou: "всё", chak: "каждый", ensi: "так", pui: "потом", alor: "тогда", byensur: "конечно", kelkun: "кто-то", kelkchoz: "что-то",
-  partou: "везде", nulpar: "нигде", byenke: "хотя", tanke: "пока", voila: "вот", mersi: "спасибо", salu: "привет",
+  boqu: "много", deja: "уже", anqor: "ещё", osi: "тоже", seulman: "только", meme: "даже", presqe: "почти", ansanbl: "вместе",
+  tou: "всё", chaq: "каждый", ensi: "так", pui: "потом", alor: "тогда", byensur: "конечно", qelqun: "кто-то", qelqchoz: "что-то",
+  partou: "везде", nulpar: "нигде", byenqe: "хотя", tanqe: "пока", voila: "вот", mersi: "спасибо", salu: "привет",
   silvouple: "пожалуйста", orevoir: "до свидания", bonjour: "здравствуйте", byen: "хорошо", mal: "плохо", trop: "слишком",
-  aryer: "назад", kelkpar: "где-то", vreman: "правда", parfoi: "иногда", souvan: "часто", deja: "уже", ankor: "ещё", olyeude: "вместо" };
+  aryer: "назад", qelqpar: "где-то", vreman: "правда", parfoi: "иногда", souvan: "часто", deja: "уже", anqor: "ещё", olyeude: "вместо" };
 const ARTS = new Set(["le", "lez", "un", "unz"]);
 const PLUR_DET = new Set(["lez", "unz", "maz", "taz", "saz", "notaz", "votaz", "leuraz", "sez", "selaz"]);
-const ET_NUM = { un: 1, deu: 2, troi: 3, katr: 4, senk: 5, sis: 6, set: 7, uit: 8, neuf: 9, dis: 10, sent: 100, mil: 1000, zero: 0, milyon: 1000000 };
+const ET_NUM = { un: 1, deu: 2, troi: 3, qatr: 4, senq: 5, sis: 6, set: 7, uit: 8, neuf: 9, dis: 10, sent: 100, mil: 1000, zero: 0, milyon: 1000000 };
 
 function backInit() {
   BW = new Map(); E2RU = new Map(); LF = new Map();
@@ -728,17 +728,17 @@ function possDecl(base, g, cas, anim) {
   return row[k];
 }
 // предлог Etoilal → русский предлог и падеж; a/dans/sur после глаголов движения — винительный («еду во Францию»)
-const PREPC = { avek: ["с", "ins"], sans: ["без", "gen"], pour: ["для", "gen"], che: ["у", "gen"], sou: ["под", "ins"], apre: ["после", "gen"],
+const PREPC = { aveq: ["с", "ins"], sans: ["без", "gen"], pour: ["для", "gen"], che: ["у", "gen"], sou: ["под", "ins"], apre: ["после", "gen"],
   avant: ["до", "gen"], devant: ["перед", "ins"], deryer: ["за", "ins"], otour: ["вокруг", "gen"], antr: ["между", "ins"], par: ["через", "acc"],
-  kontr: ["против", "gen"], depui: ["с", "gen"], juska: ["до", "gen"], pre: ["возле", "gen"], pandant: ["во время", "gen"], selon: ["по", "dat"],
+  qontr: ["против", "gen"], depui: ["с", "gen"], jusqa: ["до", "gen"], pre: ["возле", "gen"], pandant: ["во время", "gen"], selon: ["по", "dat"],
   dans: ["в", "loc"], sur: ["на", "loc"], a: ["в", "loc"], de: ["из", "gen"] };
 const MOTION = /^(ид|иду|ид[её]|шел|шла|шли|пойд|пош|ед|еха|по[её]х|бег|беж|лет|полет|возвращ|верн|приход|приш|уход|уш|путешеств|ход|прие|уе|отправ|попад|переез)/;
 const ABOUT = /^(говор|сказ|расска|дума|мечта|пе|спе|пис|напис|зна|слыш|чита|спраш|спрос)/;
 const STR_C = { moi: "меня,мне,меня,мной,мне", toi: "тебя,тебе,тебя,тобой,тебе", lui: "него,нему,него,ним,нём", ela: "неё,ней,неё,ней,ней",
   nou: "нас,нам,нас,нами,нас", vou: "вас,вам,вас,вами,вас", leur: "них,ним,них,ними,них", soi: "себя,себе,себя,собой,себе" };
 
-const BACK_MULTI = [[/\bkoman tu ales\b/gi, "как дела"], [/\bkoman vou alez\b/gi, "как у вас дела"], [/\bkonbyen d'an tu aves\b/gi, "сколько тебе лет"],
-  [/\bkonbyen d'an vou avez\b/gi, "сколько вам лет"], [/\bmersi pour\b/gi, "спасибо за"], [/\bun jour\b/gi, "однажды"], [/\ba le mezon\b/gi, "дома"],
+const BACK_MULTI = [[/\bqoman tu ales\b/gi, "как дела"], [/\bqoman vou alez\b/gi, "как у вас дела"], [/\bqonbyen d'an tu aves\b/gi, "сколько тебе лет"],
+  [/\bqonbyen d'an vou avez\b/gi, "сколько вам лет"], [/\bmersi pour\b/gi, "спасибо за"], [/\bun jour\b/gi, "однажды"], [/\ba le mezon\b/gi, "дома"],
   [/\bpar egzanpl\b/gi, "например"], [/\ba propo\b/gi, "кстати"], [/\ban jeneral\b/gi, "вообще"], [/\btou de suit\b/gi, "сразу"], [/\bo lyeu de\b/gi, "вместо"]];
 function back(text) {
   if (!BW) backInit();
@@ -753,8 +753,8 @@ function back(text) {
       if (/^\d+$/.test(t)) { res.push({ w: t }); plural = +t > 1; continue; }
       if (/^[А-Яа-яЁё]/.test(t)) { res.push({ w: t, fn: "ru" }); continue; }                  // уже по-русски (обороты)
       let low = t.toLowerCase();
-      const el = low.match(/^(l|j|d|s|k|m)'(.+)$/);                         // слияние: l'ami → le ami
-      const parts = el ? [{ l: "le", j: "je", d: "de", s: "se", k: "ke", m: "me" }[el[1]], el[2]] : [low];
+      const el = low.match(/^(l|j|d|s|q|m)'(.+)$/);                         // слияние: l'ami → le ami
+      const parts = el ? [{ l: "le", j: "je", d: "de", s: "se", q: "qe", m: "me" }[el[1]], el[2]] : [low];
       for (const w of parts) {
         if (w === "un" && res.length && res[res.length - 1].acc) { const a = res[res.length - 1].acc; if (a.pend !== null) a.grp += a.pend; a.pend = 1; const pr = res[res.length - 1]; pr.num = a.tot + a.grp + 1; pr.w = String(pr.num); continue; }   // deudis un → 21
         if (ARTS.has(w)) { plural = w.endsWith("z"); lastArt = w; continue; }
@@ -782,7 +782,7 @@ function back(text) {
           const PL = { maz: "мои", taz: "твои", notaz: "наши", votaz: "ваши", sez: "эти", selaz: "те", saz: "его" };
           if (PLUR_DET.has(w)) plural = true;
           let ru = PL[w] || FN_RU[base];
-          if (base === "ke" && res.slice(-3).some((x) => x.fn === "plu" || x.cmp)) ru = "чем";      // plu rapid ke … → быстрее, чем
+          if (base === "qe" && res.slice(-3).some((x) => x.fn === "plu" || x.cmp)) ru = "чем";      // plu rapid ke … → быстрее, чем
           if (base === "plu") {                                                // le plu joli → самый красивый; plu bon → лучше
             if (prevArt === "le" || prevArt === "lez") {                           // превосходная: «самый» — перед словом, к которому относится
               const it = { w: "самый", adj: true, lemma: "самый" };
@@ -797,7 +797,7 @@ function back(text) {
           if (ru) res.push({ w: ru, fn: base, poss: { мои: "мой", твои: "твой", наши: "наш", ваши: "ваш", эти: "этот", те: "тот" }[ru] || (PD[ru] ? ru : null) });
           continue;
         }
-        if (ET_NUM[w] !== undefined || /^(deu|troi|katr|senk|sis|set|uit|neuf)dis$/.test(w)) {
+        if (ET_NUM[w] !== undefined || /^(deu|troi|qatr|senq|sis|set|uit|neuf)dis$/.test(w)) {
           const n = ET_NUM[w] !== undefined ? ET_NUM[w] : ET_NUM[w.replace(/dis$/, "")] * 10, prev = res[res.length - 1];
           // подряд идущие числительные — одно число: sisdis senk → 65, deu sent → 200, troi milyon → 3000000
           const a = prev && prev.acc ? prev.acc : { tot: 0, grp: 0, pend: null };
@@ -822,7 +822,7 @@ function back(text) {
           // форма «вы» без vou — просьба: Pardonez! → Простите!
           if (v.k === 4 && !toks.slice(0, toks.indexOf(t)).some((x) => /^vou$/i.test(x))) { const im = backVerb(v.i, 54); if (im && /[иьй]$/.test(im)) vw = im + "те"; }
           if (!vw && !pendNeg) {                                                // «есть» опущено; дальше — сказуемое
-            const nounPred = (() => { for (const x of toks.slice(toks.indexOf(t) + 1)) { if (/^[.!?,;:]$/.test(x)) return false; const lx = x.toLowerCase().replace(/^[ljdskm]'/, "");
+            const nounPred = (() => { for (const x of toks.slice(toks.indexOf(t) + 1)) { if (/^[.!?,;:]$/.test(x)) return false; const lx = x.toLowerCase().replace(/^[ljdsqm]'/, "");
               if (ARTS.has(lx) || PLUR_DET.has(lx) || ["ma", "ta", "sa", "nota", "vota", "leura", "se", "sela", "tre", "trop", "osi", "deja", "toujour"].includes(lx)) continue;
               const c = BW.get(lx);   // решает первое значимое слово после связки
               return !!(c && c.some((q) => q.k === undefined && ["n", "name"].includes(E[q.i].p)) && !c.some((q) => q.k === undefined && E[q.i].p === "a")); } return false; })();
@@ -898,3 +898,30 @@ function back(text) {
 }
 
 if (typeof module !== "undefined") module.exports = { init, translate, render, reading, choose, back, _dbg: (i) => { if (!BW) backInit(); return E2RU.get(i); } };
+
+// ------------------------------------------------------------------ дополнительные слова (мат 18+, js/mat.js), 5.11.2026
+// list: [{ w, p, m, like (глагол-образец для 56 форм), ru: [[лемма, шаблон-лемма, основа шаблона, новая основа, [формы вручную]]] }]
+// Русские формы — по образцу шаблона (ждать → ебать) или списком; междометия и наречия — в таблицу ADV (без артикля).
+function trAddWords(list) {
+  const lemIdx = (l) => LEM.indexOf(l);
+  const tagOf = (f, p) => p === "n" ? (/(цы|цев|цам)$/.test(f) ? "N:p" : "N:s") : p === "a" ? "A"
+    : /(ть|ться|тись)$/.test(f) ? "V:inf" : /(лся|лась|лось|л|ла|ло)$/.test(f) ? "V:past:s:ipf" : /(лись|ли)$/.test(f) ? "V:past:p:ipf"
+    : /(итесь|ите)$/.test(f) ? "V:imp:p" : /(ись|и)$/.test(f) ? "V:imp:s" : /(шься|шь)$/.test(f) ? "V:pres:2s" : /(тся|т)$/.test(f) ? "V:pres:3s" : "V:pres:1s";
+  for (const x of list) {
+    if (E.some((e) => e.w === x.w)) continue;
+    const idx = E.length, ent = { w: x.w, p: x.p, m: x.m };
+    if (x.like) { const L = E.find((e) => e.w === x.like); if (L && L.f) { const st = x.like.slice(0, -2), ns = x.w.slice(0, -2); ent.f = L.f.map((f) => ns + f.slice(st.length)); } }
+    E.push(ent);
+    for (const [lemma, tpl, from, to, manual] of x.ru || []) {
+      if (x.p === "f" || x.p === "adv") { for (const f of manual || [lemma]) if (!ADV[f]) ADV[f] = x.w; continue; }
+      if (RU2E[lemma] === undefined) RU2E[lemma] = idx;
+      let li = lemIdx(lemma); if (li < 0) { LEM.push(lemma); li = LEM.length - 1; }
+      const forms = [];
+      if (tpl) { const ti = String(lemIdx(tpl));
+        for (const [k, v] of Object.entries(FORMS)) if (k.startsWith(from)) for (const a of v.split(";")) { const [i, tag] = a.split("|"); if (i === ti) forms.push([to + k.slice(from.length), tag]); } }
+      for (const f of manual || []) forms.push([f, tagOf(f, x.p)]);
+      for (const [f, tag] of forms) FORMS[f] = (FORMS[f] ? FORMS[f] + ";" : "") + li + "|" + tag;
+    }
+  }
+  BYLEN = null; BW = null; SOUND.clear();
+}

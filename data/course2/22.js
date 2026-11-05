@@ -1,6 +1,6 @@
 window.ET_C2 = window.ET_C2 || {};
 ET_C2[22] = { n: 22, sec: 3, t: "Цепочка: Je lo tey donem", s: "кто → кого → кому → глагол",
-  words: [["mesaj", "сообщение"], ["istoir", "история"], ["kado", "подарок"], ["voizen", "сосед"], ["dokteur", "врач"]],
+  words: [["mesaj", "сообщение"], ["istoir", "история"], ["qado", "подарок"], ["voizen", "сосед"], ["doqteur", "врач"]],
   gram: [],
   sut: "Если в фразе есть и «кого», и «кому», порядок всегда один: <b>кто → кого → кому → глагол</b>: Je lo tey donem — я тебе его даю.",
   rule: `<p><b>кто → кого → кому → глагол</b></p><p><span class="et">Je lo tey donem.</span> Я тебе его даю.</p><p><span class="et">Il la mey montrit.</span> Он мне её показал.</p>`,
@@ -14,7 +14,7 @@ ET_C2[22] = { n: 22, sec: 3, t: "Цепочка: Je lo tey donem", s: "кто �
 <p>Например: «Я дам тебе подарок». Подарок = «его» = [[lo]]. Тебе = [[tey]]. Дам = [[donrem]]. Ставим по формуле: [[Je lo tey donrem.]]</p>
 <h3>С отрицанием и вопросом</h3>
 > Je lo tey donrem pa. :: Я тебе его не дам.
-> Eske tu lo mey montres? :: Ты мне его покажешь?
+> Esqe tu lo mey montres? :: Ты мне его покажешь?
 <h3>Частые ошибки</h3>
 <p>• Менять местами «кого» и «кому»: «Je tey lo donem» → [[Je lo tey donem.]] • Ставить что-то после глагола: «Je lo donem tey» → [[Je lo tey donem.]]</p>`,
   lub: `<p>Во французском этот порядок — кошмар учеников: <i>je te le donne</i>, но <i>je le lui donne</i> — порядок зависит от лица. В Etoilal одна формула на все случаи.</p>`,
@@ -27,7 +27,7 @@ ET_C2[22] = { n: 22, sec: 3, t: "Цепочка: Je lo tey donem", s: "кто �
     {"k": "input", "q": "Мы вам это скажем.", "a": ["Nou lo vey dizren."], "why": "lo → vey → глагол"},
     { k: "choice", q: "«Ты дашь их нам?»", opts: ["Tu loz ney donres?", "Tu ney loz donres?", "Tu donres loz ney?"], a: "Tu loz ney donres?", why: "кого (loz) → кому (ney)" },
     {"k": "input", "q": "Я ей его не дам.", "a": ["Je lo ley donrem pa."], "why": "pa — после глагола"},
-    {"k": "input", "q": "Ты нам его покажешь?", "a": ["Eske tu lo ney montrres?", "Tu lo ney montrres?"], "why": "lo ney + montrres"},
-    { k: "choice", q: "Что значит voizen?", opts: ["сосед", "врач", "друг"], a: "сосед", lang: "x", why: "voizen — сосед, dokteur — врач" },
-    { k: "input", q: "Врач мне ответил.", a: ["Le dokteur mey repondit."], why: "mey перед глаголом" },
+    {"k": "input", "q": "Ты нам его покажешь?", "a": ["Esqe tu lo ney montrres?", "Tu lo ney montrres?"], "why": "lo ney + montrres"},
+    { k: "choice", q: "Что значит voizen?", opts: ["сосед", "врач", "друг"], a: "сосед", lang: "x", why: "voizen — сосед, doqteur — врач" },
+    { k: "input", q: "Врач мне ответил.", a: ["Le doqteur mey repondit."], why: "mey перед глаголом" },
   ] };

@@ -6,10 +6,10 @@ const Checker = (() => {
   const OBJ = new Set(["mo", "to", "lo", "la", "no", "vo", "loz", "laz", "mey", "tey", "ley", "ney", "vey", "leyz", "m", "t", "l"]);
   const NEG = new Set(["pa", "jame", "ryen"]);
   const NAMES = new Set(["Teo", "Mark", "Ana", "Lila"]);                // имена персонажей курса и текстов — не «опечатки» даже в начале фразы
-  const DEG = new Set(["tre", "trop", "osi", "si", "plu", "mouen", "deja", "toujour", "ankor"]);   // «очень, слишком…» перед прилагательным
+  const DEG = new Set(["tre", "trop", "osi", "si", "plu", "mouen", "deja", "toujour", "anqor"]);   // «очень, слишком…» перед прилагательным
   const POSS = new Set(["ma", "ta", "sa", "nota", "vota", "leura", "se", "sela"]);
-  const EXTRA = new Set(["zut", "bref", "dakor", "oke", "wa", "oh", "ah", "oi", "oura", "be", "eske", "ki", "ke", "koi", "ou", "kan", "koman", "pourkoi", "konbyen", "kel", "si", "e", "me", "oubyen", "pask", "kom", "donk", "a", "de", "dans", "sur",
-    "avek", "sans", "pour", "che", "oui", "non", "mersi", "salu", "bonjour", "orevoir", "silvouple", "byen", "mal", "tre", "boku", "peu", "deja", "ankor", "osi", "toujour", "jame",
+  const EXTRA = new Set(["zut", "bref", "daqor", "oqe", "wa", "oh", "ah", "oi", "oura", "be", "esqe", "qi", "qe", "qoi", "ou", "qan", "qoman", "pourqoi", "qonbyen", "qel", "si", "e", "me", "oubyen", "pasq", "qom", "donq", "a", "de", "dans", "sur",
+    "aveq", "sans", "pour", "che", "oui", "non", "mersi", "salu", "bonjour", "orevoir", "silvouple", "byen", "mal", "tre", "boqu", "peu", "deja", "anqor", "osi", "toujour", "jame",
     "isi", "laba", "ojourdui", "demen", "yer", "mentnant", "un", "z"]);
   const PERS_RU = ["я", "ты", "он/она", "мы", "вы", "они"];
   const TENSES_RU = ["настоящее", "прошедшее (сделал)", "прошедшее (делал)", "будущее", "скоро", "только что"];
@@ -29,7 +29,7 @@ const Checker = (() => {
     const low = w.toLowerCase(), c = BW.get(low) || [];
     const verb = c.find((x) => x.k !== undefined && x.k < 56 && E[x.i].p === "v");
     const pv = !c.length ? parseVerb(low) : null;
-    return { low, pv, known: c.length > 0 || !!pv || /^(deu|troi|katr|senk|sis|set|uit|neuf)dis$/.test(low) || FN_RU[low] !== undefined || ARTS.has(low) || PLUR_DET.has(low) || ET_NUM[low] !== undefined || NEG.has(low) || EXTRA.has(low) || /^\d/.test(low),
+    return { low, pv, known: c.length > 0 || !!pv || /^(deu|troi|qatr|senq|sis|set|uit|neuf)dis$/.test(low) || FN_RU[low] !== undefined || ARTS.has(low) || PLUR_DET.has(low) || ET_NUM[low] !== undefined || NEG.has(low) || EXTRA.has(low) || /^\d/.test(low),
       verb, adj: c.some((x) => x.k === undefined && E[x.i].p === "a"), noun: c.some((x) => x.k === undefined && ["n", "name"].includes(E[x.i].p)),
       onlyAdj: c.length > 0 && c.every((x) => x.k === undefined && E[x.i].p === "a"), onlyNoun: c.length > 0 && c.every((x) => x.k === undefined && ["n", "name"].includes(E[x.i].p)) };
   }
@@ -59,7 +59,7 @@ const Checker = (() => {
       else T.push({ s: m[0], a: m.index, b: m.index + m[0].length, p: /^[.!?…,;:—–-]+$/.test(m[0]), end: /^[.!?…]+$/.test(m[0]) });
     }
     const W = (t) => t && !t.p;
-    const low = (t) => (t.el ? ({ l: "le", j: "je", d: "de", s: "se", k: "ke", m: "me", t: "to" })[t.el] || t.el : t.s.toLowerCase());
+    const low = (t) => (t.el ? ({ l: "le", j: "je", d: "de", s: "se", q: "qe", m: "me", t: "to" })[t.el] || t.el : t.s.toLowerCase());
     let sentStart = true;
     for (let i = 0; i < T.length; i++) {
       const t = T[i]; if (t.p) { if (t.end) sentStart = true; continue; }

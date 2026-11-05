@@ -141,7 +141,7 @@ function pageNums() {
       <input class="in" id="nnum" inputmode="numeric" placeholder="Например: 345" value="345" autocomplete="off" style="margin-top:10px;font-size:20px">
       <div class="nres" id="nout"></div><button class="btn sm" id="nrand">🎲 Случайное число</button></div>
     <div class="card"><div class="k">Etoilal → цифры</div>
-      <input class="in" id="nword" placeholder="Например: deu mil deudis sis" value="setdis senk" autocomplete="off" style="margin-top:10px;font-size:20px">
+      <input class="in" id="nword" placeholder="Например: deu mil deudis sis" value="setdis senq" autocomplete="off" style="margin-top:10px;font-size:20px">
       <div class="nres" id="nback"></div><div class="muted" style="font-size:13.5px">Можно писать и слитно: <span class="et">troisent</span> — пойму.</div></div></div>
   <div class="card" style="margin-top:16px"><h3>Главные числа</h3><div class="ngrid">${base.flat().map((n) => `<button class="cf" data-say="${esc(RefCore.numToEt(n))}"><span class="pr">${n}</span><b>${esc(RefCore.numToEt(n))}</b><i>▶</i></button>`).join("")}</div></div>
   <div class="card" style="margin-top:16px"><h3>Как это устроено</h3>
@@ -166,7 +166,7 @@ function bindNums() {
   const back = () => {
     const v = $("#nword").value.trim(); if (!v) { $("#nback").innerHTML = ""; return; }
     const r = RefCore.etToNum(v);
-    $("#nback").innerHTML = r.n == null ? `<div class="muted">${r.bad ? `Не узнал «${esc(r.bad)}». ` : ""}Числа: zero un deu troi katr senk sis set uit neuf dis sent mil milyon.</div>`
+    $("#nback").innerHTML = r.n == null ? `<div class="muted">${r.bad ? `Не узнал «${esc(r.bad)}». ` : ""}Числа: zero un deu troi qatr senq sis set uit neuf dis sent mil milyon.</div>`
       : `<div class="row"><div class="nbig">${r.n.toLocaleString("ru")}</div>${playBtn(r.canon)}</div>` +
         (r.same ? `<div class="rd">«${esc(rd(r.canon))}»</div>` : `<div class="note fixn">Обычно пишут так: <span class="et">${esc(r.canon)}</span></div>`);
   };

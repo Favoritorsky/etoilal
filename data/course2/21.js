@@ -1,6 +1,6 @@
 window.ET_C2 = window.ET_C2 || {};
 ET_C2[21] = { n: 21, sec: 3, t: "Кому: mey, tey, ley…", s: "мне, тебе, ему — тоже перед глаголом",
-  words: [["doner", "давать"], ["montrer", "показывать"], ["demander", "спрашивать, просить"], ["reponder", "отвечать"], ["telefoner", "звонить"], ["kourye", "письмо"]],
+  words: [["doner", "давать"], ["montrer", "показывать"], ["demander", "спрашивать, просить"], ["reponder", "отвечать"], ["telefoner", "звонить"], ["qourye", "письмо"]],
   gram: ["mey", "tey", "ley", "ney", "vey", "leyz"],
   sut: "Мне — <b>mey</b>, тебе — <b>tey</b>, ему/ей — <b>ley</b>, нам — <b>ney</b>, вам — <b>vey</b>, им — <b>leyz</b>. Все на <b>-ey</b>, все перед глаголом.",
   rule: `<table class="tbl"><tbody><tr><td>мне</td><td class="et">mey</td><td>нам</td><td class="et">ney</td></tr><tr><td>тебе</td><td class="et">tey</td><td>вам</td><td class="et">vey</td></tr><tr><td>ему, ей</td><td class="et">ley</td><td>им</td><td class="et">leyz</td></tr></tbody></table><p><span class="et">Je tey telefonem.</span> Я тебе звоню.</p>`,
@@ -33,5 +33,5 @@ ET_C2[21] = { n: 21, sec: 3, t: "Кому: mey, tey, ley…", s: "мне, теб
     { k: "choice", q: "«Он меня видит» — какое слово?", opts: ["mo", "mey"], a: "mo", lang: "et", why: "видит кого? — mo" },
     {"k": "input", "q": "Мы им звоним.", "a": ["Nou leyz telefonen."], "why": "leyz — им"},
     { k: "input", q: "Я ему не ответил.", a: ["Je ley repondim pa."], why: "ley перед глаголом, pa после" },
-    { k: "choice", q: "Что значит kourye?", opts: ["письмо", "подарок", "ключ"], a: "письмо", lang: "x", why: "kourye — письмо" },
+    { k: "choice", q: "Что значит qourye?", opts: ["письмо", "подарок", "ключ"], a: "письмо", lang: "x", why: "qourye — письмо" },
   ] };

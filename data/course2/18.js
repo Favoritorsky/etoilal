@@ -17,7 +17,7 @@ ET_C2[18] = { n: 18, sec: 2, t: "Слова времени", s: "сегодня,
 > Nou fezin ryen yer. :: Вчера мы ничего не сделали.
 <p>По-русски «никогда <b>не</b> поёт» — два отрицания. В Etoilal — одно: [[Il chantet jame.]]</p>
 <h3>alor — тогда</h3>
-> Alor, koi nou fezren? :: Тогда что мы будем делать?
+> Alor, qoi nou fezren? :: Тогда что мы будем делать?
 <h3>Частые ошибки</h3>
 <p>• Ставить jame перед глаголом: «Il jame chantet» → [[Il chantet jame.]] • Добавлять pa: «Je voiyem pa ryen» → [[Je voiyem ryen.]]</p>`,
   lub: `<p>Во французском — <i>il ne chante jamais</i>, <i>je ne vois rien</i>: снова двойное отрицание, и снова Etoilal взял разговорный вариант без <i>ne</i>. Слова [[jame]] и [[ryen]] — это и есть французские <i>jamais</i> и <i>rien</i>, записанные как слышатся.</p>`,

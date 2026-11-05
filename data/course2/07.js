@@ -1,6 +1,6 @@
 window.ET_C2 = window.ET_C2 || {};
 ET_C2[7] = { n: 7, sec: 1, t: "Много: z", s: "lez, unz — само слово не меняется",
-  words: [["pen", "хлеб"], ["fromaj", "сыр"], ["te", "чай"], ["park", "парк"], ["jarden", "сад"], ["chanbr", "комната"]],
+  words: [["pen", "хлеб"], ["fromaj", "сыр"], ["te", "чай"], ["parq", "парк"], ["jarden", "сад"], ["chanbr", "комната"]],
   gram: ["unz"],
   sut: "Много = <b>z у маленького слова</b>: le → lez, un → unz. Само существительное не меняется: lez cha — кошки.",
   rule: `<p><span class="et">le cha</span> → <span class="et">lez cha</span> (те кошки)</p><p><span class="et">un cha</span> → <span class="et">unz cha</span> (какие-то кошки)</p><p>Само слово — без изменений. z связывается с гласной: <span class="et">lez ami</span> «лэзами».</p>`,

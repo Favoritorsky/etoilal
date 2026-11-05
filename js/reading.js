@@ -77,6 +77,7 @@ function pageLibrary(args) {
   <p class="lead">Сказка, разговоры и стихи на Etoilal с записью и переводом каждой строки. Можно спрятать перевод и проверять себя.</p>
   <div class="songs">${ET_LIBRARY.map((t) => `<a class="card songc" href="#/библиотека/${t.id}"><div class="sn">${t.icon}</div><div><b class="et">${esc(t.title)}</b>
     <div>«${esc(t.ru)}» · ${t.kind}</div><small class="muted">${t.paras.reduce((a, p) => a + p.length, 0)} строк${t.audio ? " · запись ~5 мин" : ""}</small></div></a>`).join("")}
+    <a class="card songc bookban" href="#/книги"><div class="sn">📕</div><div><b>Книги читателей</b><div class="muted">книги, которые написали сами ученики · писать можно с уровня artizan</div></div></a>
     <a class="card songc" href="#/песни"><div class="sn">🎤</div><div><b>Песни</b><div class="muted">8 песен, у двух — караоке</div></div></a></div>`;
 }
 async function bindLibrary(args) {

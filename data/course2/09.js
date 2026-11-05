@@ -30,7 +30,7 @@ ET_C2[9] = { n: 9, sec: 1, t: "Глагол сейчас", s: "основа + e 
     { k: "choice", q: "Что значит dormet?", opts: ["он спит", "я сплю", "они спят"], a: "он спит", lang: "x", why: "t — он/она" },
     {"k": "input", "q": "мы спим", "a": ["Nou dormen."], "why": "dorm + e + n"},
     {"k": "input", "q": "Они смотрят.", "a": ["Ilz regardel."], "why": "regard + e + l"},
-    { k: "input", q: "Я люблю кофе.", a: ["J'emem le kafe."], why: "je + emem → j'emem" },
+    { k: "input", q: "Я люблю кофе.", a: ["J'emem le qafe."], why: "je + emem → j'emem" },
     {"k": "tiles", "q": "Дети поют.", "a": "Lez anfan chantel", "d": ["chantet", "le"], "why": "много → l (они)"},
     { k: "fix", q: "Lez cha dormet.", a: ["Lez cha dormel."], why: "кошки — они → l" },
     { k: "choice", q: "Что значит regardez?", opts: ["вы смотрите", "мы смотрим", "ты смотришь"], a: "вы смотрите", lang: "x", why: "z — вы" },

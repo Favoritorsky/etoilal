@@ -44,6 +44,9 @@ function pageProfile() {
   const pct = nx ? Math.round((S.points - RANKS[k][0]) / (nx[0] - RANKS[k][0]) * 100) : 100;
   const got = new Set(S.ach || []);
   return `<div class="k">Профиль</div><h1 class="page">Твой <i>путь</i></h1>
+  ${(() => { const lv = Lv.level(); return `<div class="card rankc"><div class="rki">${lv ? LEVELS[lv - 1].ic : "·"}</div><div style="flex:1 1 200px;min-width:0"><div class="k">Уровень</div>
+    <div class="rkn">${lv ? `<span class="et">${LEVELS[lv - 1].w}</span> · ${LEVELS[lv - 1].ru}` : "пока нет"}</div>
+    <div class="muted">${lv < LEVELS.length ? `следующий — <b class="et">${LEVELS[lv].w}</b> «${LEVELS[lv].ru}»: ${lv ? "контрольная раздела " + (lv + 1) : "пройди уроки 1–3"}` : "высший уровень!"}${lv >= 4 ? ` · <a href="#/книги">✍ можно писать книги</a>` : ""}${lv >= 5 ? ` · <a href="#/мат">🔞 уроки мата</a>` : ""}</div></div></div>`; })()}
   <div class="card rankc"><div class="rki">${RANKS[k][1]}</div><div style="flex:1 1 200px;min-width:0"><div class="k">Звание</div><div class="rkn">${RANKS[k][2]}</div>
     <div class="q"><i style="width:${pct}%"></i></div><div class="muted">${nx ? `до звания «${nx[2]}» — ещё ${nx[0] - S.points} ✦` : "высшее звание!"}</div></div>
     <a class="btn gold" href="#/магазин">🛍 Магазин</a></div>
@@ -69,23 +72,23 @@ function bindProfile() {
 }
 
 // ---------------------------------------------------------------- магазин
-const THEMES = [["", "Ночное небо", 0, ["#0b1026", "#f1c97a", "#e99bb8"]], ["dawn", "Рассвет", 100, ["#1a0f22", "#ffb38a", "#ff8fa3"]],
+const THEMES = [["", "Ночная сетка", 0, ["#0a1222", "#4fe0b5", "#9fc4ff"]], ["dawn", "Рассвет", 100, ["#1a0f22", "#ffb38a", "#ff8fa3"]],
   ["aurora", "Северное сияние", 150, ["#071a1f", "#8ff0c8", "#9fb8ff"]], ["cosmos", "Глубокий космос", 200, ["#0d0820", "#c9a7ff", "#ff9ad5"]]];
 const BONUS_SONGS = { 6: 80, 7: 80, 8: 80 };              // песни 6–8 — бонусные (открываются в магазине)
 const SECRETS = [
   { id: "словечки", icon: "😏", title: "Разговорные словечки", cost: 120, intro: "Как звучат «блин», «короче», «ладно», «ура» и «вау». Такие слова не учат в учебниках, но без них речь звучит как у робота.",
-    phrases: [["Zut! Je perdim ma telefon!", "Блин! Я потерял телефон!"], ["Bref, je venom.", "Короче, сейчас приду."], ["Dakor, alor demen.", "Ладно, тогда завтра."],
-      ["Oke, mersi!", "Окей, спасибо!"], ["Wa, s'eset tre bo!", "Вау, это очень красиво!"], ["Oura! Nou parvenin!", "Ура! У нас получилось!"], ["Oi, pardone!", "Ой, прости!"], ["Be, je savem pa.", "Ну, я не знаю."]],
+    phrases: [["Zut! Je perdim ma telefon!", "Блин! Я потерял телефон!"], ["Bref, je venom.", "Короче, сейчас приду."], ["Daqor, alor demen.", "Ладно, тогда завтра."],
+      ["Oqe, mersi!", "Окей, спасибо!"], ["Wa, s'eset tre bo!", "Вау, это очень красиво!"], ["Oura! Nou parvenin!", "Ура! У нас получилось!"], ["Oi, pardone!", "Ой, прости!"], ["Be, je savem pa.", "Ну, я не знаю."]],
     tips: ["Междометия не меняются и стоят в начале фразы, обычно с запятой или восклицательным знаком.", "**zut** — мягкое ругательство, как «блин»: его можно сказать при всех.", "**alor** значит «тогда, итак» — им удобно начинать вывод: *Alor, nou alen?* — «Ну что, идём?»"],
-    quiz: [["Как сказать «Блин!»?", ["Zut!", "Bref!", "Oura!"], 0], ["«Dakor» значит…", ["ладно", "короче", "ура"], 0]] },
+    quiz: [["Как сказать «Блин!»?", ["Zut!", "Bref!", "Oura!"], 0], ["«Daqor» значит…", ["ладно", "короче", "ура"], 0]] },
   { id: "стихи", icon: "🪶", title: "Как писать стихи на Etoilal", cost: 150, intro: "Etoilal придуман для песен: ударение всегда на последнем слоге, слова сливаются, а прилагательное перед словом звучит образно. Вот приёмы, которыми написаны песни и стихи из библиотеки.",
-    phrases: [["Le nui venet lanman,", "Ночь приходит медленно,"], ["Le mer dormet trankilman.", "море тихо спит."], ["Ma keur kriet sans son,", "Моё сердце кричит без звука,"], ["Me persone ekoutet ma peur.", "но никто не слушает мой страх."],
+    phrases: [["Le nui venet lanman,", "Ночь приходит медленно,"], ["Le mer dormet tranqilman.", "море тихо спит."], ["Ma qeur qriet sans son,", "Моё сердце кричит без звука,"], ["Me persone eqoutet ma peur.", "но никто не слушает мой страх."],
       ["Un sonbr nui", "мрачная ночь (образно)"], ["Le plu bo etoil", "самая прекрасная звезда"]],
-    tips: ["**Рифма** — по последнему слогу: keur / peur / douleur, son / chanson / nom, nui / gri / li, lanman / trankilman (все наречия на -man рифмуются между собой).",
+    tips: ["**Рифма** — по последнему слогу: qeur / peur / douleur, son / chanson / nom, nui / gri / li, lanman / tranqilman (все наречия на -man рифмуются между собой).",
       "**Ритм**: ударение на конце каждого слова и сильнее всего — в конце строки. Считай слоги: 6–8 в строке звучат как песня.",
       "**Образ**: поставь прилагательное перед словом — и строка станет эмоциональной: *un sonbr nui* — не просто «тёмная», а «мрачная, страшная» ночь.",
-      "**Перекличка**: вопрос и ответ в скобках, как в «Ryen»: *Koi eset? (Ryen, ryen.)*"],
-    quiz: [["Что рифмуется с «keur»?", ["peur", "lun", "mer"], 0], ["Как сказать образно «мрачная ночь»?", ["un sonbr nui", "un nui sonbr", "le nui sonbr"], 0]] },
+      "**Перекличка**: вопрос и ответ в скобках, как в «Ryen»: *Qoi eset? (Ryen, ryen.)*"],
+    quiz: [["Что рифмуется с «qeur»?", ["peur", "lun", "mer"], 0], ["Как сказать образно «мрачная ночь»?", ["un sonbr nui", "un nui sonbr", "le nui sonbr"], 0]] },
 ];
 const owned = (id) => (Store.get().bought || []).includes(id);
 function buy(id, cost) {

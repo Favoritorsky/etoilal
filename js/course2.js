@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611041144`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611060050`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -17,17 +17,22 @@ const c2Next = () => (ET_C2I.lessons.find((l) => !c2Done(l.n)) || ET_C2I.lessons
 function c2PageLearn() {
   const S = Store.get(), L = ET_C2I.lessons, next = c2Next(), total = L.filter((l) => c2Done(l.n)).length;
   const stars = L.reduce((a, l) => a + ((S.lessons[l.n] || {}).stars || 0), 0);
+  const lv = Lv.level(S);
+  const ladder = `<div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv ? `${LEVELS[lv - 1].ic} <span class="et">${LEVELS[lv - 1].w}</span> · ${LEVELS[lv - 1].ru}` : "пока без уровня — пройди уроки 1–3"}</b></div></div>
+    <div class="lvsteps">${LEVELS.map((L, k) => `<div class="lvs${k < lv ? " d" : k === lv ? " c" : ""}"><i>${k + 1}</i><b class="et">${L.w}</b><small>${L.ru}</small></div>`).join("")}</div>
+    <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${Lv.PASS} %). Уроки открываются строго по порядку.</div></div>`;
   return `<div class="k">Самоучитель</div><h1 class="page">Etoilal <i>по порядку</i></h1>
   <p class="lead">${L.length} уроков, каждый — как слоёный пирог: суть за 30 секунд, объяснение простыми словами и «для любопытных». Каждый урок опирается только на пройденное, новые слова сразу закрепляются, а важные таблицы можно закрепить на доске шпаргалок сбоку.</p>
   <div class="learnhead card"><div class="stats"><div class="st">📖 ${total}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${S.points}<small>очков</small></div></div>
     <a class="btn gold" href="#/урок/${next.n}">${total ? "Продолжить" : "Начать"}: урок ${next.n} ▶</a></div>
+  ${ladder}
   <a class="card xban" href="#/альтернатива"><span class="xic">🧠</span><span><b>Альтернативное обучение: весь язык сразу</b><small>шпаргалка по всему языку, тексты с подсказками, загадки, практика</small></span><span class="lst">▶</span></a>
   <a class="card xban trban" href="#/тренировки"><span class="xic">🎯</span><span><b>Тренировки</b><small>задания пройденных уроков вперемешку, «успей перевести», аудирование, произношение</small></span><span class="lst">▶</span></a>
-  ${ET_C2I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}</h2><div class="llist">
-    ${L.filter((l) => l.sec === k).map((l) => { const st = (S.lessons[l.n] || {}).stars || 0;
-      return `<a class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}" href="#/урок/${l.n}"><span class="ln">${l.check ? "✓" : l.n}</span>
-        <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? "контрольная" : esc(l.s)}</small></span>
-        <span class="lst">${st ? "★".repeat(st) + "☆".repeat(3 - st) : l.n === next.n ? "▶" : ""}</span></a>`; }).join("")}</div></div>`).join("")}`;
+  ${ET_C2I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${Lv.secPassed(k, S) ? " d" : ""}">${LEVELS[k].ic} <span class="et">${LEVELS[k].w}</span></span></h2><div class="llist">
+    ${L.filter((l) => l.sec === k).map((l) => { const st = (S.lessons[l.n] || {}).stars || 0, open = Lv.isOpen(l.n, S), old = l.check && (S.checksOld || {})[l.n] && !st;
+      return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/урок/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : l.n) : "🔒"}</span>
+        <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? `контрольная · уровень ${esc(LEVELS[l.sec].w)}${old ? " · пересдай по новым правилам" : ""}` : esc(l.s)}</small></span>
+        <span class="lst">${st ? "★".repeat(st) + "☆".repeat(3 - st) : l.n === next.n ? "▶" : ""}</span></${open ? "a" : "div"}>`; }).join("")}</div></div>`).join("")}`;
 }
 
 // ---------------------------------------------------------------- урок
@@ -46,12 +51,19 @@ let C2 = null;                                        // состояние от
 function c2PageLesson(args) {
   const n = +args[0] || 1, I = ET_C2I.lessons.find((l) => l.n === n);
   if (!I) return `<div class="card soon"><h2>Такого урока нет</h2><a class="btn gold" href="#/учиться">К урокам</a></div>`;
+  if (!Lv.isOpen(n)) { const f = Lv.firstOpen();
+    return `<div class="card soon nokeep"><div class="ic">🔒</div><h2>${I.check ? "Контрольная" : "Урок"} ${n} пока ${I.check ? "закрыта" : "закрыт"}</h2>
+      <p class="muted">Уроки и контрольные открываются строго по порядку. Сначала пройди ${f.check ? "контрольную" : "урок"} ${f.n} «${esc(f.t)}».</p>
+      <a class="btn gold" href="#/урок/${f.n}">К ${f.check ? "контрольной" : "уроку"} ${f.n} ▶</a></div>`; }
+  if (I.check) return `<div id="c2l"><div class="card muted">Загружаю контрольную ${n}…</div></div>`;
   return Board.wrap(`<div id="c2l"><div class="card muted">Загружаю урок ${n}…</div></div>`);
 }
 async function c2BindLesson(args) {
-  const n = +args[0] || 1; Board.bind();
+  const n = +args[0] || 1; if (!$("#c2l")) return;
+  const I0 = ET_C2I.lessons.find((l) => l.n === n); if (I0 && I0.check) return examBind(n);
+  Board.bind();
   let L; try { L = await c2Load(n); } catch (e) { $("#c2l").innerHTML = `<div class="card">Не удалось загрузить урок.</div>`; return; }
-  await trReady();
+  await trReady(); await c2LoadPrev(n);
   const I = ET_C2I.lessons.find((l) => l.n === n), sec = ET_C2I.sections[I.sec];
   // 4 шпаргалки урока для доски: правило, слова, примеры (первые 5 из «Простыми словами»), частые ошибки (тот же раздел)
   const exL = String(L.prosto || "").split("\n").filter((x) => /^>\s*.+::/.test(x) && !/\w-\w/.test(x.split("::")[0])).slice(0, 5).join("\n");
@@ -84,7 +96,7 @@ async function c2BindLesson(args) {
   // ответы урока хранятся вместе с прогрессом: Store.c2ans[N] = { at, items: {mem, rev} (случайные задания — те же), a: {mem, tasks, rev}: {номер: [попытки]}, res }
   const Sx = Store.get(); Sx.c2ans = Sx.c2ans || {};
   const saved = Sx.c2ans[n] && Sx.c2ans[n].items ? Sx.c2ans[n] : null;
-  const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = (L.tasks || []).map((t) => ({ rq: t.why, ...t }));
+  const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = [...(L.tasks || []), ...(L.extra || []), ...c2TextTask(n)].map((t) => ({ rq: t.why, ...t }));
   const rec = saved || { at: "", items: { mem, rev }, a: { mem: {}, tasks: {}, rev: {} } };
   // задание на этом месте заменили (поправили урок) — его старые ответы не подставляем: сверяем «отпечатки» заданий
   const sigs = tasks.map(c2Sig), was = rec.sigs || (window.ET_C2_OLDSIG || {})[n] || sigs;
@@ -93,7 +105,7 @@ async function c2BindLesson(args) {
   const onTry = (g) => (k, v) => { (rec.a[g][k] = rec.a[g][k] || []).push(v); rec.at = new Date().toISOString(); Store.get().c2ans = Store.get().c2ans || {}; Store.get().c2ans[n] = rec; Store.save(); };
   if (!rev.length) { $("#c2revh").remove(); $("#c2rev").remove(); }
   const S2 = C2 = { n, L, rec, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
-  const each = (item, first, ok) => { S2.done++; if (first && ok) S2.first++; $("#c2bar").style.width = Math.round(S2.done / S2.total * 100) + "%"; if (S2.done >= S2.total) c2Finish(S2); };
+  const each = (item, first, ok, frac) => { S2.done++; if (item.k === "trtext") { if (first) S2.first += frac || 0; } else if (first && ok) S2.first++; $("#c2bar").style.width = Math.round(S2.done / S2.total * 100) + "%"; if (S2.done >= S2.total) c2Finish(S2); };
   const bInfo = Board.current();                         // при возвращении к уроку — вернуть его шпаргалки на доску
   PageHook.onShow = () => { C2 = S2; Board.setLesson(bInfo); Board.render(); };
   if (mem.length) AltT.mount($("#c2mem"), mem, { onAnswer: each, onTry: onTry("mem"), restore: rec.a.mem });
@@ -101,7 +113,7 @@ async function c2BindLesson(args) {
   if (rev.length) AltT.mount($("#c2rev"), rev, { onAnswer: each, onTry: onTry("rev"), restore: rec.a.rev });
   if (saved && S2.done && !S2.finished) toast("Продолжаешь с того места, где остановился ✦");
 }
-function c2Sig(t) { const s = t.q + "|" + JSON.stringify(t.a); let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); }
+function c2Sig(t) { const s = (t.q + "|" + JSON.stringify(t.a)).replace(/q/g, "k").replace(/Q/g, "K"); let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); }
 function c2Again(n) { const S = Store.get(); if (S.c2ans) delete S.c2ans[n]; Store.save(); route(); window.scrollTo(0, 0); }
 // «Запомни»: по одному заданию на каждое новое слово (то перевод → слово, то слово → перевод)
 function c2MemItems(L) {
@@ -137,7 +149,7 @@ function c2PinOffer(L, end) {
     <div class="c2offb">${P.map((p) => `<span class="c2offi"><span>${esc(p.t)}</span>${Board.pinButton(p.id)}</span>`).join("")}</div></div>`;
 }
 function c2Finish(st = C2) {
-  if (st.finished) return; st.finished = true; const C2 = st;
+  if (st.finished) return; st.finished = true; const C2 = st; C2.first = Math.round(C2.first);
   const { n, L } = C2, pct = Math.round(C2.first / C2.total * 100), stars = pct >= 90 ? 3 : pct >= 70 ? 2 : 1;
   let r = { pts: 0 }, added = 0; const again = !!(C2.rec && C2.rec.res);
   if (C2.rec && C2.rec.res) { r = C2.rec.res.r; added = C2.rec.res.added; }      // урок уже был закончен — просто показываем итог (очки второй раз не даём)
@@ -154,4 +166,100 @@ function c2Finish(st = C2) {
     <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : `<a class="btn gold" href="#/учиться">Курс пройден! 🎓</a>`}
     <a class="btn" href="#/карточки">🃏 Повторить слова</a><button class="btn" onclick="c2Again(${n})">↻ Пройти снова</button></div></div>`;
   if (!again) $("#c2end").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// ---------------------------------------------------------------- «Переведи текст» в уроке (5.11.2026)
+// 3 предложения из заданий прошлых уроков (n-1 … n-4) — только пройденные слова; направление чередуется: чётные уроки —
+// на Etoilal, нечётные — на русский. Выбор одинаковый при каждом открытии (зависит только от номера урока).
+function c2Rand(seed) { let a = seed * 9301 + 49297; return () => ((a = (a * 9301 + 49297) % 233280) / 233280); }
+function c2Sentences(from, to) {
+  const out = [];
+  for (let k = from; k <= to; k++) { const L = (window.ET_C2 || {})[k]; if (!L) continue;
+    for (const t of L.tasks || []) { const a = [].concat(t.a)[0];
+      if (t.k === "input" && (t.lang || "et") === "et" && /[.?!]$/.test(a) && a.split(" ").length >= 3 && /[а-я]/i.test(t.q) && !/[a-z]{3}/i.test(t.q.replace(/«[^»]*»/g, "")))
+        out.push([a, t.q.replace(/\s*\(.*?\)\s*/g, " ").trim()]); } }
+  return out;
+}
+function c2TextTask(n) {
+  if (n < 5) return [];
+  const pool = c2Sentences(Math.max(4, n - 4), n - 1); if (pool.length < 3) return [];
+  const r = c2Rand(n), pick = pool.map((x) => [r(), x]).sort((a, b) => a[0] - b[0]).slice(0, 3).map((x) => x[1]);
+  return [{ k: "trtext", dir: n % 2 ? "ru" : "et", parts: pick, why: "Повторение прошлых уроков: переводи по смыслу, засчитывается каждое верное предложение." }];
+}
+// уроки до n загружены? (для «Переведи текст» нужны задания прошлых уроков)
+async function c2LoadPrev(n) { for (let k = Math.max(1, n - 4); k < n; k++) try { await c2Load(k); } catch (e) {} }
+
+// ---------------------------------------------------------------- контрольная (5.11.2026)
+// Режим контрольной: задания по одному, на каждое 60 секунд («Переведи текст» — 60 секунд на каждое предложение), без «?» и
+// подсказок, одна попытка. Пока идёт контрольная — переводчик и «Проверь текст» закрыты, доски шпаргалок нет.
+// Уйти со страницы = попытка закончена. Порог уровня — 80 %. Пересдача — не чаще раза в час.
+const EX_SEC = 60;
+let EX = null;
+async function examBind(n) {
+  let L; try { L = await c2Load(n); } catch (e) { $("#c2l").innerHTML = `<div class="card">Не удалось загрузить контрольную.</div>`; return; }
+  await trReady();
+  const I = ET_C2I.lessons.find((l) => l.n === n), S = Store.get(), best = S.lessons[n], left = Lv.retryLeft(n), lvNext = LEVELS[I.sec];
+  const items = [...(L.tasks || []), ...(L.exam || [])];
+  const mins = items.reduce((a, t) => a + (t.k === "trtext" ? t.parts.length : 1), 0);
+  const old = (S.checksOld || {})[n];
+  $("#c2l").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/учиться">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(ET_C2I.sections[I.sec])}</span></div>
+    <div class="k">Контрольная · урок ${n}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
+    <div class="card exrules"><div class="exlv"><span class="k">Сдашь — получишь уровень</span><b>${lvNext.ic} <span class="et">${lvNext.w}</span> · ${lvNext.ru}</b></div>
+      <ul><li><b>${items.length} заданий</b>, по одному. На каждое — <b>${EX_SEC} секунд</b> («Переведи текст» — ${EX_SEC} секунд на каждое предложение). Время вышло — задание не засчитано.</li>
+      <li>Подсказок «?» нет, ответ даётся <b>один раз</b>.</li>
+      <li>Пока идёт контрольная, <b>переводчик и «Проверь текст» закрыты</b>, доски шпаргалок нет.</li>
+      <li>Нужно набрать <b>${Lv.PASS} %</b>. Не вышло — пересдать можно через час.</li>
+      <li>Если уйдёшь со страницы — попытка закончится.</li></ul>
+      ${best ? `<p class="note fixn">Контрольная сдана: ${best.best} %, ${"★".repeat(best.stars)}${"☆".repeat(3 - best.stars)}. Можно пересдать на лучший результат.</p>` : ""}
+      ${!best && old ? `<p class="note">Раньше ты сдал её по старым правилам (${old.best || 0} %). Контрольные стали сложнее — пересдай, чтобы открыть дальнейшие уроки и получить уровень.</p>` : ""}
+      ${left ? `<p class="note unk">Пересдача будет доступна через ${left} мин.</p>` : `<button class="btn gold" id="exgo">Начать контрольную ▶</button>`}
+      <span class="muted"> · примерно ${Math.ceil(mins * 0.6)}–${mins} мин</span></div>
+    <div id="exbox"></div>`;
+  const go = $("#exgo"); if (go) go.onclick = () => examRun(n, L, items);
+}
+function examRun(n, L, items) {
+  const S = Store.get(); S.examLast = S.examLast || {}; S.examLast[n] = new Date().toISOString(); Store.save();
+  const total = items.reduce((a, t) => a + (t.k === "trtext" ? t.parts.length : 1), 0);
+  Lv.examStart(n, total + 5);
+  EX = { n, L, items, i: 0, score: 0, timer: null, hash: location.hash, done: false };
+  $(".exrules").outerHTML = `<div class="card exbar"><div class="row"><b id="exnum"></b><span class="extime" id="extime"></span></div><div class="c2prog"><i id="exprog"></i></div></div>`;
+  window.addEventListener("hashchange", examLeave);
+  examStep();
+}
+function examLeave() {
+  if (!EX || EX.done) return; if (location.hash === EX.hash) return;
+  clearInterval(EX.timer); EX.done = true; Lv.examStop(); window.removeEventListener("hashchange", examLeave);
+  toast("Контрольная прервана — попытка не засчитана");
+}
+function examStep() {
+  const E = EX, it = E.items[E.i], box = $("#exbox"); if (!box) return;
+  $("#exnum").textContent = `Задание ${E.i + 1} из ${E.items.length}`;
+  $("#exprog").style.width = Math.round(E.i / E.items.length * 100) + "%";
+  box.innerHTML = `<div class="alt-qs" id="exq"></div><div id="exnext"></div>`;
+  let sec = EX_SEC * (it.k === "trtext" ? it.parts.length : 1); const tick = () => { const el = $("#extime"); if (el) { el.textContent = `⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`; el.classList.toggle("hot", sec <= 10); } };
+  const after = (item, first, ok, frac) => {
+    clearInterval(E.timer); E.score += item.k === "trtext" ? (frac || 0) : ok ? 1 : 0;
+    const last = E.i === E.items.length - 1;
+    $("#exnext").innerHTML = `<button class="btn gold" id="exn">${last ? "Узнать результат ▶" : "Дальше ▶"}</button>`;
+    $("#exn").onclick = () => { if (last) examEnd(); else { E.i++; examStep(); window.scrollTo(0, $("#exbox").offsetTop - 120); } };
+  };
+  AltT.mount($("#exq"), [it], { exam: true, base: E.i, onAnswer: after });
+  tick(); E.timer = setInterval(() => { sec--; tick(); if (sec <= 0) { clearInterval(E.timer); const q = $("#exq"); if (q && q._timeout) q._timeout(); } }, 1000);
+  const inp = box.querySelector("input"); if (inp) inp.focus({ preventScroll: true });
+}
+function examEnd() {
+  const E = EX; E.done = true; Lv.examStop(); window.removeEventListener("hashchange", examLeave);
+  const n = E.n, pct = Math.round(E.score / E.items.length * 100), pass = pct >= Lv.PASS;
+  const before = Lv.level(); let r = { pts: 0 };
+  if (pass) { const stars = pct >= 95 ? 3 : pct >= 88 ? 2 : 1; r = Store.finishLesson(n, stars, pct, Math.round(E.score)); }
+  const after = Lv.level(), up = after > before ? LEVELS[after - 1] : null;
+  const next = ET_C2I.lessons.find((l) => l.n === n + 1);
+  renderNav("учиться");
+  $(".exbar").remove();
+  $("#exbox").innerHTML = `<div class="card c2res"><div class="bigstars">${pass ? "✓" : "✗"}</div>
+    <h2>${pass ? "Контрольная сдана!" : "Пока не сдана"}</h2><p>Результат: <b>${pct} %</b> (${E.score.toFixed(1).replace(".0", "")} из ${E.items.length}). Нужно ${Lv.PASS} %. ${r.pts ? `+${r.pts} очков ✦` : ""}</p>
+    ${up ? `<div class="lvup"><small>Новый уровень</small><b>${up.ic} <span class="et">${up.w}</span></b><span>${up.ru}</span></div>` : ""}
+    ${pass ? "" : `<p class="muted">Повтори уроки раздела и попробуй снова через час. Переводчик и «Проверь текст» снова открыты.</p>`}
+    <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${pass && next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : ""}<a class="btn" href="#/учиться">Ко всем урокам</a></div></div>`;
+  EX = null;
 }

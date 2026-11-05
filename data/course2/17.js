@@ -1,6 +1,6 @@
 window.ET_C2 = window.ET_C2 || {};
 ET_C2[17] = { n: 17, sec: 2, t: "Вот-вот и только что: o и u", s: "chantom — сейчас спою; chantum — только что спел",
-  words: [["mentnant", "сейчас, теперь"], ["deja", "уже"], ["ankor", "ещё"], ["ouvrer", "открывать"], ["fermer", "закрывать"]],
+  words: [["mentnant", "сейчас, теперь"], ["deja", "уже"], ["anqor", "ещё"], ["ouvrer", "открывать"], ["fermer", "закрывать"]],
   gram: [], unlock: { t: ["o", "u"] },
   sut: "Ещё два времени: <b>o</b> — «вот-вот, сейчас начну» (chantom), <b>u</b> — «только что» (chantum). Теперь у тебя все шесть.",
   rule: `<p><b>o</b> — вот-вот: <span class="et">Je partom!</span> Я ухожу!</p><p><b>u</b> — только что: <span class="et">Il venut.</span> Он только что пришёл.</p>`,
@@ -30,5 +30,5 @@ ET_C2[17] = { n: 17, sec: 2, t: "Вот-вот и только что: o и u", 
     {"k": "tiles", "q": "Он только что открыл окно.", "a": "Il ouvrut le fenetr", "d": ["ouvrot", "ouvrit"], "why": "u — только что"},
     { k: "input", q: "Я сейчас открою окно. (вот-вот)", a: ["J'ouvrom le fenetr."], why: "ouvr + o + m; je + o… → j'" },
     { k: "choice", q: "Сколько всего времён в Etoilal?", opts: ["3", "6", "12"], a: "6", lang: "x", why: "e, i, a, re, o, u" },
-    { k: "choice", q: "Что значит ankor?", opts: ["ещё", "уже", "сейчас"], a: "ещё", lang: "x", why: "ankor — ещё, deja — уже" },
+    { k: "choice", q: "Что значит anqor?", opts: ["ещё", "уже", "сейчас"], a: "ещё", lang: "x", why: "anqor — ещё, deja — уже" },
   ] };
