@@ -4,22 +4,36 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 1600); }
 
 // ---------------------------------------------------------------- озвучка: записи курса (ET_AUDIO_C), слова словаря (ET_AUDIO), иначе голос браузера
-function speak(text) {
+// 7.11.2026: первыми — записи без обрывов (ET_AUDIO_V2, tools/revoice_clean.py); rate — скорость (0.5 / 0.75 / 1, высота голоса та же)
+let SPK = null;
+function speak(text, rate) {
   const low = text.toLowerCase().trim(), C = window.ET_AUDIO_C || {};
   const A = window.ET_AUDIO_A || {};                 // записи раздела «Альтернативное обучение» (tools/build_alt_audio.py)
   const K = window.ET_AUDIO_C2 || {};                // записи нового самоучителя (tools/build_course2_audio.py)
+  const V = window.ET_AUDIO_V2 || {};
   const s = low.replace(/[.!?]+$/, "");
-  const f = K[low] || K[s] || C[low] || C[s] || A[low] || A[s] || (window.ET_AUDIO && window.ET_AUDIO[s]);
-  if (f) { new Audio(f).play().catch(() => speakTTS(text)); return; }
-  speakTTS(text);
+  const f = V[low] || V[s] || K[low] || K[s] || C[low] || C[s] || A[low] || A[s] || (window.ET_AUDIO && window.ET_AUDIO[s]);
+  if (f) { try { SPK && SPK.pause(); } catch (e) {}
+    const a = new Audio(f); a.preservesPitch = a.mozPreservesPitch = a.webkitPreservesPitch = true; a.playbackRate = rate || 1; SPK = a;
+    a.play().catch(() => speakTTS(text, rate)); return; }
+  speakTTS(text, rate);
 }
-function speakTTS(text) {
+function speakTTS(text, rate) {
   if (!("speechSynthesis" in window)) { toast("Озвучка недоступна в этом браузере"); return; }
-  const u = new SpeechSynthesisUtterance(text.replace(/'/g, "")); u.lang = "fr-FR"; u.rate = .9;
+  const u = new SpeechSynthesisUtterance(text.replace(/'/g, "")); u.lang = "fr-FR"; u.rate = .9 * (rate || 1);
   const v = speechSynthesis.getVoices().find((x) => /^fr/i.test(x.lang)); if (v) u.voice = v;
   speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
-document.addEventListener("click", (e) => { const b = e.target.closest("[data-say]"); if (b) { e.preventDefault(); e.stopPropagation(); speak(b.dataset.say); } });
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-say]"); if (b) { e.preventDefault(); e.stopPropagation(); speak(b.dataset.say, +b.dataset.rate || undefined); } });
+// скорость заданий на слух: разделы 1–2 — 0.5x (чтобы разобрать каждое слово), дальше — выбор ученика (по умолчанию 0.75x)
+const ARate = {
+  sec: null,                                          // раздел открытого урока/контрольной (если у задания нет своего)
+  get(sec) { sec = sec ?? this.sec; if (sec != null && sec < 2) return 0.5; const r = +((Store.get().opts || {}).rate); return [0.5, 0.75, 1].includes(r) ? r : 0.75; },
+  set(r) { const S = Store.get(); S.opts = S.opts || {}; S.opts.rate = r; Store.save();
+    document.querySelectorAll(".lsn[data-free] [data-say]").forEach((b) => b.dataset.rate = r);
+    document.querySelectorAll(".lsn[data-free] [data-rate-set]").forEach((b) => b.classList.toggle("on", +b.dataset.rateSet === r)); },
+};
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-rate-set]"); if (b) { e.preventDefault(); ARate.set(+b.dataset.rateSet); } });
 const rd = (t) => { try { return reading(t); } catch (e) { return ""; } };
 const playBtn = (t, sm) => `<button class="play${sm ? " sm" : ""}" data-say="${esc(t)}" title="Послушать">▶</button>`;
 
@@ -95,6 +109,8 @@ function pageHome() {
   return `<div class="ghome"><section class="gh"><div><div class="k">Самоучитель · 40 уроков</div><h1>Язык, который <span>звучит</span> как звёзды</h1></div>
     <div><p>Сорок уроков по порядку. Шесть разделов — шесть уровней: от <b class="et">elev</b> до <b class="et">etoil</b>. Каждый уровень подтверждает контрольная.</p>
       <a class="btn gold" href="#/урок/${next.n}">${doneN ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} ${ICO.arrow}</a></div></section>
+  <a class="card gdaily" href="#/тренировка"><span class="gi">${ICO.flame}</span><div><b>Ежедневная тренировка</b><span>${Daily.streak()} дн. подряд · сегодня ${Daily.dlog().s} из ${Daily.st().goal} занятий · ≈ 4 минуты</span></div>
+    <span class="btn gold sm">${Daily.dlog().s >= Daily.st().goal ? "Ещё занятие" : "Начать"} ${ICO.arrow}</span></a>
   <section class="gstats">${[[ICO.flame, Store.streak(), "дней подряд"], [ICO.star, S.points, "очков"], [ICO.book, doneN + "/" + L.length, "уроков пройдено"], [ICO.chest, S.chests, "сундуков"]]
     .map(([ic, v, t]) => `<div class="gst"><span class="gi">${ic}</span><div><b>${v}</b><span>${t}</span></div></div>`).join("")}</section>
   <div class="gcap"><span>Карта разделов · уровни</span><span>Твой уровень: ${lv ? Lv.badge(lv) + " " + LEVELS[lv - 1].ru : "пока нет — пройди уроки 1–3"}</span></div>
@@ -302,7 +318,7 @@ function bindCheck() {
 
 // ---------------------------------------------------------------- профиль и «ещё»
 function pageMore() {
-  const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["альтернатива", "🧠", "Альтернативное обучение", "весь язык сразу: шпаргалка, тексты, загадки"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
+  const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["альтернатива", "🧠", "Альтернативное обучение", "весь язык сразу: шпаргалка, тексты, загадки"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировка", "🔥", "Ежедневная тренировка", "3–5 минут в день"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
     ["песни", "🎤", "Песни", "караоке"], ["библиотека", "📜", "Библиотека", "рассказы и книги читателей"], ["чат", "💬", "Чат", "общение со всеми"], ["мат", "🔞", "Мат 18+", "с уровня filozof"], ["полезное", "💬", "Полезное", "фразы по ситуациям"], ["тексты", "✍", "Тексты", "переведи — я проверю"], ["о-языке", "✦", "О языке", "история"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"], ["магазин", "🛍", "Магазин", "темы, песни, секреты"]];
   return `<h1 class="page">Ещё</h1><div class="tools">${items.map(([h, i, t, s]) => `<a class="card tool" href="#/${h}"><div class="ic">${i}</div><b>${t}</b><span>${s}</span></a>`).join("")}</div>`;
 }
@@ -313,7 +329,7 @@ const soon = (ic, t, s) => () => `<div class="card soon"><div class="ic">${ic}</
 const PAGES = {
   "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [(a) => Lv.examActive() ? Lv.lockedPage("Переводчик") : pageTranslate(a), (a) => !Lv.examActive() && bindTranslate(a)], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
   "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
-  "тренировки": [pageTrain, bindTrain],
+  "тренировки": [pageTrain, bindTrain], "тренировка": [pageDaily, bindDaily],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
   "проверка": [(a) => Lv.examActive() ? Lv.lockedPage("«Проверь текст»") : pageCheck(a), (a) => !Lv.examActive() && bindCheck(a)],
   "справочник": [pageRef, bindRef],
@@ -346,7 +362,7 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = ["урок", "экспресс", "тренировки", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
+  const navId = ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
   const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);

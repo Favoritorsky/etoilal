@@ -62,11 +62,12 @@ const prepSec = (n) => ET_C2I.lessons.find((l) => l.n === n).sec;
 const prepLessons = (n) => Lv.secLessons(prepSec(n)).filter((l) => !l.check);
 async function prepLoad(n) { for (const l of ET_C2I.lessons.filter((x) => x.n <= n)) try { await c2Load(l.n); } catch (e) {} await trReady(); }
 const prepPool = (n) => { const ls = prepLessons(n); return c2Sentences(ls[0].n, ls[ls.length - 1].n); };
-const prepTasks = (n) => prepLessons(n).flatMap((l) => ((window.ET_C2 || {})[l.n] || {}).tasks || []).map((t) => ({ rq: t.why, ...t }));
+const prepTasks = (n) => prepLessons(n).flatMap((l) => [...(((window.ET_C2 || {})[l.n] || {}).tasks || []), ...((window.ET_C2L || {})[l.n] || [])]).map((t) => ({ rq: t.why, ...t }));
 const prepState = (n) => { const S = Store.get(); S.prep = S.prep || {}; return (S.prep[n] = S.prep[n] || {}); };
 // пробная: 15 заданий уроков раздела + 2×«Закончи фразу», 2×«Ответь по тексту», 2×«Составь по смыслу», 1×«Переведи текст» (5 фраз)
 function prepPractice(n) {
-  const r = Math.random, pool = prepShuffle(prepPool(n), r), out = prepShuffle(prepTasks(n), r).slice(0, 15);
+  const r = Math.random, pool = prepShuffle(prepPool(n), r), all = prepTasks(n), lis = prepShuffle(all.filter((t) => t.lsn), r).slice(0, 7);
+  const out = [...prepShuffle(all.filter((t) => !t.lsn), r).slice(0, 15 - Math.min(5, lis.length)), ...lis];
   const fin = pool.map((x) => prepGenFinish(x, r)).filter(Boolean).slice(0, 2); out.push(...fin);
   for (let k = 0; k < 2 && pool.length >= 3 * (k + 1); k++) { const x = prepGenRead(pool.slice(3 * k, 3 * k + 3)); if (x) out.push(x); }
   pool.slice(6, 8).forEach((x) => out.push(prepGenSense(x, pool, r)));
@@ -77,7 +78,8 @@ function prepPractice(n) {
 function prepMistakes(n) {
   const S = Store.get(), out = [];
   for (const l of prepLessons(n)) { const L = (window.ET_C2 || {})[l.n], rec = (S.c2ans || {})[l.n]; if (!L || !rec) continue;
-    for (const [k, tries] of Object.entries(rec.a.tasks || {})) { const t = (L.tasks || [])[+k]; if (!t || !tries.length) continue;
+    const T = c2LessonTasks(l.n, L);
+    for (const [k, tries] of Object.entries(rec.a.tasks || {})) { const t = T[+k]; if (!t || !tries.length || t.k === "trtext") continue;
       if (tries.length > 1 || !AltT.judge(t, tries[0]).ok) out.push({ rq: t.why, ...t, from: l.n }); } }
   return out;
 }
@@ -116,7 +118,7 @@ document.addEventListener("click", (e) => { const b = e.target.closest && e.targ
 // ---------------------------------------------------------------- страницы
 function pagePrep(a) { return Board.wrap(`<div id="prep"><div class="card muted">Загружаю…</div></div>`); }
 async function bindPrep(a) {
-  const n = +a[0], mode = a[1], I = ET_C2I.lessons.find((l) => l.n === n);
+  const n = +a[0], mode = a[1], I = ET_C2I.lessons.find((l) => l.n === n); if (I) ARate.sec = I.sec;
   if (!I || !I.check) { $("#prep").innerHTML = `<div class="card soon nokeep"><h2>Здесь нет контрольной</h2><a class="btn gold" href="#/учиться">К урокам</a></div>`; return; }
   await prepLoad(n); Board.bind(); Board.setLesson({ title: I.t, pins: [], html: prepCheat(n), words: "", ex: "", err: "" }); Board.render();
   const head = (t, s) => `<div class="row c2crumbs"><a class="muted" href="#/урок/${n}">← К контрольной ${n}</a><span class="muted">Раздел ${I.sec + 1}: ${esc(ET_C2I.sections[I.sec])}</span></div>

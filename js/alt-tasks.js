@@ -128,13 +128,20 @@ const AltT = (() => {
 
   // ---------------------------------------------------------------- отрисовка
   let SEQ = 0;
+  const bonusN = (k) => { try { return Daily.st().bonus[k] || 0; } catch (e) { return 0; } };
+  const lsn0 = (item) => !!(item.say && (item.lsn || item.k === "listen"));
   const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   function card(item, n, opt = {}) {
     const id = "t" + (++SEQ), lang = item.lang || "et";
-    const head = { choice: "Выбери", input: lang === "ru" ? "Переведи на русский" : lang === "rd" ? "Напиши русскими буквами, как читается" : "Напиши на Etoilal", tiles: "Собери фразу", fix: "Найди и исправь ошибку", listen: "Послушай", read: "Ответь по тексту", finish: "Закончи фразу", sense: "Составь по смыслу",
+    const head = lsn0(item) ? "🎧 На слух" : { choice: "Выбери", input: lang === "ru" ? "Переведи на русский" : lang === "rd" ? "Напиши русскими буквами, как читается" : "Напиши на Etoilal", tiles: "Собери фразу", fix: "Найди и исправь ошибку", listen: "Послушай", read: "Ответь по тексту", finish: "Закончи фразу", sense: "Составь по смыслу",
       trtext: item.dir === "ru" ? "Переведи текст на русский" : "Переведи текст на Etoilal" }[item.k] || "";
     let body = "";
-    const sayBtn = item.say ? `<button class="btn sm alt-say" data-say="${esc(item.say)}">▶ Послушать</button>` : "";
+    const lsn = !!(item.say && (item.lsn || item.k === "listen"));      // задание на слух (7.11.2026): большая кнопка и скорость
+    const sayBtn = item.say && !lsn ? `<button class="btn sm alt-say" data-say="${esc(item.say)}">▶ Послушать</button>` : "";
+    const R = lsn ? ARate.get(item.sec) : 1, free = lsn && !((item.sec ?? ARate.sec) != null && (item.sec ?? ARate.sec) < 2);
+    const lsnBox = lsn ? `<div class="lsn"${free ? " data-free" : ""}><button class="btn gold lsn-play" data-say="${esc(item.say)}" data-rate="${R}">🔊 Послушать</button>
+      ${free ? `<span class="lsn-sp" title="Скорость записи">${[0.5, 0.75, 1].map((r) => `<button class="lsr${r === R ? " on" : ""}" data-rate-set="${r}">${r}x</button>`).join("")}</span>`
+        : `<span class="muted lsn-note">0.5x — медленно, чтобы разобрать каждое слово</span>`}</div>` : "";
     if (item.k === "trtext") {
       body = `<div class="alt-tt">${item.parts.map(([et, ru], i) => `<div class="alt-ttr"><div class="alt-tts${item.dir === "ru" ? " et" : ""}">${i + 1}. ${esc(item.dir === "ru" ? et : ru)}</div>
         <input class="in${item.dir === "ru" ? "" : " et-in"}" data-tt="${i}" placeholder="${item.dir === "ru" ? "По-русски…" : "На Etoilal…"}" autocomplete="off" spellcheck="false"></div>`).join("")}</div>
@@ -152,7 +159,7 @@ const AltT = (() => {
     const q = item.k === "fix" ? `<span class="et">${esc(item.q)}</span>` : item.k === "listen" && !item.q ? "Что прозвучало?"
       : item.k === "finish" ? `<span class="et">${esc(item.start)} …</span>` : item.k === "trtext" ? esc(item.q || "Переведи каждое предложение. Засчитывается каждое верное.") : esc(item.q || "");
     const text = item.k === "read" ? `<div class="alt-text et">${esc(item.text)}</div>` : "";
-    return `<div class="card alt-q alt-task" id="${id}" data-n="${n}"><div class="alt-qh">${head}${item.rq && !opt.exam ? `<button class="qbtn" data-rq title="Какое правило здесь нужно?">?</button>` : ""}</div>${text}<div class="alt-qt"><span class="alt-qn">${n + 1 + (opt.base || 0)}</span><span>${q}</span>${sayBtn}</div>${body}<div class="alt-fb"></div></div>`;
+    return `<div class="card alt-q alt-task" id="${id}" data-n="${n}"><div class="alt-qh">${head}${item.rq && !opt.exam ? `<button class="qbtn" data-rq title="Какое правило здесь нужно?">?</button>` : ""}${opt.bonus && !opt.exam && item.k !== "trtext" && bonusN("hint") ? `<button class="qbtn bh" data-bh title="Подсказка-бонус из ежедневной тренировки">💡</button>` : ""}</div>${text}<div class="alt-qt"><span class="alt-qn">${n + 1 + (opt.base || 0)}</span><span>${q}</span>${sayBtn}</div>${lsnBox}${body}<div class="alt-fb"></div></div>`;
   }
 
   // set: { el, items, onAnswer(item, firstTry, ok), onDone(stats) }
@@ -187,7 +194,7 @@ const AltT = (() => {
       if (!replaying) { box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); }
       if (s.tries === 1 && !opt.exam) {
         const hint = item.hint || item.why || "Посмотри ещё раз на правило главы.";
-        fb.innerHTML = `<div class="note unk">Пока не так. Подсказка: ${esc(hint)}. Попробуй ещё раз.</div>`;
+        fb.innerHTML = `<div class="note unk">Пока не так. Подсказка: ${esc(hint)}. Попробуй ещё раз.${opt.bonus && bonusN("retry") ? ` <button class="btn sm" data-bs>🛡 Не считать ошибку · ${bonusN("retry")}</button>` : ""}</div>`;
         if (item.k === "tiles") reset(box);
         return;
       }
@@ -218,6 +225,16 @@ const AltT = (() => {
       const t = e.target.closest("[data-tile]"); if (t && !t.disabled) { t.hidden = true; box.querySelector("[data-out]").insertAdjacentHTML("beforeend", `<button class="btn et" data-back="${t.dataset.tile}">${esc(t.textContent)}</button>`); return; }
       const bk = e.target.closest("[data-back]"); if (bk) { box.querySelector(`[data-tile="${bk.dataset.back}"]`).hidden = false; bk.remove(); return; }
       if (e.target.closest("[data-clear]")) { reset(box); return; }
+      if (e.target.closest("[data-bs]")) { const s = st[+box.dataset.n]; if (!s.done && Daily.useBonus("retry")) { s.tries = 0;
+        box.querySelector(".alt-fb").innerHTML = `<div class="note fixn">🛡 Ошибка не считается — ответь ещё раз, как будто с первой попытки.</div>`; } return; }
+      if (e.target.closest("[data-bh]")) { const it = items[+box.dataset.n], s = st[+box.dataset.n], a = String([].concat(it.a)[0]);
+        if (s.done || !Daily.useBonus("hint")) return; e.target.closest("[data-bh]").remove();
+        const wrong = [...box.querySelectorAll("[data-c]")].filter((b) => !b.disabled && b.dataset.c !== a);
+        if (wrong.length) { const b = wrong[Math.floor(Math.random() * wrong.length)]; b.disabled = true; b.classList.add("gone"); }
+        else if (box.querySelector("[data-tile]")) { const w0 = a.replace(/[.!?]$/, "").split(" ")[0], tl = [...box.querySelectorAll("[data-tile]")].find((x) => !x.hidden && x.textContent === w0);
+          reset(box); if (tl) tl.click(); }
+        else { const inp = box.querySelector("input"); if (inp) { const w = a.split(" "); inp.value = w.length > 1 ? w[0] + " " : a.slice(0, Math.max(2, Math.floor(a.length / 3))); inp.focus(); } }
+        toast(`💡 Подсказка · осталось ${bonusN("hint")}`); return; }
       if (e.target.closest("[data-go]")) {
         const out = box.querySelector("[data-out]"), tt = box.querySelectorAll("[data-tt]");
         answer(box, tt.length ? [...tt].map((x) => x.value) : out ? [...out.children].map((b) => b.textContent).join(" ") : box.querySelector("input").value); }

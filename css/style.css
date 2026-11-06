@@ -662,3 +662,48 @@ input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,
 .pcheat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; } .pch { padding: 12px; border-radius: 12px; background: rgba(0,0,0,.18); border: 1px solid var(--line); }
 .pch b { display: block; margin-bottom: 4px; } .pchw { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
 .board .pcheat { grid-template-columns: 1fr; } @media (max-width: 760px) { .pcheat { grid-template-columns: 1fr; } }
+
+/* задания на слух (7.11.2026): большая кнопка + скорость */
+.lsn { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 4px 0 12px; }
+.lsn-play { font-size: 17px; padding: 11px 20px; }
+.lsn-sp { display: inline-flex; gap: 4px; padding: 3px; border-radius: 999px; background: rgba(0,0,0,.22); border: 1px solid var(--line); }
+.lsr { border: 0; background: none; color: var(--muted); font: 600 13.5px var(--sans); padding: 6px 11px; border-radius: 999px; cursor: pointer; }
+.lsr.on { background: var(--acc); color: #14122e; }
+.lsn-note { font-size: 13.5px; }
+
+/* ежедневная тренировка (7.11.2026) */
+.gdaily { display: flex; align-items: center; gap: 14px; margin: 0 0 14px; text-decoration: none; color: inherit; }
+.gdaily > div { flex: 1; min-width: 0; display: flex; flex-direction: column; } .gdaily b { font-size: 17px; } .gdaily span { color: var(--muted); font-size: 14px; }
+.gdaily .btn { color: #14122e; white-space: nowrap; }
+.dtban .xic { filter: saturate(1.2); }
+.dtgrid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; }
+.dthero { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.dtfire { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 104px; height: 104px; border-radius: 50%; background: rgba(255,255,255,.05); border: 1px solid var(--line); }
+.dtfire b { font-size: 34px; line-height: 1; } .dtfire small { color: var(--muted); font-size: 12px; text-align: center; }
+.dtfire.on { background: radial-gradient(circle at 50% 60%, rgba(255,150,80,.35), rgba(255,150,80,.05)); border-color: rgba(255,170,90,.6); }
+.dtstart { flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.btn.big { font-size: 18px; padding: 14px 26px; }
+.dtset h3 { margin: 4px 0 8px; font-size: 15px; } .dtset h3 + .dtseg { margin-bottom: 12px; }
+.dtseg { display: flex; gap: 6px; flex-wrap: wrap; }
+.dtseg button { flex: 1 1 0; min-width: 64px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 6px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--ink); cursor: pointer; font: inherit; }
+.dtseg button small { color: var(--muted); font-size: 11.5px; } .dtseg button.on { border-color: var(--acc); background: rgba(165,162,255,.14); }
+.dtq { display: grid; gap: 10px; } .dtqi { display: flex; align-items: center; gap: 12px; } .dtqi > div { flex: 1; min-width: 0; }
+.dtqi .bar { height: 6px; border-radius: 6px; background: rgba(255,255,255,.08); margin: 6px 0 4px; overflow: hidden; } .dtqi .bar i { display: block; height: 100%; background: var(--acc); border-radius: 6px; }
+.dtqi.done .bar i { background: #7fe0b0; } .dtok { color: #7fe0b0; font-size: 22px; font-weight: 800; }
+.dtbon { display: flex; flex-wrap: wrap; gap: 8px 18px; } .dtbon .muted { flex-basis: 100%; font-size: 13.5px; }
+.dtun { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; } .dtun > div { flex: 1; min-width: 0; }
+.dtdots { display: flex; gap: 6px; margin-top: 8px; } .dtdots i { width: 26px; height: 8px; border-radius: 8px; background: rgba(255,255,255,.1); } .dtdots i.on { background: #7fe0b0; }
+.dts { max-width: 760px; margin: 0 auto; }
+.dttop { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; } .dtbar { flex: 1; height: 12px; border-radius: 12px; background: rgba(255,255,255,.08); overflow: hidden; }
+.dtbar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--acc), #7fe0b0); border-radius: 12px; transition: width .35s; }
+.dthp { color: #ff8a9a; font-size: 18px; letter-spacing: 2px; white-space: nowrap; }
+.dtcombo { min-height: 26px; text-align: center; } .dtcombo .pop { display: inline-block; padding: 3px 12px; border-radius: 999px; background: rgba(255,200,90,.16); color: #ffd27a; font-weight: 700; animation: dtpop .35s; }
+@keyframes dtpop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.dtfb { position: sticky; bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 16px; margin-top: 10px; border: 1px solid var(--line); backdrop-filter: blur(14px); }
+.dtfb.ok { background: rgba(80,190,140,.18); border-color: rgba(127,224,176,.5); } .dtfb.bad { background: rgba(230,90,110,.16); border-color: rgba(255,138,154,.5); }
+.dtnew { text-align: center; } .dtem { font-size: 72px; line-height: 1.1; margin: 6px 0; } .dtw { font-size: 34px; display: flex; gap: 10px; justify-content: center; align-items: center; } .dtm { font-size: 22px; margin-top: 6px; }
+.dtres { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0; } .dtres div { display: flex; flex-direction: column; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.05); }
+.dtres b { font-size: 24px; } .dtres small { color: var(--muted); }
+.alt-task [data-c].gone { opacity: .25; text-decoration: line-through; }
+.qbtn.bh { margin-left: 6px; }
+@media (max-width: 760px) { .dtgrid { grid-template-columns: 1fr; } .dtres { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gdaily { flex-wrap: wrap; } }
