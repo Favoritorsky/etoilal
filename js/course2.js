@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061205`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061239`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -209,7 +209,7 @@ async function examBind(n) {
       <li>Подсказок «?» нет, ответ даётся <b>один раз</b>.</li>
       <li>Пока идёт контрольная, <b>переводчик и «Проверь текст» закрыты</b>, доски шпаргалок нет.</li>
       <li>Нужно набрать <b>${Lv.PASS} %</b>. Не вышло — пересдать можно через час.</li>
-      <li>Если уйдёшь со страницы — попытка закончится.</li></ul>
+      <li>Переводчик и «Проверь текст» во время контрольной не откроются — нажатие на них ничего не сломает. А если уйти в другой раздел сайта — попытка закончится.</li></ul>
       ${best ? `<p class="note fixn">Контрольная сдана: ${best.best} %, ${"★".repeat(best.stars)}${"☆".repeat(3 - best.stars)}. Можно пересдать на лучший результат.</p>` : ""}
       ${!best && old ? `<p class="note">Раньше ты сдал её по старым правилам (${old.best || 0} %). Контрольные стали сложнее — пересдай, чтобы открыть дальнейшие уроки и получить уровень.</p>` : ""}
       ${left ? `<p class="note unk">Пересдача будет доступна через ${left} мин.</p>` : `<button class="btn gold" id="exgo">Начать контрольную ▶</button>`}
@@ -226,6 +226,13 @@ function examRun(n, L, items) {
   window.addEventListener("hashchange", examLeave);
   examStep();
 }
+// во время контрольной переводчик и «Проверь текст» не открываются: остаёшься на контрольной, попытка не прерывается (6.11.2026)
+const EX_BLOCK = /^#\/(переводчик|проверка)(\/|$)/;
+function examBlocked(href) { if (!EX || EX.done) return false; try { return EX_BLOCK.test(decodeURIComponent(href || "")); } catch (e) { return false; } }
+document.addEventListener("click", (e) => {
+  const a = e.target.closest && e.target.closest("a[href]"); if (!a || !examBlocked(a.getAttribute("href"))) return;
+  e.preventDefault(); e.stopPropagation(); toast("Недоступно во время контрольной");
+}, true);
 function examLeave() {
   if (!EX || EX.done) return; if (location.hash === EX.hash) return;
   clearInterval(EX.timer); EX.done = true; Lv.examStop(); window.removeEventListener("hashchange", examLeave);

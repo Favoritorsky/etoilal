@@ -331,7 +331,10 @@ const PAGE_CACHE = new Map();                          // ключ (адрес) 
 const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
 let pageKey = null;
 async function route(fromNav) {
-  closePop(); if (typeof examLeave === "function") examLeave();
+  closePop();
+  if (typeof examBlocked === "function" && examBlocked(location.hash)) {   // набрали адрес вручную / «назад» — вернуть на контрольную
+    history.replaceState(null, "", EX.hash); toast("Недоступно во время контрольной"); return; }
+  if (typeof examLeave === "function") examLeave();
   const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")), parts = raw.split("/");
   const id = PAGES[parts[0]] ? parts[0] : "главная", key = id + "/" + parts.slice(1).join("/");
   const [view, bind] = PAGES[id];
