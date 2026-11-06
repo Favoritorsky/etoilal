@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061349`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061422`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -96,7 +96,7 @@ async function c2BindLesson(args) {
   // ответы урока хранятся вместе с прогрессом: Store.c2ans[N] = { at, items: {mem, rev} (случайные задания — те же), a: {mem, tasks, rev}: {номер: [попытки]}, res }
   const Sx = Store.get(); Sx.c2ans = Sx.c2ans || {};
   const saved = Sx.c2ans[n] && Sx.c2ans[n].items ? Sx.c2ans[n] : null;
-  const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = [...(L.tasks || []), ...(L.extra || []), ...c2TextTask(n)].map((t) => ({ rq: t.why, ...t }));
+  const mem = saved ? saved.items.mem : c2MemItems(L), rev = saved ? saved.items.rev : c2ReviewItems(n), tasks = [...(L.tasks || []), ...(L.extra || []), ...c2TextTask(n), ...c2NewTasks(n)].map((t) => ({ rq: t.why, ...t }));
   const rec = saved || { at: "", items: { mem, rev }, a: { mem: {}, tasks: {}, rev: {} } };
   // задание на этом месте заменили (поправили урок) — его старые ответы не подставляем: сверяем «отпечатки» заданий
   const sigs = tasks.map(c2Sig), was = rec.sigs || (window.ET_C2_OLDSIG || {})[n] || sigs;
@@ -197,7 +197,7 @@ const EX_SEC = 60;
 let EX = null;
 async function examBind(n) {
   let L; try { L = await c2Load(n); } catch (e) { $("#c2l").innerHTML = `<div class="card">Не удалось загрузить контрольную.</div>`; return; }
-  await trReady();
+  await prepLoad(n);
   const I = ET_C2I.lessons.find((l) => l.n === n), S = Store.get(), best = S.lessons[n], left = Lv.retryLeft(n), lvNext = LEVELS[I.sec];
   // доска шпаргалок: закреплённые таблицы и свои записи из прошлых уроков + правило контрольной (6.11.2026)
   Board.bind(); const bInfo = { title: L.t, pins: [], html: `<div class="brule"><b class="btitle">${esc(L.t)}</b>${altRich(L.rule || "")}</div>`, words: "", ex: "", err: "" };
@@ -217,14 +217,15 @@ async function examBind(n) {
       ${!best && old ? `<p class="note">Раньше ты сдал её по старым правилам (${old.best || 0} %). Контрольные стали сложнее — пересдай, чтобы открыть дальнейшие уроки и получить уровень.</p>` : ""}
       ${left ? `<p class="note unk">Пересдача будет доступна через ${left} мин.</p>` : `<button class="btn gold" id="exgo">Начать контрольную ▶</button>`}
       <span class="muted"> · примерно ${Math.ceil(mins * 0.6)}–${mins} мин</span></div>
-    <div id="exbox"></div>`;
+    ${prepBlock(n)}<div id="exbox"></div>`;
   const go = $("#exgo"); if (go) go.onclick = () => examRun(n, L, items);
 }
 function examRun(n, L, items) {
   const S = Store.get(); S.examLast = S.examLast || {}; S.examLast[n] = new Date().toISOString(); Store.save();
   const total = items.reduce((a, t) => a + (t.k === "trtext" ? t.parts.length : 1), 0);
   Lv.examStart(n, total + 5);
-  EX = { n, L, items, i: 0, score: 0, timer: null, hash: location.hash, done: false };
+  EX = { n, L, items, i: 0, score: 0, timer: null, hash: location.hash, done: false, miss: [] };
+  const pc = $(".prepc"); if (pc) pc.remove();
   $(".exrules").outerHTML = `<div class="card exbar"><div class="row"><b id="exnum"></b><span class="extime" id="extime"></span></div><div class="c2prog"><i id="exprog"></i></div></div>`;
   window.addEventListener("hashchange", examLeave);
   examStep();
@@ -264,6 +265,7 @@ function examStep() {
   let sec = EX_SEC * (it.k === "trtext" ? it.parts.length : 1); const tick = () => { if (tEl) { tEl.textContent = `⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`; tEl.classList.toggle("hot", sec <= 10); } };
   const after = (item, first, ok, frac) => {
     clearInterval(E.timer); E.score += item.k === "trtext" ? (frac || 0) : ok ? 1 : 0;
+    if (item.k === "trtext" ? (frac || 0) < 1 : !ok) E.miss.push(JSON.parse(JSON.stringify(item)));
     const last = E.i === E.items.length - 1;
     const nx = qEl.parentNode.querySelector("#exnext"); nx.innerHTML = `<button class="btn gold" id="exn">${last ? "Узнать результат ▶" : "Дальше ▶"}</button>`;
     nx.querySelector("#exn").onclick = () => { if (last) examEnd(); else { E.i++; examStep(); window.scrollTo(0, $("#exbox").offsetTop - 120); } };
@@ -278,6 +280,7 @@ function examEnd() {
   const before = Lv.level(); let r = { pts: 0 };
   if (pass) { const stars = pct >= 95 ? 3 : pct >= 88 ? 2 : 1; r = Store.finishLesson(n, stars, pct, Math.round(E.score)); }
   const after = Lv.level(), up = after > before ? LEVELS[after - 1] : null;
+  prepState(n).miss = E.miss; Store.save();
   const next = ET_C2I.lessons.find((l) => l.n === n + 1);
   renderNav("учиться");
   $(".exbar").remove();
@@ -285,6 +288,6 @@ function examEnd() {
     <h2>${pass ? "Контрольная сдана!" : "Пока не сдана"}</h2><p>Результат: <b>${pct} %</b> (${E.score.toFixed(1).replace(".0", "")} из ${E.items.length}). Нужно ${Lv.PASS} %. ${r.pts ? `+${r.pts} очков ✦` : ""}</p>
     ${up ? `<div class="lvup"><small>Новый уровень</small><b>${up.ic} <span class="et">${up.w}</span></b><span>${up.ru}</span></div>` : ""}
     ${pass ? "" : `<p class="muted">Повтори уроки раздела и попробуй снова через час. Переводчик и «Проверь текст» снова открыты.</p>`}
-    <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${pass && next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : ""}<a class="btn" href="#/учиться">Ко всем урокам</a></div></div>`;
+    <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${pass && next ? `<a class="btn gold" href="#/урок/${next.n}">Урок ${next.n}: ${esc(next.t)} ▶</a>` : ""}${E.miss.length ? `<a class="btn" href="#/подготовка/${n}/ошибки">Работа над ошибками · ${E.miss.length}</a>` : ""}<a class="btn" href="#/учиться">Ко всем урокам</a></div></div>`;
   EX = null;
 }

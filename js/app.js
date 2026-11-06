@@ -321,7 +321,7 @@ const PAGES = {
   "магазин": [pageShop, bindShop], "секрет": [pageSecret, bindSecret],
   "о-языке": [pageAbout],
   "альтернатива": [altPage, altBind],
-  "вход": [cloudPageLogin, cloudBindLogin], "чат": [pageChat, bindChat], "мат": [pageMat, bindMat], "книги": [pageBooks, bindBooks], "игрок": [cloudPagePlayer, cloudBindPlayer],
+  "вход": [cloudPageLogin, cloudBindLogin], "чат": [pageChat, bindChat], "мат": [pageMat, bindMat], "подготовка": [pagePrep, bindPrep], "книги": [pageBooks, bindBooks], "игрок": [cloudPagePlayer, cloudBindPlayer],
 };
 // Открытые страницы запоминаются: при переходе в другой раздел страница не уничтожается, а откладывается (вместе с ответами,
 // введённым текстом, открытыми блоками и прокруткой) и при возвращении показывается как была. Главная, профиль, карточки,
@@ -346,7 +346,7 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = ["урок", "экспресс", "тренировки", "альтернатива"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
+  const navId = ["урок", "экспресс", "тренировки", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
   const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);

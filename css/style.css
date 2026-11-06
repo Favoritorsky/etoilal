@@ -652,3 +652,13 @@ input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,
   .tabbar { left: 10px; right: 10px; bottom: 10px; border-radius: 20px; border: 1px solid var(--line); background: rgba(20,22,46,.92); backdrop-filter: blur(14px); padding: 8px 4px; }
   .tabbar a i .ico { width: 22px; height: 22px; } .tabbar a.on { color: var(--acc); } }
 .topnav { gap: 2px; } .topnav a.nl { padding: 7px 10px; font-size: 14px; } .topnav .chip { padding: 6px 8px; }
+/* подготовка к контрольной (6.11.2026) */
+.prepc { margin: 14px 0; } .prbtns { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 6px; } .prweak { margin-top: 6px; } .prweak a { color: var(--acc); }
+.prring { width: 92px; height: 92px; border-radius: 50%; display: grid; place-content: center; text-align: center; flex: none;
+  background: radial-gradient(closest-side, var(--bg) 78%, transparent 80% 100%), conic-gradient(var(--rc) calc(var(--p) * 1%), var(--line) 0); }
+.prring b { font-size: 22px; line-height: 1; } .prring small { color: var(--muted); font-size: 11px; }
+.prring.ok { --rc: #7fe0b0; } .prring.mid { --rc: var(--acc); } .prring.low { --rc: #ff9a9a; }
+.prch { margin-top: 10px; } .prch summary { cursor: pointer; font-weight: 600; color: var(--acc); }
+.pcheat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; } .pch { padding: 12px; border-radius: 12px; background: rgba(0,0,0,.18); border: 1px solid var(--line); }
+.pch b { display: block; margin-bottom: 4px; } .pchw { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
+.board .pcheat { grid-template-columns: 1fr; } @media (max-width: 760px) { .pcheat { grid-template-columns: 1fr; } }
