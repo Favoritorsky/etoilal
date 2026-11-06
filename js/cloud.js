@@ -236,7 +236,7 @@ async function cloudFillTop() {
   try {
     const r = await Cloud.top(8);
     if (!$("#ctop")) return;
-    el.innerHTML = `<div class="card"><h3>🏆 Топ недели</h3>${r.length ? `<ol class="topw">${r.map((x) => `<li class="${x.me ? "me" : ""}"><a href="#/игрок/${encodeURIComponent(x.nick)}">${esc(x.nick)}</a>${Lv.badge(x.level)}<b>✦ ${x.points}</b></li>`).join("")}</ol>`
+    el.innerHTML = `<div class="card"><h3>Топ недели</h3>${r.length ? `<ol class="topw">${r.map((x) => `<li class="${x.me ? "me" : ""}"><a href="#/игрок/${encodeURIComponent(x.nick)}">${esc(x.nick)}</a>${Lv.badge(x.level)}<b>✦ ${x.points}</b></li>`).join("")}</ol>`
       : `<p class="muted">На этой неделе ещё никого — стань первым!</p>`}
       ${Cloud.user() ? "" : `<div class="muted" style="margin-top:8px"><a href="#/вход">Войди</a>, чтобы попасть в топ.</div>`}</div>`;
   } catch (e) { el.innerHTML = ""; }                         // нет таблиц или сети — топ просто не показываем

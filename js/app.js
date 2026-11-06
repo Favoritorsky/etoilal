@@ -35,10 +35,24 @@ function trReady() {
   return TR_READY;
 }
 
+// линейные значки (дизайн «Индиго», 6.11.2026) — вместо эмодзи в меню, вкладках и на главной
+const SVGI = (d) => `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICO = {
+  flame: SVGI('<path d="M12 3c.5 3.5 5 5.2 5 10a5 5 0 0 1-10 0c0-2.2 1.2-3.6 2.3-4.6.1 1.8.9 2.9 2.2 3.2-.4-3 .1-5.8.5-8.6z"/>'),
+  star: SVGI('<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.8z"/>'),
+  chest: SVGI('<rect x="3.5" y="9" width="17" height="10.5" rx="2"/><path d="M3.5 12.5h17M5 9a7 4.5 0 0 1 14 0M10.5 12.5v2.5h3v-2.5"/>'),
+  level: SVGI('<path d="M4 19l5-8 4 5 3-4 4 7z"/><circle cx="16" cy="6" r="2"/>'),
+  book: SVGI('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5zM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/>'),
+  home: SVGI('<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>'),
+  check: SVGI('<path d="M5 12.5l4.5 4.5L19 7.5"/>'), swap: SVGI('<path d="M4 8h14l-3-3M20 16H6l3 3"/>'),
+  more: SVGI('<path d="M4 7h16M4 12h16M4 17h16"/>'), chat: SVGI('<path d="M4 5h16v11H9l-5 4z"/>'),
+  user: SVGI('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'), cloud: SVGI('<path d="M7 18a4.5 4.5 0 0 1-.5-9A6 6 0 0 1 18 8a4.5 4.5 0 0 1 0 10z"/>'),
+  lock: SVGI('<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'), arrow: SVGI('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+};
 // ---------------------------------------------------------------- меню
 const NAV = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["словарь", "Словарь", "📚"], ["карточки", "Карточки", "🃏"], ["переводчик", "Переводчик", "⇄"],
   ["проверка", "Проверь текст", "✅"], ["справочник", "Справочник", "📐"], ["песни", "Песни", "🎤"], ["библиотека", "Библиотека", "📜"], ["чат", "Чат", "💬"]];
-const TABS = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["проверка", "Проверка", "✅"], ["переводчик", "Перевод", "⇄"], ["ещё", "Ещё", "☰"]];
+const TABS = [["главная", "Главная", "home"], ["учиться", "Учиться", "book"], ["проверка", "Проверка", "check"], ["переводчик", "Перевод", "swap"], ["ещё", "Ещё", "more"]];
 // каждая вкладка меню помнит, где ты в ней был (урок, слово в словаре, загадку…): вкладка ведёт туда; повторное нажатие на
 // уже открытую вкладку — к её началу. Хранится в браузере, переживает перезаход на сайт.
 let TAB_LAST = {}; try { TAB_LAST = JSON.parse(localStorage.getItem("etoilal-tabs") || "{}"); } catch (e) {}
@@ -49,13 +63,13 @@ function tabRemember(navId, raw) {
 const tabHref = (id, cur) => (id === cur || id === "главная" || !TAB_LAST[id] ? "#/" + id : TAB_LAST[id]);
 function renderNav(cur) {
   const st = Store.streak(), pts = Store.get().points;
-  $("#topnav").innerHTML = `<a class="logo" href="#/главная">✦ Etoil<b>al</b></a>` +
+  $("#topnav").innerHTML = `<a class="logo" href="#/главная"><span class="mk">✦</span> Etoil<b>al</b></a>` +
     NAV.map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="${esc(tabHref(id, cur))}">${t}</a>`).join("") +
-    `<div class="sp"></div><span class="chip f" title="Дней подряд">🔥 ${st}</span><span class="chip" title="Очки">✦ ${pts}</span>` +
-    (Cloud.user() ? `<a class="chip cl nk" href="#/профиль" title="Профиль · прогресс в облаке">👤 ${esc(Cloud.user().nick)}</a>`
-      : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">☁ Войти</a><a class="chip" href="#/профиль" title="Профиль">👤</a>`);
+    `<div class="sp"></div><span class="chip f" title="Дней подряд">${ICO.flame} ${st}</span><span class="chip" title="Очки">${ICO.star} ${pts}</span>` +
+    (Cloud.user() ? `<a class="chip cl nk" href="#/профиль" title="Профиль · прогресс в облаке">${ICO.user} ${esc(Cloud.user().nick)}</a>`
+      : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">${ICO.cloud} Войти</a><a class="chip" href="#/профиль" title="Профиль">${ICO.user}</a>`);
   const moreOn = !TABS.some((x) => x[0] === cur);
-  $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST["ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${i}</i>${t}</a>`).join("");
+  $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST["ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${ICO[i] || i}</i>${t}</a>`).join("");
 }
 
 // ---------------------------------------------------------------- главная
@@ -73,26 +87,26 @@ function pageHome() {
   const secs = ET_C2I.sections.map((name, k) => {
     const ls = Lv.secLessons(k), nd = ls.filter((l) => Lv.done(l.n, S)).length, passed = Lv.secPassed(k, S), cur = next.sec === k && !passed;
     const lock = !passed && !cur && ls[0].n > next.n, first = ls.find((l) => !Lv.done(l.n, S)) || ls[0];
-    return `<${lock ? "div" : "a"} class="gsec${passed ? " done" : cur ? " cur" : lock ? " lock" : ""}"${lock ? "" : ` href="#/урок/${first.n}"`}><span class="no">${pad(k + 1)}${cur ? " · сейчас" : lock ? " · 🔒" : ""}</span>
+    return `<${lock ? "div" : "a"} class="gsec${passed ? " done" : cur ? " cur" : lock ? " lock" : ""}"${lock ? "" : ` href="#/урок/${first.n}"`}><span class="no"><span>${pad(k + 1)}${cur ? " · сейчас" : ""}</span><span class="gi2">${passed ? ICO.check : lock ? ICO.lock : ""}</span></span>
       <h3>${esc(name)}</h3><span class="u">уроки ${ls[0].n}–${ls[ls.length - 1].n} · пройдено ${nd} из ${ls.length}</span>
       <div class="rank"><b class="et">${LEVELS[k].w}</b><span>${LEVELS[k].ru}${passed ? " ✓" : ""}</span></div><div class="bar"><i style="width:${Math.round(nd / ls.length * 100)}%"></i></div></${lock ? "div" : "a"}>`;
   }).join("");
   const secL = Lv.secLessons(next.sec);
-  return `<div class="ghome"><section class="gh"><h1>Язык, который<br><span>звучит</span> как звёзды.</h1>
+  return `<div class="ghome"><section class="gh"><div><div class="k">Самоучитель · 40 уроков</div><h1>Язык, который <span>звучит</span> как звёзды</h1></div>
     <div><p>Сорок уроков по порядку. Шесть разделов — шесть уровней: от <b class="et">elev</b> до <b class="et">etoil</b>. Каждый уровень подтверждает контрольная.</p>
-      <a class="btn gold" href="#/урок/${next.n}">${doneN ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} →</a></div></section>
-  <section class="gstats"><div><div class="n"><i>🔥</i>${Store.streak()}</div><div class="l">дней огонёк</div></div><div><div class="n"><i>✦</i>${S.points}</div><div class="l">очков</div></div>
-    <div><div class="n">${doneN}/${L.length}</div><div class="l">уроков пройдено</div></div><div><div class="n"><i>💎</i>${S.chests}</div><div class="l">сундуков</div></div></section>
+      <a class="btn gold" href="#/урок/${next.n}">${doneN ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} ${ICO.arrow}</a></div></section>
+  <section class="gstats">${[[ICO.flame, Store.streak(), "дней подряд"], [ICO.star, S.points, "очков"], [ICO.book, doneN + "/" + L.length, "уроков пройдено"], [ICO.chest, S.chests, "сундуков"]]
+    .map(([ic, v, t]) => `<div class="gst"><span class="gi">${ic}</span><div><b>${v}</b><span>${t}</span></div></div>`).join("")}</section>
   <div class="gcap"><span>Карта разделов · уровни</span><span>Твой уровень: ${lv ? Lv.badge(lv) + " " + LEVELS[lv - 1].ru : "пока нет — пройди уроки 1–3"}</span></div>
   <section class="ggrid">${secs}</section>
   <div class="gtwo"><div>
     <div class="gcap" style="margin-top:0"><span>Раздел ${pad(next.sec + 1)} — ${esc(ET_C2I.sections[next.sec])}</span><a href="#/учиться">все уроки →</a></div>
-    ${secL.map((l) => `<a class="grow${l.n === next.n ? " cur" : ""}" href="${Lv.isOpen(l.n, S) ? "#/урок/" + l.n : "#/урок/" + next.n}"><span class="kk">${pad(l.n)}</span><b>${esc(l.t)}</b><span>${Lv.done(l.n, S) ? "★".repeat(S.lessons[l.n].stars) : l.n === next.n ? "→" : Lv.isOpen(l.n, S) ? "" : "🔒"}</span></a>`).join("")}
+    ${secL.map((l) => `<a class="grow${l.n === next.n ? " cur" : ""}" href="${Lv.isOpen(l.n, S) ? "#/урок/" + l.n : "#/урок/" + next.n}"><span class="kk">${pad(l.n)}</span><b>${esc(l.t)}</b><span class="gr">${Lv.done(l.n, S) ? "★".repeat(S.lessons[l.n].stars) : l.n === next.n ? ICO.arrow : Lv.isOpen(l.n, S) ? "" : ICO.lock}</span></a>`).join("")}
     <div class="tools" style="margin-top:22px">
-      <a class="card tool" href="#/переводчик"><div class="ic">⇄</div><b>Переводчик</b><span>Русский ⇄ Etoilal</span></a>
-      <a class="card tool" href="#/проверка"><div class="ic">✅</div><b>Проверь текст</b><span>Найдёт ошибки и объяснит</span></a>
-      <a class="card tool" href="#/чат"><div class="ic">💬</div><b>Чат</b><span>Общайся со всеми</span></a>
-      <a class="card tool" href="#/книги"><div class="ic">📕</div><b>Книги читателей</b><span>Пиши с уровня artizan</span></a>
+      <a class="card tool" href="#/переводчик"><div class="ic">${ICO.swap}</div><b>Переводчик</b><span>Русский ⇄ Etoilal</span></a>
+      <a class="card tool" href="#/проверка"><div class="ic">${ICO.check}</div><b>Проверь текст</b><span>Найдёт ошибки и объяснит</span></a>
+      <a class="card tool" href="#/чат"><div class="ic">${ICO.chat}</div><b>Чат</b><span>Общайся со всеми</span></a>
+      <a class="card tool" href="#/книги"><div class="ic">${ICO.book}</div><b>Книги читателей</b><span>Пиши с уровня artizan</span></a>
     </div></div>
   <aside class="rail">
     ${dailyCard()}

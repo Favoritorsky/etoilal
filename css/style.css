@@ -595,3 +595,60 @@ input.in:focus, textarea.in:focus, #cform input:focus { border-color: var(--acc)
 .adtog { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13.5px; margin: 12px 0; cursor: pointer; } .adtog input { accent-color: var(--acc); width: 16px; height: 16px; }
 .matex { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; } @media (max-width: 760px) { .matex { grid-template-columns: 1fr; } }
 .llist > * { min-width: 0; } .lrow .lt small { white-space: normal; }
+
+/* ======================================================================================================
+   6.11.2026 — дизайн «Индиго» (выбран из макетов v6, №5): сине-фиолетовая ночь, лавандовый акцент, мягкие скругления 16 px,
+   полупрозрачные карточки, линейные значки вместо эмодзи (ICO в app.js), шрифт Golos Text. Раскладка — как была.
+   ====================================================================================================== */
+:root { --bg: #0d0f22; --card: rgba(255,255,255,.04); --card2: rgba(255,255,255,.07); --ink: #ecebff; --muted: #9c9cc4; --dim: #7a7aa6;
+  --acc: #a5a2ff; --acc2: #c8b8ff; --acc3: #a5a2ff; --line: rgba(255,255,255,.08); --glass: var(--card); --glass2: var(--card2);
+  --r: 16px; --sans: "Golos Text", Manrope, system-ui, sans-serif; --serif: var(--sans); --star: #dcdaff; --on: #15124a; }
+body { font-family: var(--sans); background: radial-gradient(900px 600px at 10% 0, #2a256655, transparent), radial-gradient(800px 600px at 100% 30%, #1e3a6a44, transparent), var(--bg); background-attachment: fixed; }
+.ico { width: 18px; height: 18px; flex: none; vertical-align: -3px; }
+/* шапка — плавающая панель со скруглением */
+.topnav { top: 10px; margin: 12px auto 0; border: 1px solid var(--line); border-radius: 999px; background: rgba(20,22,46,.8); backdrop-filter: blur(14px); padding: 8px 10px 8px 18px; max-width: 1290px; }
+.logo { font: 700 19px var(--sans); } .logo .mk, .logo b { color: var(--acc); }
+.topnav a.nl { border-radius: 999px; padding: 7px 13px; font-weight: 500; } .topnav a.nl.on { background: var(--card2); box-shadow: none; color: var(--ink); }
+.chip { display: inline-flex; align-items: center; gap: 5px; border-radius: 999px; font-weight: 600; } .chip .ico { width: 16px; height: 16px; color: var(--acc); } .chip.f { color: var(--ink); }
+/* карточки, кнопки, поля */
+.card, .ucard, .st { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: blur(10px); }
+h1.page { font: 700 44px/1.05 var(--sans); letter-spacing: -1.2px; } h2 { font: 700 26px/1.15 var(--sans); letter-spacing: -.4px; }
+.k { color: var(--muted); }
+.btn { border-radius: 999px; background: var(--card2); border-color: var(--line); font-weight: 600; } .btn:hover { border-color: var(--acc); }
+.btn.gold, body[class*="theme-"] .btn.gold { background: var(--acc); color: var(--on); border-radius: 999px; font-weight: 600; } .btn.gold .ico { width: 16px; height: 16px; }
+.btn.sm { border-radius: 999px; }
+.play, body[class*="theme-"] .play { background: var(--card2); color: var(--acc); border: 1px solid var(--line); }
+.toast, body[class*="theme-"] .toast { background: var(--acc); color: var(--on); border-radius: 999px; }
+input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,0,.25); border-color: var(--line); }
+.seg { border-radius: 999px; background: rgba(0,0,0,.25); } .seg button { border-radius: 999px; } .seg button.on { box-shadow: none; background: var(--card2); }
+.lvb { border-radius: 999px; } .lvtag { border-radius: 999px; }
+.tool .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--card2); color: var(--acc); font-size: 0; }
+.tool .ic .ico { width: 20px; height: 20px; }
+/* главная */
+.gh { grid-template-columns: 1.7fr 1fr; padding: 40px 4px 30px; } .gh .k { margin-bottom: 10px; }
+.gh h1 { font: 700 54px/1.04 var(--sans); letter-spacing: -1.6px; } .gh h1 span { color: var(--acc); }
+.gstats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; border: 0; }
+.gstats .gst { display: flex; gap: 12px; align-items: center; padding: 16px !important; border: 1px solid var(--line) !important; border-radius: var(--r); background: var(--card); backdrop-filter: blur(10px); }
+.gi { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--card2); color: var(--acc); flex: none; }
+.gst b { display: block; font: 700 22px var(--sans); letter-spacing: -.4px; } .gst span { color: var(--muted); font-size: 13px; }
+.ggrid { gap: 12px; background: none; border: 0; }
+.gsec { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: blur(10px); }
+.gsec:hover { background: var(--card2); } .gsec.cur { background: var(--card); box-shadow: inset 0 0 0 1px var(--acc); border-color: var(--acc); }
+.gsec .no { display: flex; justify-content: space-between; } .gi2 .ico { width: 16px; height: 16px; } .gsec.done .gi2 { color: var(--acc); }
+.gsec .bar, .gsec .bar i { border-radius: 9px; } .gsec .rank b { color: var(--ink); } .gsec.done .rank b { color: var(--acc); }
+.gcap { font-weight: 600; }
+.grow { padding: 11px 12px; border-radius: 10px; border-bottom: 0; } .grow + .grow { border-top: 1px solid var(--line); } .grow.cur { background: var(--card2); }
+.gr .ico { width: 16px; height: 16px; } .gword { font: 700 44px var(--sans); letter-spacing: -1px; }
+/* уроки, уровни, прогресс */
+.lrow .ln { border-radius: 12px; } .lrow.cur { border-color: var(--acc); box-shadow: none; } .lrow.cur .ln { background: var(--acc); color: var(--on); }
+.lvsteps { gap: 8px; background: none; border: 0; } .lvs { border-radius: 12px; background: var(--card); border: 1px solid var(--line); } .lvs.c { box-shadow: none; border-color: var(--acc); }
+.c2prog, .c2prog i, .q, .q i { border-radius: 9px; }
+.lvup { border-radius: var(--r); border-color: var(--acc); }
+.alt-text { border-radius: 12px; border-left: 0; box-shadow: inset 3px 0 var(--acc); background: rgba(0,0,0,.2); }
+.chb { border-radius: 14px; background: var(--card2); } .chm.me .chb { border-color: var(--acc); }
+.chatc { overflow: hidden; }
+@media (max-width: 960px) { .gh { grid-template-columns: 1fr; gap: 14px; } .gh h1 { font-size: 38px; letter-spacing: -1px; } .gstats { grid-template-columns: 1fr 1fr; } .gstats > div:nth-child(n) { border: 1px solid var(--line) !important; padding: 16px !important; } }
+@media (max-width: 760px) { .topnav { margin: 8px 10px 0; top: 8px; border-radius: 18px; }
+  .tabbar { left: 10px; right: 10px; bottom: 10px; border-radius: 20px; border: 1px solid var(--line); background: rgba(20,22,46,.92); backdrop-filter: blur(14px); padding: 8px 4px; }
+  .tabbar a i .ico { width: 22px; height: 22px; } .tabbar a.on { color: var(--acc); } }
+.topnav { gap: 2px; } .topnav a.nl { padding: 7px 10px; font-size: 14px; } .topnav .chip { padding: 6px 8px; }
