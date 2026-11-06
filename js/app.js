@@ -334,12 +334,13 @@ async function route(fromNav) {
   closePop();
   if (typeof examBlocked === "function" && examBlocked(location.hash)) {   // набрали адрес вручную / «назад» — вернуть на контрольную
     history.replaceState(null, "", EX.hash); toast("Недоступно во время контрольной"); return; }
+  if (typeof examMayLeave === "function" && !examMayLeave(location.hash)) { history.replaceState(null, "", EX.hash); if (!document.querySelector("#exbox")) return route(true); return; }
   if (typeof examLeave === "function") examLeave();
   const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")), parts = raw.split("/");
   const id = PAGES[parts[0]] ? parts[0] : "главная", key = id + "/" + parts.slice(1).join("/");
   const [view, bind] = PAGES[id];
   const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
-  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key && !app.querySelector("#exbox, .nokeep")) {        // отложить уходящую страницу
+  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key && (!app.querySelector("#exbox, .nokeep") || (typeof exOn === "function" && exOn() && app.querySelector("#exbox")))) {        // отложить уходящую страницу
     app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
     PAGE_CACHE.delete(pageKey); PAGE_CACHE.set(pageKey, { el: cur, y: scrollY, onShow: PageHook.onShow });
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);

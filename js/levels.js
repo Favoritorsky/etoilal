@@ -22,7 +22,10 @@ const Lv = (() => {
   const firstOpen = (S = Store.get()) => (ET_C2I.lessons.find((l) => !done(l.n, S)) || null);
   function isOpen(n, S = Store.get()) { const f = firstOpen(S); return !f || n <= f.n || done(n, S); }
   // пересдача контрольной — не чаще раза в час
+  // аккаунты без паузы между пересдачами (владелец сайта — чтобы проверять контрольные), 6.11.2026
+  const NO_COOLDOWN = new Set(["qub"]);
   function retryLeft(n, S = Store.get()) {
+    try { if (typeof Cloud !== "undefined" && Cloud.user() && NO_COOLDOWN.has(String(Cloud.user().nick || "").toLowerCase())) return 0; } catch (e) {}
     const t = (S.examLast || {})[n]; if (!t) return 0;
     return Math.max(0, Math.ceil((Date.parse(t) + RETRY_MIN * 60000 - Date.now()) / 60000));
   }

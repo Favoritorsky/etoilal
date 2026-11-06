@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061239`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611061349`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -55,7 +55,7 @@ function c2PageLesson(args) {
     return `<div class="card soon nokeep"><div class="ic">🔒</div><h2>${I.check ? "Контрольная" : "Урок"} ${n} пока ${I.check ? "закрыта" : "закрыт"}</h2>
       <p class="muted">Уроки и контрольные открываются строго по порядку. Сначала пройди ${f.check ? "контрольную" : "урок"} ${f.n} «${esc(f.t)}».</p>
       <a class="btn gold" href="#/урок/${f.n}">К ${f.check ? "контрольной" : "уроку"} ${f.n} ▶</a></div>`; }
-  if (I.check) return `<div id="c2l"><div class="card muted">Загружаю контрольную ${n}…</div></div>`;
+  if (I.check) return Board.wrap(`<div id="c2l"><div class="card muted">Загружаю контрольную ${n}…</div></div>`);
   return Board.wrap(`<div id="c2l"><div class="card muted">Загружаю урок ${n}…</div></div>`);
 }
 async function c2BindLesson(args) {
@@ -199,6 +199,9 @@ async function examBind(n) {
   let L; try { L = await c2Load(n); } catch (e) { $("#c2l").innerHTML = `<div class="card">Не удалось загрузить контрольную.</div>`; return; }
   await trReady();
   const I = ET_C2I.lessons.find((l) => l.n === n), S = Store.get(), best = S.lessons[n], left = Lv.retryLeft(n), lvNext = LEVELS[I.sec];
+  // доска шпаргалок: закреплённые таблицы и свои записи из прошлых уроков + правило контрольной (6.11.2026)
+  Board.bind(); const bInfo = { title: L.t, pins: [], html: `<div class="brule"><b class="btitle">${esc(L.t)}</b>${altRich(L.rule || "")}</div>`, words: "", ex: "", err: "" };
+  Board.setLesson(bInfo); Board.render(); PageHook.onShow = () => { Board.setLesson(bInfo); Board.render(); };
   const items = [...(L.tasks || []), ...(L.exam || [])];
   const mins = items.reduce((a, t) => a + (t.k === "trtext" ? t.parts.length : 1), 0);
   const old = (S.checksOld || {})[n];
@@ -207,9 +210,9 @@ async function examBind(n) {
     <div class="card exrules"><div class="exlv"><span class="k">Сдашь — получишь уровень</span><b>${lvNext.ic} <span class="et">${lvNext.w}</span> · ${lvNext.ru}</b></div>
       <ul><li><b>${items.length} заданий</b>, по одному. На каждое — <b>${EX_SEC} секунд</b> («Переведи текст» — ${EX_SEC} секунд на каждое предложение). Время вышло — задание не засчитано.</li>
       <li>Подсказок «?» нет, ответ даётся <b>один раз</b>.</li>
-      <li>Пока идёт контрольная, <b>переводчик и «Проверь текст» закрыты</b>, доски шпаргалок нет.</li>
+      <li>Пока идёт контрольная, <b>переводчик и «Проверь текст» закрыты</b>. <b>Словарь</b> и <b>доска шпаргалок</b> (твои закреплённые таблицы и записи) — можно.</li>
       <li>Нужно набрать <b>${Lv.PASS} %</b>. Не вышло — пересдать можно через час.</li>
-      <li>Переводчик и «Проверь текст» во время контрольной не откроются — нажатие на них ничего не сломает. А если уйти в другой раздел сайта — попытка закончится.</li></ul>
+      <li>В словарь можно уйти и вернуться — контрольная и таймер продолжатся. Уход в другие разделы закончит попытку (сайт спросит перед этим).</li></ul>
       ${best ? `<p class="note fixn">Контрольная сдана: ${best.best} %, ${"★".repeat(best.stars)}${"☆".repeat(3 - best.stars)}. Можно пересдать на лучший результат.</p>` : ""}
       ${!best && old ? `<p class="note">Раньше ты сдал её по старым правилам (${old.best || 0} %). Контрольные стали сложнее — пересдай, чтобы открыть дальнейшие уроки и получить уровень.</p>` : ""}
       ${left ? `<p class="note unk">Пересдача будет доступна через ${left} мин.</p>` : `<button class="btn gold" id="exgo">Начать контрольную ▶</button>`}
@@ -227,14 +230,27 @@ function examRun(n, L, items) {
   examStep();
 }
 // во время контрольной переводчик и «Проверь текст» не открываются: остаёшься на контрольной, попытка не прерывается (6.11.2026)
-const EX_BLOCK = /^#\/(переводчик|проверка)(\/|$)/;
-function examBlocked(href) { if (!EX || EX.done) return false; try { return EX_BLOCK.test(decodeURIComponent(href || "")); } catch (e) { return false; } }
+// словарь — можно (контрольная и таймер продолжаются); другие разделы — только после подтверждения (попытка закончится)
+const EX_BLOCK = /^#\/(переводчик|проверка)(\/|$)/, EX_FREE = /^#\/словарь(\/|$)/;
+const EX_LEAVE_MSG = "Если ты выйдешь из контрольной, все ответы сбросятся, и пересдать её можно будет только через час.\n\nВыйти?";
+const exOn = () => !!(EX && !EX.done), exDec = (h) => { try { return decodeURIComponent(h || ""); } catch (e) { return h || ""; } };
+function examBlocked(href) { return exOn() && EX_BLOCK.test(exDec(href)); }
+function examFree(href) { return exOn() && EX_FREE.test(exDec(href)); }
+// уход с контрольной (не в словарь): спросить; true — можно уходить
+function examMayLeave(href) {
+  if (!exOn() || EX.leaveOk || examFree(href) || exDec(href) === exDec(EX.hash)) return true;
+  if (confirm(EX_LEAVE_MSG)) { EX.leaveOk = true; return true; }
+  return false;
+}
 document.addEventListener("click", (e) => {
-  const a = e.target.closest && e.target.closest("a[href]"); if (!a || !examBlocked(a.getAttribute("href"))) return;
-  e.preventDefault(); e.stopPropagation(); toast("Недоступно во время контрольной");
+  const a = e.target.closest && e.target.closest("a[href]"); if (!a || !exOn()) return;
+  const h = a.getAttribute("href"); if (!/^#/.test(h)) return;
+  if (examBlocked(h)) { e.preventDefault(); e.stopPropagation(); toast("Недоступно во время контрольной"); return; }
+  if (!examMayLeave(h)) { e.preventDefault(); e.stopPropagation(); }
 }, true);
+window.addEventListener("beforeunload", (e) => { if (exOn()) { e.preventDefault(); e.returnValue = ""; } });
 function examLeave() {
-  if (!EX || EX.done) return; if (location.hash === EX.hash) return;
+  if (!EX || EX.done) return; if (location.hash === EX.hash || examFree(location.hash)) return;
   clearInterval(EX.timer); EX.done = true; Lv.examStop(); window.removeEventListener("hashchange", examLeave);
   toast("Контрольная прервана — попытка не засчитана");
 }
@@ -243,15 +259,17 @@ function examStep() {
   $("#exnum").textContent = `Задание ${E.i + 1} из ${E.items.length}`;
   $("#exprog").style.width = Math.round(E.i / E.items.length * 100) + "%";
   box.innerHTML = `<div class="alt-qs" id="exq"></div><div id="exnext"></div>`;
-  let sec = EX_SEC * (it.k === "trtext" ? it.parts.length : 1); const tick = () => { const el = $("#extime"); if (el) { el.textContent = `⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`; el.classList.toggle("hot", sec <= 10); } };
+  // ссылки на элементы, а не поиск по странице: пока ты в словаре, страница контрольной отложена, а таймер идёт
+  const tEl = $("#extime"), qEl = $("#exq");
+  let sec = EX_SEC * (it.k === "trtext" ? it.parts.length : 1); const tick = () => { if (tEl) { tEl.textContent = `⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`; tEl.classList.toggle("hot", sec <= 10); } };
   const after = (item, first, ok, frac) => {
     clearInterval(E.timer); E.score += item.k === "trtext" ? (frac || 0) : ok ? 1 : 0;
     const last = E.i === E.items.length - 1;
-    $("#exnext").innerHTML = `<button class="btn gold" id="exn">${last ? "Узнать результат ▶" : "Дальше ▶"}</button>`;
-    $("#exn").onclick = () => { if (last) examEnd(); else { E.i++; examStep(); window.scrollTo(0, $("#exbox").offsetTop - 120); } };
+    const nx = qEl.parentNode.querySelector("#exnext"); nx.innerHTML = `<button class="btn gold" id="exn">${last ? "Узнать результат ▶" : "Дальше ▶"}</button>`;
+    nx.querySelector("#exn").onclick = () => { if (last) examEnd(); else { E.i++; examStep(); window.scrollTo(0, $("#exbox").offsetTop - 120); } };
   };
-  AltT.mount($("#exq"), [it], { exam: true, base: E.i, onAnswer: after });
-  tick(); E.timer = setInterval(() => { sec--; tick(); if (sec <= 0) { clearInterval(E.timer); const q = $("#exq"); if (q && q._timeout) q._timeout(); } }, 1000);
+  AltT.mount(qEl, [it], { exam: true, base: E.i, onAnswer: after });
+  tick(); E.timer = setInterval(() => { sec--; tick(); if (sec <= 0) { clearInterval(E.timer); if (qEl._timeout) qEl._timeout(); } }, 1000);
   const inp = box.querySelector("input"); if (inp) inp.focus({ preventScroll: true });
 }
 function examEnd() {
