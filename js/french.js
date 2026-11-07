@@ -15,7 +15,7 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611080229`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611080239`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
@@ -216,7 +216,7 @@ const FR = (() => {
     // итоговая (последняя) контрольная — по всему курсу: по заданию из каждого урока последнего раздела + 8 случайных уроков раньше
     const last = !info(n + 1), all = lessons().filter((l) => !l.check);
     const secL = last ? all.filter((l) => l.sec === I.sec).concat(AltT.shuffle(all.filter((l) => l.sec < I.sec)).slice(0, 8)) : all.filter((l) => l.sec === I.sec);
-    const best = prog()[n], left = retryLeft(n), lv = LV[I.sec];
+    const best = prog()[n], left = retryLeft(n), lv = LV[I.sec], miss = ((S0().frMiss || {})[n] || []);
     await Promise.all(secL.map((l) => load(l.n).catch(() => null)));
     // задания: свои задания контрольной + по 1–2 задания каждого урока раздела + задания на слух (треть) — всё вперемешку
     const own = (L.tasks || []).map(fix), per = secL.length > 6 ? 1 : 2, fromL = secL.flatMap((l) => AltT.shuffle((FR_C[l.n] || {}).tasks || []).slice(0, per).map(fix));
@@ -234,9 +234,12 @@ const FR = (() => {
         <li>Нужно набрать <b>${PASS} %</b>. Не вышло — пересдать можно через час.</li></ul>
         ${best ? `<p class="note fixn">Контрольная сдана: ${best.best} %, ${"★".repeat(best.stars)}${"☆".repeat(3 - best.stars)}. Можно пересдать на лучший результат.</p>` : ""}
         ${left ? `<p class="note unk">Пересдача будет доступна через ${left} мин.</p>` : `<button class="btn gold" id="exgo">Начать контрольную ▶</button>`}
-        <span class="muted"> · примерно ${Math.ceil(items.length * 0.6)}–${items.length} мин</span></div><div id="exbox"></div>`;
+        <span class="muted"> · примерно ${Math.ceil(items.length * 0.6)}–${items.length} мин</span></div>
+      ${miss.length ? `<div class="card prepc" id="frmissc"><b>🔁 Работа над ошибками</b><div class="muted">В прошлой попытке не получилось ${miss.length} заданий. Перереши их спокойно — с подсказками и разбором, без таймера. На результат контрольной не влияет.</div>
+        <button class="btn sm" id="frmissgo">Перерешать ошибки (${miss.length})</button><div class="alt-qs" id="frmissq"></div></div>` : ""}<div id="exbox"></div>`;
     window.__frExam = items;                              // для тестов
-    const go = $("#exgo"); if (go) go.onclick = () => {
+    const mg = $("#frmissgo"); if (mg) mg.onclick = () => { mg.remove(); AltT.mount($("#frmissq"), miss, { onAnswer: () => {} }); };
+    const go = $("#exgo"); if (go) go.onclick = () => { const mc = $("#frmissc"); if (mc) mc.remove();
       const S = S0(); S.frExam = S.frExam || {}; S.frExam[n] = new Date().toISOString(); Store.save();
       EX = { n, I, items, i: 0, score: 0, timer: null, miss: [] };
       $(".exrules").outerHTML = `<div class="card exbar"><div class="row"><b id="exnum"></b><span class="extime" id="extime"></span></div><div class="c2prog"><i id="exprog"></i></div></div>`;
@@ -264,7 +267,8 @@ const FR = (() => {
       pts = old.times ? Math.max(0, stars - old.stars) * 5 : Math.round(E.score) + stars * 5 + 20;
       P[n] = { stars: Math.max(old.stars, stars), best: Math.max(old.best, pct), times: old.times + 1, date: new Date().toISOString().slice(0, 10) };
       if (pts) Store.addPoints(pts); else Store.save(); renderNav("учиться"); }
-    else Store.save();
+    const S = S0(); S.frMiss = S.frMiss || {}; S.frMiss[n] = JSON.parse(JSON.stringify(E.miss)).map((t) => { delete t.again; return t; });
+    Store.save();
     const after = level(), up = after > before ? LV[after - 1] : null, nx = info(n + 1);
     $("#exbox").innerHTML = `<div class="card c2res"><div class="bigstars">${pass ? "✓" : "✗"}</div>
       <h2>${pass ? "Контрольная сдана!" : "Пока не сдана"}</h2><p>Результат: <b>${pct} %</b> (${E.score} из ${E.items.length}). Нужно ${PASS} %. ${pts ? `+${pts} очков ✦` : ""}</p>

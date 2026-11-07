@@ -88,5 +88,8 @@ const FRT = (() => {
         <p class="muted">Сегодня тренировок: ${S0().frtrain.s}.</p><div class="row" style="justify-content:center;gap:10px"><button class="btn gold" onclick="route()">Ещё одна ↻</button><a class="btn" href="#/французский">К урокам</a></div>`; };
     step();
   }
-  return { dict, bindDict, ref, bindRef, cards, bindCards, train, bindTrain };
+  // ---------------------------------------------------------------- полезное: фразы по ситуациям (data/french/useful.js)
+  const useful = () => `${head("💬", "Полезное", "Готовые фразы для поездки во Францию: нажми ▶, послушай и повтори вслух.")}
+    ${(window.FR_USEFUL || []).map((g) => `<details class="card c2sec" open><summary>${g.ic} ${esc(g.t)}</summary><div class="alt-exs">${g.p.map(([f, r, rd]) => `<div class="alt-ex">${playBtn(f, 1)}<div><span class="fr">${esc(f)}</span> <span class="alt-ru">— ${esc(r)}</span><div class="rd">«${esc(rd)}»</div></div></div>`).join("")}</div></details>`).join("")}${C2_AUD_NOTE}`;
+  return { dict, bindDict, ref, bindRef, cards, bindCards, train, bindTrain, useful };
 })();

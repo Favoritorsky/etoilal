@@ -81,7 +81,8 @@ const Shell = {
 };
 // разделы французской оболочки, которые уже есть (js/french-tools.js); остальные — заглушка frSoon
 const FR_PAGES = { "словарь": [() => FRT.dict(), () => FRT.bindDict()], "справочник": [() => FRT.ref(), () => FRT.bindRef()],
-  "карточки": [() => FRT.cards(), () => FRT.bindCards()], "тренировка": [() => FRT.train(), () => FRT.bindTrain()], "тренировки": [() => FRT.train(), () => FRT.bindTrain()] };
+  "карточки": [() => FRT.cards(), () => FRT.bindCards()], "тренировка": [() => FRT.train(), () => FRT.bindTrain()], "тренировки": [() => FRT.train(), () => FRT.bindTrain()],
+  "полезное": [() => FRT.useful()] };
 function frSoon(id) { const [ic, t] = Shell.SAME[id];
   return `<div class="card soon"><div class="ic">${ic}</div><h2>${t}</h2><p class="muted">Во французской оболочке этот раздел будет таким же, как в Etoilal, — сейчас он в работе. Пока есть пробные уроки французского.</p>
     <p><a class="btn gold" href="#/учиться">Уроки французского</a> <a class="btn" href="#/${esc(id)}" data-shell="et">Открыть раздел в Etoilal</a></p></div>`; }
