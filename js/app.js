@@ -79,6 +79,9 @@ const Shell = {
     "библиотека": ["📜", "Книги на французском"], "книги": ["📜", "Книги на французском"], "тренировка": ["🔥", "Ежедневная тренировка французского"],
     "тренировки": ["🎯", "Тренировки французского"], "полезное": ["💬", "Французские фразы по ситуациям"], "тексты": ["✍", "Тексты на французском"] },
 };
+// разделы французской оболочки, которые уже есть (js/french-tools.js); остальные — заглушка frSoon
+const FR_PAGES = { "словарь": [() => FRT.dict(), () => FRT.bindDict()], "справочник": [() => FRT.ref(), () => FRT.bindRef()],
+  "карточки": [() => FRT.cards(), () => FRT.bindCards()], "тренировка": [() => FRT.train(), () => FRT.bindTrain()], "тренировки": [() => FRT.train(), () => FRT.bindTrain()] };
 function frSoon(id) { const [ic, t] = Shell.SAME[id];
   return `<div class="card soon"><div class="ic">${ic}</div><h2>${t}</h2><p class="muted">Во французской оболочке этот раздел будет таким же, как в Etoilal, — сейчас он в работе. Пока есть пробные уроки французского.</p>
     <p><a class="btn gold" href="#/учиться">Уроки французского</a> <a class="btn" href="#/${esc(id)}" data-shell="et">Открыть раздел в Etoilal</a></p></div>`; }
@@ -384,7 +387,7 @@ async function route(fromNav) {
   else if (Shell.ET_ONLY.has(id) && Shell.fr()) Shell.set("et");
   else document.body.classList.toggle("shell-fr", Shell.fr());
   const key = (Shell.fr() ? "fr:" : "") + id + "/" + parts.slice(1).join("/");
-  const [view, bind] = Shell.fr() ? (id === "главная" || id === "учиться" ? [() => FR.page()] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : PAGES[id];
+  const [view, bind] = Shell.fr() ? (id === "главная" || id === "учиться" ? [() => FR.page()] : FR_PAGES[id] ? FR_PAGES[id] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : PAGES[id];
   const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
   if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key && (!app.querySelector("#exbox, .nokeep") || (typeof exOn === "function" && exOn() && app.querySelector("#exbox")))) {        // отложить уходящую страницу
     app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
