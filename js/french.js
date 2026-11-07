@@ -15,7 +15,7 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611080220`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611080225`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
@@ -213,9 +213,12 @@ const FR = (() => {
   // ---------------------------------------------------------------- контрольная раздела
   let EX = null;
   async function examBind(n, L, I) {
-    const secL = lessons().filter((l) => l.sec === I.sec && !l.check), best = prog()[n], left = retryLeft(n), lv = LV[I.sec];
+    // итоговая (последняя) контрольная — по всему курсу: по заданию из каждого урока последнего раздела + 8 случайных уроков раньше
+    const last = !info(n + 1), all = lessons().filter((l) => !l.check);
+    const secL = last ? all.filter((l) => l.sec === I.sec).concat(AltT.shuffle(all.filter((l) => l.sec < I.sec)).slice(0, 8)) : all.filter((l) => l.sec === I.sec);
+    const best = prog()[n], left = retryLeft(n), lv = LV[I.sec];
     await Promise.all(secL.map((l) => load(l.n).catch(() => null)));
-    // задания: свои задания контрольной + по 2 задания каждого урока раздела + задания на слух (треть) — всё вперемешку
+    // задания: свои задания контрольной + по 1–2 задания каждого урока раздела + задания на слух (треть) — всё вперемешку
     const own = (L.tasks || []).map(fix), per = secL.length > 6 ? 1 : 2, fromL = secL.flatMap((l) => AltT.shuffle((FR_C[l.n] || {}).tasks || []).slice(0, per).map(fix));
     const src = { n, tasks: own.concat(fromL), prosto: secL.map((l) => (FR_C[l.n] || {}).prosto || "").join("\n") };
     const base = AltT.shuffle(own.concat(fromL)), items = mix(base, listenItems(src, I).slice(0, Math.round(base.length / 2)));
