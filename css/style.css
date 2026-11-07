@@ -708,3 +708,23 @@ input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,
 .qbtn.bh { margin-left: 6px; }
 @media (max-width: 760px) { .dtgrid { grid-template-columns: 1fr; } .dtres { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gdaily { flex-wrap: wrap; } }
 .dlim { flex-basis: 100%; font-size: .9em; }
+/* 8.11.2026 — французский «от Etoilal» (js/french.js) */
+.fr { font-family: var(--sans); font-style: normal; font-weight: 700; color: #8fb4ff; }
+.alt-ex .fr { font-size: 18px; } .tbl .fr { font-size: 1.1em; } .tbl s { opacity: .45; text-decoration: line-through; }
+.fr.say { cursor: pointer; border-bottom: 1px dashed currentColor; }
+.frhero { padding: 26px; } .frhero h1 i { color: #8fb4ff; }
+.frsteps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 14px 0; }
+.frsteps div { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); }
+.frsteps b { display: grid; place-items: center; min-width: 28px; height: 28px; border-radius: 50%; background: #8fb4ff; color: #0b1020; }
+.frbridge { display: inline-block; margin: 0 0 10px; font-size: 14px; color: var(--acc); }
+.frrule { margin: 10px 0; }
+.frban .xic { filter: none; }
+/* 8.11.2026 — две оболочки: Etoilal и французский (переключатель в шапке) */
+.shsw { display: inline-flex; gap: 2px; padding: 3px; margin: 0 8px; border-radius: 12px; background: var(--glass2); flex-shrink: 0; }
+.shsw a { padding: 5px 10px; border-radius: 9px; font-size: 13px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.shsw a.on { background: var(--acc); color: #0b1020; }
+body.shell-fr { --acc: #8fb4ff; }
+body.shell-fr .fr { color: #b9d0ff; }
+@media (max-width: 760px) { .topnav .logo { display: none; } .shsw { margin: 0 4px 0 0; } .shsw a { padding: 5px 7px; font-size: 12px; } }
+@media (max-width: 1560px) { .topnav .logo { display: none; } }
+@media (min-width: 761px) and (max-width: 1340px) { .topnav { flex-wrap: wrap; row-gap: 4px; } }

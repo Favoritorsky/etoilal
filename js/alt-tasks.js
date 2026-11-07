@@ -34,6 +34,10 @@ const AltT = (() => {
     const v = norm(val);
     if (!v) return { ok: false, empty: true, best: answers[0] };
     if (pool.includes(v)) return { ok: true };
+    if (lang === "fr") {                                // 8.11.2026: французский — без значков (e вместо é, oe вместо œ) засчитываем, но показываем
+      const bare = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/œ/g, "oe").replace(/'/g, " ").replace(/\s+/g, " ");
+      const hit = pool.find((p) => bare(p) === bare(v)); if (hit) return { ok: true, typo: [[v, hit]] };
+    }
     if (lang === "x") return { ok: false, best: answers[0] };
     // опечатка: те же слова, в одном слове длиной ≥ 4 не больше одной буквы
     const vw = v.split(" ");
@@ -133,7 +137,7 @@ const AltT = (() => {
   const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   function card(item, n, opt = {}) {
     const id = "t" + (++SEQ), lang = item.lang || "et";
-    const head = lsn0(item) ? "🎧 На слух" : { choice: "Выбери", input: lang === "ru" ? "Переведи на русский" : lang === "rd" ? "Напиши русскими буквами, как читается" : "Напиши на Etoilal", tiles: "Собери фразу", fix: "Найди и исправь ошибку", listen: "Послушай", read: "Ответь по тексту", finish: "Закончи фразу", sense: "Составь по смыслу",
+    const head = lsn0(item) ? "🎧 На слух" : { choice: "Выбери", input: lang === "ru" ? "Переведи на русский" : lang === "rd" ? "Напиши русскими буквами, как читается" : lang === "fr" ? "Напиши по-французски" : "Напиши на Etoilal", tiles: "Собери фразу", fix: "Найди и исправь ошибку", listen: "Послушай", read: "Ответь по тексту", finish: "Закончи фразу", sense: "Составь по смыслу",
       trtext: item.dir === "ru" ? "Переведи текст на русский" : "Переведи текст на Etoilal" }[item.k] || "";
     let body = "";
     const lsn = !!(item.say && (item.lsn || item.k === "listen"));      // задание на слух (7.11.2026): большая кнопка и скорость
@@ -154,7 +158,7 @@ const AltT = (() => {
         <div class="row alt-in" style="justify-content:flex-start"><button class="btn sm" data-clear>Сбросить</button><button class="btn gold" data-go>Проверить</button></div>`;
     } else {
       const pre = item.k === "fix" ? item.q : "";
-      body = `<div class="row alt-in"><input class="in${lang === "et" ? " et-in" : ""}" value="${esc(pre)}" placeholder="${lang === "ru" ? "По-русски…" : lang === "rd" ? "Русскими буквами…" : "На Etoilal…"}" autocomplete="off" spellcheck="false"><button class="btn gold" data-go>Проверить</button></div>`;
+      body = `<div class="row alt-in"><input class="in${lang === "et" ? " et-in" : ""}" value="${esc(pre)}" placeholder="${lang === "ru" ? "По-русски…" : lang === "rd" ? "Русскими буквами…" : lang === "fr" ? "По-французски…" : "На Etoilal…"}" autocomplete="off" spellcheck="false"><button class="btn gold" data-go>Проверить</button></div>`;
     }
     const q = item.k === "fix" ? `<span class="et">${esc(item.q)}</span>` : item.k === "listen" && !item.q ? "Что прозвучало?"
       : item.k === "finish" ? `<span class="et">${esc(item.start)} …</span>` : item.k === "trtext" ? esc(item.q || "Переведи каждое предложение. Засчитывается каждое верное.") : esc(item.q || "");

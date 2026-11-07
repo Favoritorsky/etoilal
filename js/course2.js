@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611072211`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611080121`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -27,6 +27,7 @@ function c2PageLearn() {
     <a class="btn gold" href="#/урок/${next.n}">${total ? "Продолжить" : "Начать"}: урок ${next.n} ▶</a>${Lv.dayNote()}</div>
   ${ladder}
   <a class="card xban" href="#/альтернатива"><span class="xic">🧠</span><span><b>Альтернативное обучение: весь язык сразу</b><small>шпаргалка по всему языку, тексты с подсказками, загадки, практика</small></span><span class="lst">▶</span></a>
+  ${FR.banner()}
   <a class="card xban dtban" href="#/тренировка"><span class="xic">🔥</span><span><b>Ежедневная тренировка · ${Daily.streak()} ${Daily.streak() % 10 === 1 && Daily.streak() % 100 !== 11 ? "день" : "дн."} подряд</b><small>3–5 минут в день: повторение того, где ошибаешься, задания на слух, новые слова, комбо и задания дня</small></span><span class="lst">▶</span></a>
   <a class="card xban trban" href="#/тренировки"><span class="xic">🎯</span><span><b>Тренировки</b><small>задания пройденных уроков вперемешку, «успей перевести», аудирование, произношение</small></span><span class="lst">▶</span></a>
   ${ET_C2I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${Lv.secPassed(k, S) ? " d" : ""}">${LEVELS[k].ic} <span class="et">${LEVELS[k].w}</span></span></h2><div class="llist">
