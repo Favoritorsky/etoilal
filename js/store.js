@@ -78,6 +78,7 @@ const Store = (() => {
       const old = S.lessons[n] || { stars: 0, best: 0, times: 0 };
       const pts = old.times ? Math.max(0, stars - old.stars) * 5 + Math.ceil(correct / 3) : correct + stars * 5 + 10;
       const chest = stars === 3 && old.stars < 3;
+      if (!old.times) { S.firsts = S.firsts || {}; S.firsts[n] = Date.now(); }  // время первого прохождения — для дневного лимита (levels.js)
       S.lessons[n] = { stars: Math.max(old.stars, stars), best: Math.max(old.best, pct), times: old.times + 1, date: today() };
       S.points += pts; if (chest) S.chests++; this.daily().lessons++;
       touchDay(); save();

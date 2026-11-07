@@ -7,7 +7,7 @@ const C2_AUD_NOTE = `<div class="aud-note">🔊 Аудио синтезиров�
 function c2Load(n) {
   window.ET_C2 = window.ET_C2 || {};
   if (ET_C2[n]) return Promise.resolve(ET_C2[n]);
-  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611071911`;
+  return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/course2/${String(n).padStart(2, "0")}.js?v=202611072211`;
     s.onload = () => (ET_C2[n] ? ok(ET_C2[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); });
 }
 const c2Done = (n) => { const l = Store.get().lessons[n]; return !!(l && l.stars > 0); };
@@ -24,7 +24,7 @@ function c2PageLearn() {
   return `<div class="k">Самоучитель</div><h1 class="page">Etoilal <i>по порядку</i></h1>
   <p class="lead">${L.length} уроков, каждый — как слоёный пирог: суть за 30 секунд, объяснение простыми словами и «для любопытных». Каждый урок опирается только на пройденное, новые слова сразу закрепляются, а важные таблицы можно закрепить на доске шпаргалок сбоку.</p>
   <div class="learnhead card"><div class="stats"><div class="st">📖 ${total}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${S.points}<small>очков</small></div></div>
-    <a class="btn gold" href="#/урок/${next.n}">${total ? "Продолжить" : "Начать"}: урок ${next.n} ▶</a></div>
+    <a class="btn gold" href="#/урок/${next.n}">${total ? "Продолжить" : "Начать"}: урок ${next.n} ▶</a>${Lv.dayNote()}</div>
   ${ladder}
   <a class="card xban" href="#/альтернатива"><span class="xic">🧠</span><span><b>Альтернативное обучение: весь язык сразу</b><small>шпаргалка по всему языку, тексты с подсказками, загадки, практика</small></span><span class="lst">▶</span></a>
   <a class="card xban dtban" href="#/тренировка"><span class="xic">🔥</span><span><b>Ежедневная тренировка · ${Daily.streak()} ${Daily.streak() % 10 === 1 && Daily.streak() % 100 !== 11 ? "день" : "дн."} подряд</b><small>3–5 минут в день: повторение того, где ошибаешься, задания на слух, новые слова, комбо и задания дня</small></span><span class="lst">▶</span></a>
@@ -56,6 +56,7 @@ function c2PageLesson(args) {
     return `<div class="card soon nokeep"><div class="ic">🔒</div><h2>${I.check ? "Контрольная" : "Урок"} ${n} пока ${I.check ? "закрыта" : "закрыт"}</h2>
       <p class="muted">Уроки и контрольные открываются строго по порядку. Сначала пройди ${f.check ? "контрольную" : "урок"} ${f.n} «${esc(f.t)}».</p>
       <a class="btn gold" href="#/урок/${f.n}">К ${f.check ? "контрольной" : "уроку"} ${f.n} ▶</a></div>`; }
+  if (Lv.dayBlocked(n)) return Lv.dayPage(n);
   if (I.check) return Board.wrap(`<div id="c2l"><div class="card muted">Загружаю контрольную ${n}…</div></div>`);
   return Board.wrap(`<div id="c2l"><div class="card muted">Загружаю урок ${n}…</div></div>`);
 }

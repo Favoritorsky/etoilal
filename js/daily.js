@@ -184,7 +184,8 @@ const Daily = (() => {
       let extra = "";
       if (S0.kind === "урок") { d2.unlock = d2.unlock && d2.unlock.n === S0.n ? d2.unlock : { n: S0.n, run: 0 };
         d2.unlock.run = pct >= PASS ? d2.unlock.run + 1 : 0;
-        if (d2.unlock.run >= RUN && !Lv.done(S0.n)) { const L1 = ET_C2[S0.n]; Store.finishLesson(S0.n, 1, pct, firstOk); (L1.words || []).forEach(([w]) => Store.hasWord(w) || Store.toggleWord(w));
+        if (d2.unlock.run >= RUN && !Lv.done(S0.n) && Lv.dayBlocked(S0.n)) extra = `<p>Серия для урока ${S0.n} готова, но на сегодня новых уроков хватит — засчитаю после 7:30 утра, если снова сдашь занятие.</p>`;
+        else if (d2.unlock.run >= RUN && !Lv.done(S0.n)) { const L1 = ET_C2[S0.n]; Store.finishLesson(S0.n, 1, pct, firstOk); (L1.words || []).forEach(([w]) => Store.hasWord(w) || Store.toggleWord(w));
           d2.unlock = null; extra = `<div class="lvup"><small>Открыто тренировкой</small><b>Урок ${S0.n} засчитан ★</b><span>можно идти дальше — урок ${S0.n + 1}</span></div>`; }
         else extra = `<p>${pct >= PASS ? "Засчитано" : "Нужно " + PASS + " %+ — серия начата заново"}: <b>${d2.unlock ? d2.unlock.run : 0} из ${RUN}</b> занятий подряд для урока ${S0.n}.</p>`; }
       if (S0.kind === "контрольная") { if (pct >= PASS) { delete (Store.get().examLast || {})[S0.n]; prepState(S0.n).miss = [];

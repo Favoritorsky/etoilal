@@ -707,3 +707,4 @@ input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,
 .alt-task [data-c].gone { opacity: .25; text-decoration: line-through; }
 .qbtn.bh { margin-left: 6px; }
 @media (max-width: 760px) { .dtgrid { grid-template-columns: 1fr; } .dtres { grid-template-columns: repeat(2, minmax(0, 1fr)); } .gdaily { flex-wrap: wrap; } }
+.dlim { flex-basis: 100%; font-size: .9em; }

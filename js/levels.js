@@ -29,6 +29,25 @@ const Lv = (() => {
     const t = (S.examLast || {})[n]; if (!t) return 0;
     return Math.max(0, Math.ceil((Date.parse(t) + RETRY_MIN * 60000 - Date.now()) / 60000));
   }
+  // дневной лимит НОВЫХ уроков для отдельных ников (7.11.2026, просьба владельца — чтобы не перегореть).
+  // День — с 7:30 до 7:29 следующего утра по местному времени. Контрольные и повторы пройденных не считаются.
+  // DAY_SEED — уроки, пройденные до появления счётчика (7.11 Qub уже прошёл 1 урок).
+  const DAY_LIMIT = { qub: 2 }, DAY_SHIFT = 7.5 * 3600000, DAY_SEED = { qub: { "2026-11-07": 1 } };
+  const nick = () => { try { return typeof Cloud !== "undefined" && Cloud.user() ? String(Cloud.user().nick || "").toLowerCase() : ""; } catch (e) { return ""; } };
+  const dayOf = (t) => { const d = new Date(+t - DAY_SHIFT); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  const isCheck = (n) => !!(ET_C2I.lessons.find((l) => l.n === +n) || {}).check;
+  const dayLimit = () => DAY_LIMIT[nick()] || 0;
+  function dayUsed(S = Store.get()) {
+    const k = dayOf(Date.now());
+    return ((DAY_SEED[nick()] || {})[k] || 0) + Object.entries(S.firsts || {}).filter(([n, t]) => dayOf(t) === k && !isCheck(n)).length;
+  }
+  function dayBlocked(n, S = Store.get()) { const lim = dayLimit(); return !!lim && !done(n, S) && !isCheck(n) && dayUsed(S) >= lim; }
+  function dayPage(n) {
+    return `<div class="card soon nokeep"><div class="ic">🌙</div><h2>На сегодня уроков хватит</h2>
+      <p class="muted">Ты прошёл ${dayUsed()} из ${dayLimit()} новых уроков за день. Урок ${n} откроется в 7:30 утра.<br>Лучше понемногу каждый день, чем рывками — так не перегоришь.</p>
+      <p><a class="btn gold" href="#/тренировка">Ежедневная тренировка 🔥</a> <a class="btn" href="#/учиться">Повторить пройденное</a></p></div>`;
+  }
+  const dayNote = () => dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : "";
   // контрольная идёт (в этой или другой вкладке)
   function examActive() {
     try { const x = JSON.parse(localStorage.getItem(EXAM_KEY) || "null"); return x && Date.now() < x.until ? x : null; } catch (e) { return null; }
@@ -43,5 +62,5 @@ const Lv = (() => {
       <p class="muted">Идёт контрольная (урок ${x ? x.n : ""}). Подсказки, переводчик и проверка текста откроются, когда ты её закончишь.</p>
       ${x ? `<a class="btn gold" href="#/урок/${x.n}">Вернуться к контрольной</a>` : ""}</div>`;
   }
-  return { PASS, RETRY_MIN, done, secLessons, secPassed, level, levelOf, firstOpen, isOpen, retryLeft, examActive, examStart, examStop, badge, lockedPage };
+  return { dayLimit, dayUsed, dayBlocked, dayPage, dayNote, PASS, RETRY_MIN, done, secLessons, secPassed, level, levelOf, firstOpen, isOpen, retryLeft, examActive, examStart, examStop, badge, lockedPage };
 })();
