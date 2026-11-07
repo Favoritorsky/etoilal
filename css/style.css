@@ -710,7 +710,7 @@ input.in, textarea.in, #cform input { border-radius: 12px; background: rgba(0,0,
 .dlim { flex-basis: 100%; font-size: .9em; }
 /* 8.11.2026 — французский «от Etoilal» (js/french.js) */
 .fr { font-family: var(--sans); font-style: normal; font-weight: 700; color: #8fb4ff; }
-.alt-ex .fr { font-size: 18px; } .tbl .fr { font-size: 1.1em; } .tbl s { opacity: .45; text-decoration: line-through; }
+.alt-ex .fr { font-size: 18px; } .tbl .fr { font-size: 1.1em; } .tbl s, .fr s, s.mute { text-decoration: underline 2px; text-decoration-color: var(--acc2); text-underline-offset: 4px; opacity: .55; } .frleg { font-size: 13px; margin-top: 6px; }
 .fr.say { cursor: pointer; border-bottom: 1px dashed currentColor; }
 .frhero { padding: 26px; } .frhero h1 i { color: #8fb4ff; }
 .frsteps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 14px 0; }
@@ -727,4 +727,4 @@ body.shell-fr { --acc: #8fb4ff; }
 body.shell-fr .fr { color: #b9d0ff; }
 @media (max-width: 760px) { .topnav .logo { display: none; } .shsw { margin: 0 4px 0 0; } .shsw a { padding: 5px 7px; font-size: 12px; } }
 @media (max-width: 1560px) { .topnav .logo { display: none; } }
-@media (min-width: 761px) and (max-width: 1340px) { .topnav { flex-wrap: wrap; row-gap: 4px; } }
+@media (min-width: 761px) { .topnav { flex-wrap: wrap; row-gap: 4px; } .topnav .chip { flex-shrink: 0; } }
