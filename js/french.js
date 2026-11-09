@@ -15,17 +15,20 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611080357`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611091734`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
   const nick = () => { try { return Cloud.user() ? String(Cloud.user().nick || "").toLowerCase() : ""; } catch (e) { return ""; } };
   const lessons = () => FR_I.lessons, info = (n) => lessons().find((l) => l.n === +n);
   const done = (n) => !!((prog()[n] || {}).stars);
-  const firstOpen = () => lessons().find((l) => !done(l.n)) || null;
-  const isOpen = (n) => { const f = firstOpen(); return !f || n <= f.n || done(n); };
+  const skipped = (k) => !!(S0().frSkip || {})[k];
+  const firstOpen = () => lessons().find((l) => !done(l.n) && !skipped(l.sec)) || null;
+  const isOpen = (n) => { const f = firstOpen(), i = info(n); return !f || n <= f.n || done(n) || (i && skipped(i.sec)); };
   const secPassed = (k) => { const L = lessons().filter((l) => l.sec === k), c = L.find((l) => l.check); return L.length && (c ? done(c.n) : L.every((l) => done(l.n))); };
-  const level = () => { let k = 0; while (k < LV.length && secPassed(k)) k++; return k; };
+  const level = () => { let k = 0; while (k < LV.length && (secPassed(k) || skipped(k))) k++; return k; };
+  const setSkip = (k, on) => { const S = S0(); S.frSkip = S.frSkip || {}; if (on) S.frSkip[k] = true; else delete S.frSkip[k]; Store.save(); route(); };
+  window.__frSkip = setSkip;
   // дневной лимит новых уроков — как в Etoilal (levels.js): для Qub 2 новых урока французского в день, день с 7:30
   const DAY_LIMIT = { qub: 2 }, dayOf = (t) => { const d = new Date(+t - 7.5 * 3600000); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
   const dayLimit = () => DAY_LIMIT[nick()] || 0;
@@ -65,10 +68,13 @@ const FR = (() => {
       <p class="lead">Для тех, кто начинает с нуля или немного знает: простыми словами, без терминов, с чтением русскими буквами и озвучкой. Каждый урок — как слоёный пирог: суть за 30 секунд, объяснение, «для любопытных», слова и задания. Каждый урок опирается только на пройденное.</p>
       <div class="learnhead"><div class="stats"><div class="st">📖 ${nd}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${Store.get().points}<small>очков</small></div></div>
       <a class="btn gold" href="#/фр/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} ▶</a>${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
-    <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : "пока без уровня — пройди раздел «Звуки и чтение»"}</b></div></div>
+    <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv && !(lv === 1 && skipped(0) && !secPassed(0)) ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : (skipped(0) ? "пока без уровня — сдай контрольную «Первые фразы» (урок 18)" : "пока без уровня — пройди раздел «Звуки и чтение»")}</b></div></div>
       <div class="lvsteps">${LV.map((x, k) => `<div class="lvs${k < lv ? " d" : k === lv ? " c" : ""}"><i>${k + 1}</i><b class="fr">${x.w}</b><small>${x.ru}</small></div>`).join("")}</div>
       <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${PASS} %). Уроки открываются строго по порядку.</div></div>
-    ${FR_I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${secPassed(k) ? " d" : ""}">${LV[k].ic} <span class="fr">${LV[k].w}</span></span></h2><div class="llist">
+    ${secPassed(0) ? "" : skipped(0)
+      ? `<div class="card frskip"><b>⏩ Звуки и чтение пропущены</b><p class="muted">Уроки 1–7 открыты — заглядывай в них, когда захочешь: чтение русскими буквами есть в каждом уроке, так что без них можно идти дальше.</p><button class="btn sm" onclick="__frSkip(0, false)">Вернуть обычный порядок</button></div>`
+      : `<div class="card frskip"><b>Скучно на звуках? Можно сразу к грамматике</b><p class="muted">Раздел «Звуки и чтение» останется открытым — вернёшься к нему, когда захочешь. Чтение русскими буквами есть в каждом уроке, так что дальше ты не потеряешься.</p><button class="btn gold sm" onclick="__frSkip(0, true)">⏩ Пропустить и перейти к уроку 8</button></div>`}
+    ${FR_I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${secPassed(k) ? " d" : ""}">${skipped(k) && !secPassed(k) ? "⏩ пропущен" : `${LV[k].ic} <span class="fr">${LV[k].w}</span>`}</span></h2><div class="llist">
       ${L.filter((l) => l.sec === k).map((l) => { const st = (P[l.n] || {}).stars || 0, open = isOpen(l.n);
         return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фр/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : l.n) : "🔒"}</span>
           <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? `контрольная · уровень ${esc(LV[l.sec].w)}` : esc(l.s)}</small></span>

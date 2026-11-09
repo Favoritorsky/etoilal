@@ -733,3 +733,5 @@ body.shell-fr .fr { color: #b9d0ff; }
 @media (max-width: 760px) { .frdw { grid-template-columns: auto 1fr auto; } .frdw > span:nth-of-type(1) { display: none; } }
 .frcard { text-align: center; padding: 28px 16px; } .frcw { display: flex; gap: 12px; justify-content: center; align-items: center; margin: 18px 0; } .frcw .fr { font-size: 34px; }
 .frcm { display: grid; gap: 4px; margin: 0 0 16px; } .frcm b { font-size: 22px; }
+
+.frskip{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.frskip p{margin:0}
