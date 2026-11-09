@@ -25,7 +25,7 @@ FR_C[21] = { n: 21, t: "Немного чего-то: du, de la", s: "хлеб, 
 <h3>Частые ошибки</h3>
 <p>• Пропускают du: «Je bois café» — надо {{Je bois du café.}} • После «не» оставляют du: «pas du café» — надо {{pas de café}}. • «J'aime du café» — любят вообще: {{J'aime le café.}}</p>`,
   lub: `<p>du — это слившиеся de + le, «из того самого»: «я ем из хлеба». Такое же слияние ты видел у au (à + le). В итальянском похоже: <i>del pane</i>.</p>
-<p>Глагол {{boire}} «пить» неправильный: je bois, tu bois, il boit, nous buvons, vous buvez, ils boivent. А {{vouloir}} «хотеть» — je veux, tu veux, il veut. Подробнее о «хотеть» — в уроке 26.</p>`,
+<p>Глагол {{boire}} «пить» неправильный: je bois, tu bois, il boit, nous buvons, vous buvez, ils boivent. А {{vouloir}} «хотеть» — je veux, tu veux, il veut. Подробнее о «хотеть» — в уроке 25.</p>`,
   pins: [{ id: "fr21", t: "du, de la, de l'", html: `<table class="tbl"><tbody><tr><td class="fr">du</td><td>часть, «он»: du pain</td></tr><tr><td class="fr">de la</td><td>часть, «она»: de la confiture</td></tr><tr><td class="fr">de l'</td><td>перед гласной: de l'eau</td></tr><tr><td class="fr">pas de</td><td>после «не»: pas de café</td></tr><tr><td class="fr">le / la</td><td>вообще: J'aime le café</td></tr></tbody></table>` }],
   tasks: [
     { k: "choice", q: "Я ем хлеб. — Je mange … pain.", opts: ["du", "de la", "le"], a: "du", why: "часть, pain — «он»: du" },

@@ -7,7 +7,7 @@ FR_C[34] = { n: 34, t: "Прошлое с être: je suis allé", s: "глаго�
 <tr><td>я (он / она)</td><td class="fr">je suis allé / allée</td></tr><tr><td>ты</td><td class="fr">tu es allé / allée</td></tr>
 <tr><td>он · она</td><td class="fr">il est allé · elle est allée</td></tr><tr><td>мы</td><td class="fr">nous sommes allés / allées</td></tr>
 <tr><td>вы</td><td class="fr">vous êtes allé(e)s</td></tr><tr><td>они</td><td class="fr">ils sont allés · elles sont allées</td></tr></tbody></table>
-<p>С être: <span class="fr">aller, venir, arriver, partir, entrer, sortir, monter, descendre, tomber, rester, naître, mourir, rentrer, revenir</span> + все глаголы с «себя» (урок 44).</p>`,
+<p>С être: <span class="fr">aller, venir, arriver, partir, entrer, sortir, monter, descendre, tomber, rester, naître, mourir, rentrer, revenir</span> + все глаголы с «себя» (урок 43).</p>`,
   prosto: `<p>Представь «дом être»: в нём живут глаголы, которые описывают <b>путь</b> — родиться, прийти, войти, подняться, спуститься, упасть, выйти, уйти, умереть. В прошлом они идут с {{être}}, а не с avoir.</p>
 > Je suis allé à Paris. :: Я ездил в Париж. — «жё сюизалэ а пари»
 > Elle est venue hier. :: Она приходила вчера. — «эль э вёню йер»: «она» — +e

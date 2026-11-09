@@ -23,7 +23,7 @@ FR_C[37] = { n: 37, t: "Будущее: je chanterai", s: "глагол цели
 <p><b>Как в русском:</b> «спою» — одно слово, как {{je chanterai}}.</p>
 <p><b>Не как в русском:</b> в русском будущее делают через «буду» или приставку. Во французском — окончанием к глаголу <b>целиком</b>. Внутри всегда слышно «р»: chante<b>r</b>ai, fe<b>r</b>a, se<b>r</b>as.</p>
 <h3>Частые ошибки</h3>
-<p>• «je prendreai» — у -re убирают e: {{je prendrai}}. • «j'allerai» — у aller особая основа: {{j'irai}}. • Путают {{je chanterai}} (спою) и {{je chanterais}} (спел бы) — звучат почти одинаково; разницу узнаешь в уроке 50.</p>`,
+<p>• «je prendreai» — у -re убирают e: {{je prendrai}}. • «j'allerai» — у aller особая основа: {{j'irai}}. • Путают {{je chanterai}} (спою) и {{je chanterais}} (спел бы) — звучат почти одинаково; разницу узнаешь в уроке 49.</p>`,
   lub: `<p>Это будущее родилось из «я имею петь»: латинское <i>cantare habeo</i> → <i>chanter-ai</i>. Поэтому окончания так похожи на avoir — это он и есть, прилипший к глаголу.</p>
 <p>В разговоре французы чаще говорят {{je vais chanter}}, а {{je chanterai}} — в обещаниях, прогнозах погоды, планах на далёкое будущее и в песнях.</p>`,
   pins: [{ id: "fr37", t: "Будущее: je chanterai", html: `<table class="tbl"><tbody><tr><td>глагол целиком +</td><td class="fr">-ai -as -a -ons -ez -ont</td></tr><tr><td>-re</td><td class="fr">prendre → je prendrai</td></tr><tr><td>особые</td><td class="fr">ser- aur- ir- fer- viendr- pourr- voudr- verr- devr-</td></tr></tbody></table>` }],

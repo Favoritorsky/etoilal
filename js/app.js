@@ -373,6 +373,9 @@ const PAGES = {
 // введённым текстом, открытыми блоками и прокруткой) и при возвращении показывается как была. Главная, профиль, карточки,
 // тренировки и т.п. всегда рисуются заново (там данные меняются). Прямой вызов route() (кнопки «Ещё раз», смена темы) — заново.
 const PAGE_KEEP = new Set(["урок", "альтернатива", "переводчик", "проверка", "словарь", "тексты", "справочник", "полезное", "библиотека", "о-языке", "экспресс"]);
+// 9.11: во французской оболочке ключи страниц начинаются с «fr:»; там же откладываются уроки (фр/N), карточки и тренировка
+const FR_KEEP = new Set(["фр", "тренировки", "тренировка", "карточки"]);
+const keepPage = (k) => { const fr = /^fr:/.test(k), id = k.replace(/^fr:/, "").split("/")[0]; return PAGE_KEEP.has(id) || (fr && FR_KEEP.has(id)); };
 const PAGE_CACHE = new Map();                          // ключ (адрес) → { el, y, onShow }
 const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
 let pageKey = null;
@@ -390,7 +393,7 @@ async function route(fromNav) {
   const key = (Shell.fr() ? "fr:" : "") + id + "/" + parts.slice(1).join("/");
   const [view, bind] = Shell.fr() ? (id === "главная" || id === "учиться" ? [() => FR.page()] : FR_PAGES[id] ? FR_PAGES[id] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : PAGES[id];
   const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
-  if (cur.length && pageKey && PAGE_KEEP.has(pageKey.split("/")[0]) && pageKey !== key && (!app.querySelector("#exbox, .nokeep") || (typeof exOn === "function" && exOn() && app.querySelector("#exbox")))) {        // отложить уходящую страницу
+  if (cur.length && pageKey && keepPage(pageKey) && pageKey !== key && (!app.querySelector("#exbox, .nokeep") || (typeof exOn === "function" && exOn() && app.querySelector("#exbox")))) {        // отложить уходящую страницу
     app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
     PAGE_CACHE.delete(pageKey); PAGE_CACHE.set(pageKey, { el: cur, y: scrollY, onShow: PageHook.onShow });
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);

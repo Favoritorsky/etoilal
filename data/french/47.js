@@ -1,6 +1,6 @@
 window.FR_C = window.FR_C || {};
-FR_C[47] = { n: 47, t: "Контрольная: местоимения и мир вокруг", s: "уроки 40–46: le / lui, y / en, moi / toi, se lever, приказ, места и страны",
-  rule: `<p>Проверь себя по урокам 40–46: je le vois / je lui parle, j'y vais / j'en veux, avec moi / chez eux, je me lève / je me suis levé, Écoute ! / Ne pars pas !, sur / sous / à côté de, à Paris / en France / au Canada.</p>`,
+FR_C[47] = { n: 47, t: "Контрольная: местоимения и мир вокруг", s: "уроки 39–45: le / lui, y / en, moi / toi, se lever, приказ, места и страны",
+  rule: `<p>Проверь себя по урокам 39–45: je le vois / je lui parle, j'y vais / j'en veux, avec moi / chez eux, je me lève / je me suis levé, Écoute ! / Ne pars pas !, sur / sous / à côté de, à Paris / en France / au Canada.</p>`,
   tasks: [
     { k: "choice", q: "Я его вижу.", opts: ["Je le vois.", "Je lui vois.", "Je vois le."], a: "Je le vois.", why: "voir — кого: le" },
     { k: "choice", q: "Я с ней говорю.", opts: ["Je lui parle.", "Je la parle.", "Je parle la."], a: "Je lui parle.", why: "parler à — кому: lui" },

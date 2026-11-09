@@ -15,13 +15,16 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611091734`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611091824`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
   const nick = () => { try { return Cloud.user() ? String(Cloud.user().nick || "").toLowerCase() : ""; } catch (e) { return ""; } };
   const lessons = () => FR_I.lessons, info = (n) => lessons().find((l) => l.n === +n);
   const done = (n) => !!((prog()[n] || {}).stars);
+  // номер урока на экране = его место в списке (9.11: урок «Знакомство» убран, внутренние номера и файлы не менялись)
+  const num = (n) => lessons().findIndex((l) => l.n === +n) + 1;
+  const nextOf = (n) => lessons()[num(n)] || null;
   const skipped = (k) => !!(S0().frSkip || {})[k];
   const firstOpen = () => lessons().find((l) => !done(l.n) && !skipped(l.sec)) || null;
   const isOpen = (n) => { const f = firstOpen(), i = info(n); return !f || n <= f.n || done(n) || (i && skipped(i.sec)); };
@@ -67,8 +70,8 @@ const FR = (() => {
       <h1 class="page">Французский <i>по порядку</i></h1>
       <p class="lead">Для тех, кто начинает с нуля или немного знает: простыми словами, без терминов, с чтением русскими буквами и озвучкой. Каждый урок — как слоёный пирог: суть за 30 секунд, объяснение, «для любопытных», слова и задания. Каждый урок опирается только на пройденное.</p>
       <div class="learnhead"><div class="stats"><div class="st">📖 ${nd}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${Store.get().points}<small>очков</small></div></div>
-      <a class="btn gold" href="#/фр/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${next.n} ▶</a>${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
-    <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv && !(lv === 1 && skipped(0) && !secPassed(0)) ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : (skipped(0) ? "пока без уровня — сдай контрольную «Первые фразы» (урок 18)" : "пока без уровня — пройди раздел «Звуки и чтение»")}</b></div></div>
+      <a class="btn gold" href="#/фр/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${num(next.n)} ▶</a>${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
+    <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv && !(lv === 1 && skipped(0) && !secPassed(0)) ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : (skipped(0) ? "пока без уровня — сдай контрольную «Первые фразы» (урок ${num(18)})" : "пока без уровня — пройди раздел «Звуки и чтение»")}</b></div></div>
       <div class="lvsteps">${LV.map((x, k) => `<div class="lvs${k < lv ? " d" : k === lv ? " c" : ""}"><i>${k + 1}</i><b class="fr">${x.w}</b><small>${x.ru}</small></div>`).join("")}</div>
       <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${PASS} %). Уроки открываются строго по порядку.</div></div>
     ${secPassed(0) ? "" : skipped(0)
@@ -76,7 +79,7 @@ const FR = (() => {
       : `<div class="card frskip"><b>Скучно на звуках? Можно сразу к грамматике</b><p class="muted">Раздел «Звуки и чтение» останется открытым — вернёшься к нему, когда захочешь. Чтение русскими буквами есть в каждом уроке, так что дальше ты не потеряешься.</p><button class="btn gold sm" onclick="__frSkip(0, true)">⏩ Пропустить и перейти к уроку 8</button></div>`}
     ${FR_I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${secPassed(k) ? " d" : ""}">${skipped(k) && !secPassed(k) ? "⏩ пропущен" : `${LV[k].ic} <span class="fr">${LV[k].w}</span>`}</span></h2><div class="llist">
       ${L.filter((l) => l.sec === k).map((l) => { const st = (P[l.n] || {}).stars || 0, open = isOpen(l.n);
-        return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фр/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : l.n) : "🔒"}</span>
+        return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фр/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : num(l.n)) : "🔒"}</span>
           <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? `контрольная · уровень ${esc(LV[l.sec].w)}` : esc(l.s)}</small></span>
           <span class="lst">${st ? "★".repeat(st) + "☆".repeat(3 - st) : l.n === next.n ? "▶" : ""}</span></${open ? "a" : "div"}>`; }).join("")}
     </div></div>`).join("")}
@@ -116,11 +119,11 @@ const FR = (() => {
   }
   // повторение: слова уроков n-1, n-3, n-7, n-15 — 4 задания, одно — написать слово, одно — на слух
   function reviewItems(n) {
-    const back = [1, 3, 7, 15].map((d) => n - d).filter((x) => x >= 1);
+    const back = [1, 3, 7, 15].map((d) => lessons()[num(n) - 1 - d]).filter(Boolean).map((l) => l.n);
     const cand = back.flatMap((k) => ((window.FR_C && FR_C[k] && FR_C[k].words) || []).map((w) => [...w, k]));
     const pick = AltT.shuffle(cand).slice(0, 4), pool = wordsUpTo(n);
     return pick.map(([w, m, r, k], i) => {
-      const others = AltT.shuffle(pool.filter((x) => x[0] !== w && x[1] !== m)).slice(0, 2), why = `${w} «${r}» — ${m} (урок ${k})`;
+      const others = AltT.shuffle(pool.filter((x) => x[0] !== w && x[1] !== m)).slice(0, 2), why = `${w} «${r}» — ${m} (урок ${num(k)})`;
       if (i === 0) return { k: "input", lang: "fr", q: `Напиши по-французски: «${m}»`, a: [w], why, rq: why, hint: `читается «${r}»` };
       if (i === 1) return { k: "listen", say: w, q: "Что прозвучало?", opts: [w, ...others.map((x) => x[0])], a: w, lang: "x", why, rq: why };
       return i % 2 ? { k: "choice", q: `Что значит ${w}?`, opts: [m, ...others.map((x) => x[1])], a: m, lang: "x", why, rq: why }
@@ -135,13 +138,13 @@ const FR = (() => {
     const n = +args[0] || 1, I = info(n);
     if (!I) return `<div class="card soon"><h2>Такого урока нет</h2><a class="btn gold" href="#/французский">К урокам французского</a></div>`;
     if (!isOpen(n)) { const f = firstOpen();
-      return `<div class="card soon nokeep"><div class="ic">🔒</div><h2>${I.check ? "Контрольная" : "Урок"} ${n} пока ${I.check ? "закрыта" : "закрыт"}</h2>
-        <p class="muted">Уроки и контрольные открываются строго по порядку. Сначала пройди ${f.check ? "контрольную" : "урок"} ${f.n} «${esc(f.t)}».</p>
-        <a class="btn gold" href="#/фр/${f.n}">К ${f.check ? "контрольной" : "уроку"} ${f.n} ▶</a></div>`; }
+      return `<div class="card soon nokeep"><div class="ic">🔒</div><h2>${I.check ? "Контрольная" : "Урок"} ${num(n)} пока ${I.check ? "закрыта" : "закрыт"}</h2>
+        <p class="muted">Уроки и контрольные открываются строго по порядку. Сначала пройди ${f.check ? "контрольную" : "урок"} ${num(f.n)} «${esc(f.t)}».</p>
+        <a class="btn gold" href="#/фр/${f.n}">К ${f.check ? "контрольной" : "уроку"} ${num(f.n)} ▶</a></div>`; }
     if (dayBlocked(n)) return `<div class="card soon nokeep"><div class="ic">🌙</div><h2>На сегодня уроков хватит</h2>
-      <p class="muted">Ты прошёл ${dayUsed()} из ${dayLimit()} новых уроков французского за день. Урок ${n} откроется в 7:30 утра.<br>Лучше понемногу каждый день, чем рывками — так не перегоришь.</p>
+      <p class="muted">Ты прошёл ${dayUsed()} из ${dayLimit()} новых уроков французского за день. Урок ${num(n)} откроется в 7:30 утра.<br>Лучше понемногу каждый день, чем рывками — так не перегоришь.</p>
       <p><a class="btn gold" href="#/французский">Повторить пройденное</a></p></div>`;
-    return Board.wrap(`<div id="frl"><div class="card muted">Загружаю ${I.check ? "контрольную" : "урок"} ${n}…</div></div>`);
+    return Board.wrap(`<div id="frl"><div class="card muted">Загружаю ${I.check ? "контрольную" : "урок"} ${num(n)}…</div></div>`);
   }
   const pinOffer = (L, end) => { const P = (L.pins || []).filter((p) => !(Store.get().board || { cards: [] }).cards.some((c) => c.id === p.id)); if (!P.length) return "";
     return `<div class="card c2offer"><div><b>📌 ${end ? "Не забудь закрепить" : "В этом уроке важная таблица"}${P.length > 1 ? "ы" : ""}</b>
@@ -164,8 +167,8 @@ const FR = (() => {
       <div class="muted" style="margin-top:8px">Нажми ▶ у каждого слова и повтори вслух. Потом — быстрая проверка, чтобы слова запомнились.</div></div>
       <h3 class="c2h3">🧠 Запомни</h3><div class="alt-qs" id="frmem"></div>` : "";
     const sec = FR_I.sections[I.sec];
-    $("#frl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/французский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(sec)} · урок ${n} из ${lessons().length}</span></div>
-      <div class="k">🇫🇷 Урок ${n}${I.kind ? " · " + esc(I.kind) : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
+    $("#frl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/французский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(sec)} · урок ${num(n)} из ${lessons().length}</span></div>
+      <div class="k">🇫🇷 Урок ${num(n)}${I.kind ? " · " + esc(I.kind) : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
       <div class="c2prog"><i id="frbar"></i></div>
       ${L.sut ? `<div class="card c2sut"><div class="k">⚡ Суть за 30 секунд</div><div class="c2big">${rich(L.sut, L)}</div></div>` : ""}
       ${L.rule ? `<div class="card frrule">${rich(L.rule, L)}</div>` : ""}
@@ -206,12 +209,12 @@ const FR = (() => {
       if (!old.times) { const S = S0(); S.frFirst = S.frFirst || {}; S.frFirst[n] = Date.now(); }
       P[n] = { stars: Math.max(old.stars, stars), best: Math.max(old.best, pct), times: old.times + 1, date: new Date().toISOString().slice(0, 10) };
       rec.res = { pts }; S0().frans[n] = rec; Store.addPoints(pts); renderNav("учиться"); }
-    const nx = info(n + 1);
+    const nx = nextOf(n);
     $("#frend").innerHTML = `<div class="card c2res"><div class="bigstars">${"★".repeat(stars)}${"☆".repeat(3 - stars)}</div>
-      <h2>Урок ${n} пройден!</h2><p>С первой попытки: <b>${st.first} из ${st.total}</b> (${pct}%). ${pts ? `+${pts} очков ✦` : ""}</p>
+      <h2>Урок ${num(n)} пройден!</h2><p>С первой попытки: <b>${st.first} из ${st.total}</b> (${pct}%). ${pts ? `+${pts} очков ✦` : ""}</p>
       ${pinOffer(L, true)}
       ${stars < 3 ? `<p class="muted">Хочешь три звезды? Пройди урок ещё раз — засчитается лучший результат.</p>` : ""}
-      <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${nx ? `<a class="btn gold" href="#/фр/${nx.n}">${nx.check ? "Контрольная" : "Урок " + nx.n}: ${esc(nx.t)} ▶</a>` : `<a class="btn gold" href="#/французский">Курс пройден! 🎓</a>`}
+      <div class="row" style="justify-content:center;gap:10px;flex-wrap:wrap">${nx ? `<a class="btn gold" href="#/фр/${nx.n}">${nx.check ? "Контрольная" : "Урок " + num(nx.n)}: ${esc(nx.t)} ▶</a>` : `<a class="btn gold" href="#/французский">Курс пройден! 🎓</a>`}
       <button class="btn" onclick="FR.again(${n})">↻ Пройти снова</button></div></div>`;
     if (!replay) $("#frend").scrollIntoView({ behavior: "smooth", block: "center" });
   }
@@ -220,7 +223,7 @@ const FR = (() => {
   let EX = null;
   async function examBind(n, L, I) {
     // итоговая (последняя) контрольная — по всему курсу: по заданию из каждого урока последнего раздела + 8 случайных уроков раньше
-    const last = !info(n + 1), all = lessons().filter((l) => !l.check);
+    const last = !nextOf(n), all = lessons().filter((l) => !l.check);
     const secL = last ? all.filter((l) => l.sec === I.sec).concat(AltT.shuffle(all.filter((l) => l.sec < I.sec)).slice(0, 8)) : all.filter((l) => l.sec === I.sec);
     const best = prog()[n], left = retryLeft(n), lv = LV[I.sec], miss = ((S0().frMiss || {})[n] || []);
     await Promise.all(secL.map((l) => load(l.n).catch(() => null)));
@@ -230,7 +233,7 @@ const FR = (() => {
     const base = AltT.shuffle(own.concat(fromL)), items = mix(base, listenItems(src, I).slice(0, Math.round(base.length / 2)));
     Board.render();
     $("#frl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/французский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(FR_I.sections[I.sec])}</span></div>
-      <div class="k">🇫🇷 Контрольная · урок ${n}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
+      <div class="k">🇫🇷 Контрольная · урок ${num(n)}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
       ${L.rule ? `<div class="card frrule">${rich(L.rule, L)}</div>` : ""}
       <div class="card exrules"><div class="exlv"><span class="k">Сдашь — получишь уровень</span><b>${lv.ic} <span class="fr">${lv.w}</span> · ${lv.ru}</b></div>
         <ul><li><b>${items.length} заданий</b>, по одному. На каждое — <b>${EX_SEC} секунд</b>. Время вышло — задание не засчитано.</li>
@@ -275,18 +278,18 @@ const FR = (() => {
       if (pts) Store.addPoints(pts); else Store.save(); renderNav("учиться"); }
     const S = S0(); S.frMiss = S.frMiss || {}; S.frMiss[n] = JSON.parse(JSON.stringify(E.miss)).map((t) => { delete t.again; return t; });
     Store.save();
-    const after = level(), up = after > before ? LV[after - 1] : null, nx = info(n + 1);
+    const after = level(), up = after > before ? LV[after - 1] : null, nx = nextOf(n);
     $("#exbox").innerHTML = `<div class="card c2res"><div class="bigstars">${pass ? "✓" : "✗"}</div>
       <h2>${pass ? "Контрольная сдана!" : "Пока не сдана"}</h2><p>Результат: <b>${pct} %</b> (${E.score} из ${E.items.length}). Нужно ${PASS} %. ${pts ? `+${pts} очков ✦` : ""}</p>
       ${up ? `<div class="lvup"><small>Новый уровень</small><b>${up.ic} <span class="fr">${up.w}</span></b><span>${up.ru}</span></div>` : ""}
       ${E.miss.length ? `<details class="card"><summary>Ошибки (${E.miss.length})</summary><ul>${E.miss.map((t) => `<li>${esc(t.q || "")} — <b>${esc([].concat(t.a)[0])}</b>${t.why ? ` <span class="muted">(${esc(t.why)})</span>` : ""}</li>`).join("")}</ul></details>` : ""}
       ${pass ? "" : `<p class="muted">Повтори уроки раздела и попробуй снова через час.</p>`}
-      <div class="row" style="justify-content:center;gap:10px">${pass && nx ? `<a class="btn gold" href="#/фр/${nx.n}">Урок ${nx.n}: ${esc(nx.t)} ▶</a>` : ""}<a class="btn" href="#/французский">Все уроки</a></div></div>`;
+      <div class="row" style="justify-content:center;gap:10px">${pass && nx ? `<a class="btn gold" href="#/фр/${nx.n}">Урок ${num(nx.n)}: ${esc(nx.t)} ▶</a>` : ""}<a class="btn" href="#/французский">Все уроки</a></div></div>`;
     $("#exprog").style.width = "100%";
   }
 
   // реклама на страницах Etoilal: «Etoilal — простой вход во французский»
   const banner = () => `<a class="card xban frban" href="#/французский"><span class="xic">🇫🇷</span><span><b>Etoilal — простой вход во французский</b><small>те же корни и звуки, только без немых букв и исключений · а ещё на сайте есть самоучитель французского</small></span><span class="lst">▶</span></a>`;
   const onPage = () => { try { return /^#\/(французский|фр)(\/|$)/.test(decodeURIComponent(location.hash)) || (typeof Shell !== "undefined" && Shell.fr()); } catch (e) { return false; } };
-  return { page, pageLesson, bindLesson, banner, onPage, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
+  return { num, page, pageLesson, bindLesson, banner, onPage, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
 })();

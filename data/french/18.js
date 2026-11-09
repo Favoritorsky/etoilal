@@ -1,8 +1,8 @@
 window.FR_C = window.FR_C || {};
-FR_C[18] = { n: 18, t: "Контрольная: первые фразы", s: "уроки 8–17: знакомство, être, avoir, le/la, много, глаголы, не, вопросы, прилагательные, мой",
-  rule: `<p>Проверь себя по урокам 8–17: je suis / j'ai, le · la · les · un · une · des, je chante, ne … pas, est-ce que, petit / petite, mon · ma · mes.</p>`,
+FR_C[18] = { n: 18, t: "Контрольная: первые фразы", s: "уроки 8–16: être, avoir, le/la, много, глаголы, не, вопросы, прилагательные, мой",
+  rule: `<p>Проверь себя по урокам 8–16: je suis / j'ai, le · la · les · un · une · des, je chante, ne … pas, est-ce que, petit / petite, mon · ma · mes.</p>`,
   tasks: [
-    { k: "input", lang: "fr", q: "Меня зовут Анна.", a: ["Je m'appelle Anna."], why: "je m'appelle" },
+    { k: "input", lang: "fr", q: "Я русский.", a: ["Je suis russe."], why: "je suis — я (есть)" },
     { k: "choice", q: "Nous … prêts.", opts: ["sommes", "sont", "êtes"], a: "sommes", why: "nous sommes" },
     { k: "input", lang: "fr", q: "Мне десять лет.", a: ["J'ai dix ans."], why: "возраст — avoir" },
     { k: "choice", q: "… fleurs (те самые цветы)", opts: ["la", "les", "des"], a: "les", why: "много, «те самые» — les" },

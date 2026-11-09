@@ -24,7 +24,7 @@ FR_C[9] = { n: 9, t: "Быть: je suis, tu es…", s: "самый важный 
 <h3>Частые ошибки</h3>
 <p>• Пропускают глагол: «Je russe» — надо {{Je suis russe.}} • Путают {{il est}} «иль э» (он есть) и {{et}} «э» (и) — звучат одинаково! • Читают {{ils sont}} как «ильс сонт» — s и t молчат: «иль сон».</p>`,
   lub: `<p>{{être}} — самый неправильный глагол почти во всех европейских языках: английское <i>be — am — is — are</i>, немецкое <i>sein — bin — ist</i>. Он такой древний, что его формы собраны из нескольких разных старых глаголов.</p>
-<p>Слово «женщина-студентка» — {{étudiante}} «этюдьянт»: e на конце, и t начинает звучать. Подробнее про «он» и «она» у слов — в уроке 16.</p>`,
+<p>Слово «женщина-студентка» — {{étudiante}} «этюдьянт»: e на конце, и t начинает звучать. Подробнее про «он» и «она» у слов — в уроке 15.</p>`,
   pins: [{ id: "fr9", t: "être — быть", html: `<table class="tbl"><tbody><tr><td class="fr">je suis</td><td>жё сюи</td></tr><tr><td class="fr">tu es</td><td>тю э</td></tr><tr><td class="fr">il / elle est</td><td>иль / эль э</td></tr><tr><td class="fr">nous sommes</td><td>ну сом</td></tr><tr><td class="fr">vous êtes</td><td>вузэт</td></tr><tr><td class="fr">ils / elles sont</td><td>иль / эль сон</td></tr></tbody></table>` }],
   tasks: [
     { k: "choice", q: "Я русский. — Je … russe.", opts: ["suis", "es", "est"], a: "suis", why: "je suis — я есть" },

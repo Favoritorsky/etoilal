@@ -28,7 +28,7 @@ FR_C[26] = { n: 26, t: "Мочь, хотеть, должен", s: "pouvoir, voul
 <p><b>Не как в русском:</b> «надо» во французском — с «кто»: {{il faut}} «оно надо». А «уметь плавать» французы чаще говорят тоже через {{pouvoir}} или {{savoir}}.</p>
 <h3>Частые ошибки</h3>
 <p>• Меняют второй глагол: «Je veux mange» — надо {{Je veux manger.}} • Ставят pas после второго глагола: «Je peux venir pas» — надо {{Je ne peux pas venir.}} • «Il faut que partir» — после il faut сразу глагол: {{Il faut partir.}}</p>`,
-  lub: `<p>Вежливо «я хотел бы» — {{je voudrais}} «жё вудрэ». Так говорят в кафе и магазине: <i>Je voudrais un café, s'il vous plaît.</i> Эту форму («бы») разберём в уроке 50 — а пока запомни целиком.</p>
+  lub: `<p>Вежливо «я хотел бы» — {{je voudrais}} «жё вудрэ». Так говорят в кафе и магазине: <i>Je voudrais un café, s'il vous plaît.</i> Эту форму («бы») разберём в уроке 49 — а пока запомни целиком.</p>
 <p>{{devoir}} значит ещё и «быть должным деньги»: <i>Je te dois dix euros</i> — «я тебе должен десять евро». Отсюда и слово «долг».</p>`,
   pins: [{ id: "fr26", t: "pouvoir, vouloir, devoir", html: `<table class="tbl"><tbody><tr><td>мочь</td><td class="fr">peux peux peut · pouvons pouvez peuvent</td></tr><tr><td>хотеть</td><td class="fr">veux veux veut · voulons voulez veulent</td></tr><tr><td>должен</td><td class="fr">dois dois doit · devons devez doivent</td></tr><tr><td>+ глагол целиком</td><td class="fr">Je peux nager. Il faut partir.</td></tr></tbody></table>` }],
   tasks: [

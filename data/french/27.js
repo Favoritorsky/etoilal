@@ -28,7 +28,7 @@ FR_C[27] = { n: 27, t: "Прийти и взять: venir, prendre", s: "два 
 <p>• «Je suis de Russie» — правильно {{Je viens de Russie.}} • «ils prendent» — надо {{ils prennent}} (две n). • «je viene» — надо {{je viens}}.</p>
 <p>• Фраза {{Je ne comprends pas.}} — одна из самых полезных: запомни её целиком.</p>`,
   lub: `<p>Отсюда русские слова: «авантюра» (<i>aventure</i> — «то, что придёт») и «сувенир» (<i>se souvenir</i> — «вспоминать», буквально «прийти снизу»).</p>
-<p>У {{venir}} есть важная форма {{venir de}} + глагол — «только что сделал»: <i>Je viens de manger</i> «я только что поел». Её разберём в уроке 31.</p>`,
+<p>У {{venir}} есть важная форма {{venir de}} + глагол — «только что сделал»: <i>Je viens de manger</i> «я только что поел». Её разберём в уроке 30.</p>`,
   pins: [{ id: "fr27", t: "venir и prendre", html: `<table class="tbl"><tbody><tr><td class="fr">venir</td><td class="fr">viens viens vient · venons venez viennent</td></tr><tr><td class="fr">prendre</td><td class="fr">prends prends prend · prenons prenez prennent</td></tr><tr><td class="fr">Je viens de Russie.</td><td>Я из России.</td></tr><tr><td class="fr">Je prends le bus.</td><td>Я еду на автобусе.</td></tr></tbody></table>` }],
   tasks: [
     { k: "input", lang: "fr", q: "Я из России.", a: ["Je viens de Russie."], why: "«я прихожу из России»", hint: "je viens de…" },

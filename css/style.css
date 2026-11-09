@@ -735,3 +735,6 @@ body.shell-fr .fr { color: #b9d0ff; }
 .frcm { display: grid; gap: 4px; margin: 0 0 16px; } .frcm b { font-size: 22px; }
 
 .frskip{display:flex;flex-direction:column;gap:6px;align-items:flex-start}.frskip p{margin:0}
+
+.frwl{cursor:pointer;font:inherit;border:1px solid var(--line,rgba(255,255,255,.12));background:none;color:inherit;margin:2px 4px 2px 0}.frdc{font:500 11px var(--sans);color:var(--dim);margin-left:6px}
+.frform{margin-bottom:10px}

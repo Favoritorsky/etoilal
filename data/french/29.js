@@ -1,6 +1,6 @@
 window.FR_C = window.FR_C || {};
-FR_C[29] = { n: 29, t: "Контрольная: каждый день", s: "уроки 19–28: aller, faire, du / de la, вопросы, числа, время, -ir, мочь / хотеть, venir / prendre, c'est / il y a",
-  rule: `<p>Проверь себя по урокам 19–28: je vais au / à la, il fait beau, du pain / de l'eau, où / quand / pourquoi, soixante-dix, quelle heure est-il, je finis, je peux / je veux / je dois + глагол, je viens / je prends, c'est / il y a.</p>`,
+FR_C[29] = { n: 29, t: "Контрольная: каждый день", s: "уроки 18–27: aller, faire, du / de la, вопросы, числа, время, -ir, мочь / хотеть, venir / prendre, c'est / il y a",
+  rule: `<p>Проверь себя по урокам 18–27: je vais au / à la, il fait beau, du pain / de l'eau, où / quand / pourquoi, soixante-dix, quelle heure est-il, je finis, je peux / je veux / je dois + глагол, je viens / je prends, c'est / il y a.</p>`,
   tasks: [
     { k: "choice", q: "Il va … musée.", opts: ["au", "à le", "à la"], a: "au", why: "à + le = au" },
     { k: "input", lang: "fr", q: "Холодно.", a: ["Il fait froid."], why: "погода — il fait" },

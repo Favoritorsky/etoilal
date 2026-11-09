@@ -8,7 +8,7 @@ function loadLesson(n) {
   window.ET_LESSONS = window.ET_LESSONS || {};
   if (ET_LESSONS[n]) return Promise.resolve(ET_LESSONS[n]);
   return new Promise((ok, bad) => {
-    const s = document.createElement("script"); s.src = `data/course/${String(n).padStart(2, "0")}.js?v=202611091734`;
+    const s = document.createElement("script"); s.src = `data/course/${String(n).padStart(2, "0")}.js?v=202611091824`;
     s.onload = () => (ET_LESSONS[n] ? ok(ET_LESSONS[n]) : bad(new Error("нет урока")));
     s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s);
   });

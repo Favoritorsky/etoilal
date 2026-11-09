@@ -1,6 +1,6 @@
 window.FR_C = window.FR_C || {};
-FR_C[39] = { n: 39, t: "Контрольная: прошлое и будущее", s: "уроки 30–38: je vais + глагол, je viens de, j'ai chanté, je suis allé, je chantais, je chanterai, слова времени",
-  rule: `<p>Проверь себя по урокам 30–38: скоро (je vais chanter), только что (je viens de chanter), прошлое с avoir и être, особые формы (fait, vu, pris), фон или событие (je chantais / j'ai chanté), будущее (je chanterai), déjà / pas encore / depuis.</p>`,
+FR_C[39] = { n: 39, t: "Контрольная: прошлое и будущее", s: "уроки 29–37: je vais + глагол, je viens de, j'ai chanté, je suis allé, je chantais, je chanterai, слова времени",
+  rule: `<p>Проверь себя по урокам 29–37: скоро (je vais chanter), только что (je viens de chanter), прошлое с avoir и être, особые формы (fait, vu, pris), фон или событие (je chantais / j'ai chanté), будущее (je chanterai), déjà / pas encore / depuis.</p>`,
   tasks: [
     { k: "input", lang: "fr", q: "Я сейчас поем. (скоро)", a: ["Je vais manger."], why: "aller + глагол" },
     { k: "choice", q: "Я только что поел.", opts: ["Je viens de manger.", "Je viens manger.", "Je vais manger."], a: "Je viens de manger.", why: "venir de" },
