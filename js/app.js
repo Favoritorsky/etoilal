@@ -106,9 +106,9 @@ function renderNav(cur) {
   const st = Store.streak(), pts = Store.get().points;
   $("#topnav").innerHTML = (Shell.fr() ? `<a class="logo" href="#/главная"><span class="mk">🇫🇷</span> Fran<b>çais</b></a>` : `<a class="logo" href="#/главная"><span class="mk">✦</span> Etoil<b>al</b></a>`) + shellSwitch() +
     NAV.map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="${esc(tabHref(id, cur))}">${t}</a>`).join("") +
-    `<div class="sp"></div><span class="chip f" title="Дней подряд">${ICO.flame} ${st}</span><span class="chip" title="Очки">${ICO.star} ${pts}</span>` +
+    `<div class="sp"></div><span class="navr"><span class="chip f" title="Дней подряд">${ICO.flame} ${st}</span><span class="chip" title="Очки">${ICO.star} ${pts}</span>` +
     (Cloud.user() ? `<a class="chip cl nk" href="#/профиль" title="Профиль · прогресс в облаке">${ICO.user} ${esc(Cloud.user().nick)}</a>`
-      : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">${ICO.cloud} Войти</a><a class="chip" href="#/профиль" title="Профиль">${ICO.user}</a>`);
+      : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">${ICO.cloud} Войти</a><a class="chip" href="#/профиль" title="Профиль">${ICO.user}</a>`) + `</span>`;
   const moreOn = !TABS.some((x) => x[0] === cur);
   $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST[(Shell.fr() ? "fr:" : "") + "ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${ICO[i] || i}</i>${t}</a>`).join("");
 }

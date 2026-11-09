@@ -18,7 +18,7 @@ const FRT = (() => {
   const DS = { q: "", pos: "", shown: 60, open: null };
   let dictP = null;
   const dictLoad = () => dictP || (dictP = new Promise((ok, bad) => { if (window.FR_DICT) return ok(FR_DICT);
-    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611091824"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
+    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611100001"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
   const my = () => { const S = S0(); S.frMy = S.frMy || {}; return S.frMy; };
   function dictSearch(q, pos) {
     const W = FR_DICT.words; q = dn(q);

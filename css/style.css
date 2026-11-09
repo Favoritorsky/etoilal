@@ -738,3 +738,7 @@ body.shell-fr .fr { color: #b9d0ff; }
 
 .frwl{cursor:pointer;font:inherit;border:1px solid var(--line,rgba(255,255,255,.12));background:none;color:inherit;margin:2px 4px 2px 0}.frdc{font:500 11px var(--sans);color:var(--dim);margin-left:6px}
 .frform{margin-bottom:10px}
+
+/* 9.11: огонёк, очки и ник — одной группой справа, не разъезжаются по строкам; на широком экране шапка шире — всё в одну строку */
+.topnav .navr{display:flex;align-items:center;gap:2px;flex-shrink:0;margin-left:auto;white-space:nowrap}
+@media (min-width:1500px){.topnav{max-width:1480px}}
