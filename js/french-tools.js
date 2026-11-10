@@ -18,10 +18,10 @@ const FRT = (() => {
   const DS = { q: "", pos: "", shown: 60, open: null };
   let dictP = null;
   const dictLoad = () => dictP || (dictP = new Promise((ok, bad) => { if (window.FR_DICT) return ok(FR_DICT);
-    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611102132"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
+    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611102300"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
   const my = () => { const S = S0(); S.frMy = S.frMy || {}; return S.frMy; };
   function dictSearch(q, pos) {
-    const W = FR_DICT.words; q = dn(q);
+    const W = FR_DICT.words; q = dn(q); if (!/[а-я]/.test(q)) q = q.replace(/^(le|la|les|un|une|des|du)\s+|^l'\s*/, "");
     if (!q) return pos ? W.filter((w) => w[1] === pos) : W;
     const cyr = /[а-я]/.test(q), res = [];
     for (const w of W) {
@@ -34,12 +34,19 @@ const FRT = (() => {
     }
     return res.sort((a, b) => a[0] - b[0] || a[1] - b[1]).map((x) => x[2]);
   }
+  // артикль существительного (10.11.2026): le / la / l' / les; h «придыхательное» (le héros, la honte) — без l'
+  const HASP = /^(h[ée]ros|haricot|hibou|homard|honte|hasard|haut|hache|haine|hall|hamac|hamburger|handicap|hangar|hanche|harpe|hockey|housse|hublot|huit|hutte|h[âa]te|hausse|hamster|haie|halte|hareng|h[ée]risson|h[êe]tre|hi[ée]rarchie|hameau|harc[èe]lement|halt[èe]re|houx|hurlement|hold-up|hippie)/;
+  const art = (w) => { if (w[1] !== "n" || !w[5]) return ""; const g = w[5];
+    if (/мн/.test(g)) return "les "; if (/^[aeiouyàâäéèêëîïôöùûüœæ]/i.test(w[0]) || (/^h/i.test(w[0]) && !HASP.test(w[0].toLowerCase()))) return "l'";
+    return g === "м./ж." ? "le / la " : g === "ж." ? "la " : "le "; };
+  const artRd = (w) => ({ "les ": "ле ", "l'": "л", "le / la ": "лё / ла ", "la ": "ла ", "le ": "лё " })[art(w)] || "";
+  const full = (w) => art(w) + w[0];
   const posTxt = (w) => (POS[w[1]] || "") + (w[5] ? " · " + w[5] + " р." : "");
   const wlink = (x) => `<button class="tag frwl" data-ow="${esc(x)}"><span class="fr">${esc(x)}</span></button>`;
   function wordCard(w) {
-    const [, , g, r, , , n, rel = [], syn = [], ex = []] = w, mine = !!my()[w[0]];
-    return `<div class="card wd"><div class="row"><div><div class="big fr">${esc(w[0])}</div><div class="rd">${r ? `«${esc(r)}» · ` : ""}${posTxt(w)}</div></div>
-      <div class="row">${playBtn(w[0])}<button class="btn sm" data-frmy="${esc(w[0])}">${mine ? "★ в карточках" : "☆ в карточки"}</button></div></div>
+    const [, , g, r, , , n, rel = [], syn = [], ex = []] = w, mine = !!my()[full(w)] || !!my()[w[0]];
+    return `<div class="card wd"><div class="row"><div><div class="big fr">${esc(full(w))}</div><div class="rd">${r ? `«${esc(artRd(w) + r)}» · ` : ""}${posTxt(w)}</div></div>
+      <div class="row">${playBtn(full(w).replace(/^le \/ la /, "le "))}<button class="btn sm" data-frmy="${esc(w[0])}">${mine ? "★ в карточках" : "☆ в карточки"}</button></div></div>
       <div style="font-size:19px;margin-top:10px">${esc(g)}</div>
       ${n ? `<div class="muted" style="margin-top:6px">Из курса: <a href="#/фр/${n}">урок ${FR.num(n)}${FR.done(n) ? " ✓" : ""}</a></div>` : ""}
       <div class="aud-note">🔊 Аудио синтезировано — возможны неточности</div>
@@ -66,8 +73,8 @@ const FRT = (() => {
     $("#frdres").innerHTML = (open ? wordCard(open) + "<div style='height:14px'></div>" : "") +
       (fm ? `<div class="card frform">${fm.map(([f, L]) => `<span class="fr">${esc(f)}</span> — форма слова ${L.map(wlink).join(" или ")}`).join("<br>")}</div>` : "") +
       (res.length ? `<div class="muted" style="margin-bottom:8px">Найдено: ${res.length.toLocaleString("ru")}</div>` : `<div class="card muted">Ничего не нашлось. Попробуй другое слово или начальную форму (глагол — как в словаре: <span class="fr">aller</span>, а не <span class="fr">vais</span>).</div>`) +
-      `<div class="dlist">${list.map((w) => `<div class="card wrow" data-w="${esc(w[0])}"><div class="txt"><div class="w fr">${esc(w[0])}${w[6] ? ` <small class="frdc" title="слово из курса">урок ${FR.num(w[6])}</small>` : ""}</div>
-        <div class="m">${esc(w[2])}</div><div class="r">${w[3] ? `«${esc(w[3])}» · ` : ""}${posTxt(w)}</div></div>${playBtn(w[0], 1)}</div>`).join("")}</div>` +
+      `<div class="dlist">${list.map((w) => `<div class="card wrow" data-w="${esc(w[0])}"><div class="txt"><div class="w fr">${esc(full(w))}${w[6] ? ` <small class="frdc" title="слово из курса">урок ${FR.num(w[6])}</small>` : ""}</div>
+        <div class="m">${esc(w[2])}</div><div class="r">${w[3] ? `«${esc(artRd(w) + w[3])}» · ` : ""}${posTxt(w)}</div></div>${playBtn(full(w).replace(/^le \/ la /, "le "), 1)}</div>`).join("")}</div>` +
       (res.length > list.length ? `<div class="more"><button class="btn" id="frdmore">Показать ещё</button></div>` : "");
   }
   async function bindDict() {
@@ -80,7 +87,8 @@ const FRT = (() => {
     $("#frdres").addEventListener("click", (e) => {
       if (e.target.closest(".play, [data-say], .lsn-play")) return;
       const m = e.target.closest("[data-frmy]"); if (m) { const w = FR_DICT.words.find((x) => x[0] === m.dataset.frmy), M = my();
-        if (M[w[0]]) { delete M[w[0]]; toast("Убрал из карточек"); } else { M[w[0]] = [w[2], w[3]]; toast("Добавил в карточки"); } Store.save(); dictRender(); return; }
+        const k = full(w).replace(/^le \/ la /, "le ");
+        if (M[k] || M[w[0]]) { delete M[k]; delete M[w[0]]; toast("Убрал из карточек"); } else { M[k] = [w[2], (w[3] ? artRd(w).replace("лё / ла ", "лё ") + w[3] : "")]; toast("Добавил в карточки"); } Store.save(); dictRender(); return; }
       if (e.target.id === "frdmore") { DS.shown += 60; dictRender(); return; }
       const o = e.target.closest("[data-ow]"); if (o) { DS.open = o.dataset.ow; dictRender(); window.scrollTo({ top: $("#frdres").offsetTop - 90, behavior: "smooth" }); return; }
       const r = e.target.closest(".wrow"); if (r && !e.target.closest("a")) { DS.open = r.dataset.w; dictRender(); window.scrollTo({ top: $("#frdres").offsetTop - 90, behavior: "smooth" }); }
