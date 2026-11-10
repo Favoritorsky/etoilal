@@ -742,3 +742,16 @@ body.shell-fr .fr { color: #b9d0ff; }
 /* 9.11: огонёк, очки и ник — одной группой справа, не разъезжаются по строкам; на широком экране шапка шире — всё в одну строку */
 .topnav .navr{display:flex;align-items:center;gap:2px;flex-shrink:0;margin-left:auto;white-space:nowrap}
 @media (min-width:1500px){.topnav{max-width:1480px}}
+
+/* 10.11: тренировки французского */
+.lrow.frtr { border-style: dashed; } .lrow.frtr .ln { font-size: 18px; }
+.frln { display: flex; gap: 10px; align-items: flex-start; padding: 6px 8px; border-radius: 10px; cursor: pointer; }
+.frln:hover { background: var(--glass2, rgba(255,255,255,.05)); } .frln.on { background: rgba(143,180,255,.14); }
+.frln .fr { font-size: 17px; } .frtr2 { display: none; margin-top: 2px; font-size: 14px; } .frln.tr .frtr2, .frtext.all .frtr2, .frdlg .frtr2 { display: block; }
+.frdlg .frtr2 { display: none; } .frdlg .frln.tr .frtr2 { display: block; }
+.frd.b .frwho { color: var(--acc); } .frwho { margin-right: 4px; }
+.frwrite textarea { width: 100%; margin-top: 10px; font: inherit; resize: vertical; }
+.frwres > div { padding: 3px 0; } .frwres .ok { color: #8fd18f; } .frwres .bad { color: #f0a070; } .frwres .q { color: var(--muted); }
+.frmodel { margin-top: 10px; } .frmodel .fr { font-size: 16px; margin: 4px 0; }
+.frpack { display: flex; flex-wrap: wrap; gap: 6px; } .frpack .tag { display: inline-flex; align-items: center; gap: 6px; }
+.frnote .k { margin-bottom: 6px; }

@@ -72,7 +72,7 @@ const Shell = {
   set(v) { try { localStorage.setItem("etoilal-shell", v); } catch (e) {} document.body.classList.toggle("shell-fr", v === "fr"); },
   fr() { return this.get() === "fr"; },
   ET_ONLY: new Set(["урок", "альтернатива", "подготовка", "экспресс", "о-языке", "мат", "секрет"]),
-  FR_ONLY: new Set(["французский", "фр"]),
+  FR_ONLY: new Set(["французский", "фр", "фрт"]),
   // разделы с одинаковыми функциями: во французской оболочке — своя версия (когда будет) или заглушка
   SAME: { "словарь": ["📚", "Словарь французского"], "карточки": ["🃏", "Карточки французских слов"], "переводчик": ["⇄", "Переводчик с французского"],
     "проверка": ["✅", "Проверь текст на французском"], "справочник": ["📐", "Справочник французской грамматики"], "песни": ["🎤", "Французские песни — караоке"],
@@ -359,7 +359,7 @@ const PAGES = {
   "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [(a) => Lv.examActive() ? Lv.lockedPage("Переводчик") : pageTranslate(a), (a) => !Lv.examActive() && bindTranslate(a)], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
   "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
   "тренировки": [pageTrain, bindTrain], "тренировка": [pageDaily, bindDaily],
-  "французский": [() => FR.page()], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)],
+  "французский": [() => FR.page()], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)], "фрт": [(a) => FRP.page(a), (a) => FRP.bind(a)],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
   "проверка": [(a) => Lv.examActive() ? Lv.lockedPage("«Проверь текст»") : pageCheck(a), (a) => !Lv.examActive() && bindCheck(a)],
   "справочник": [pageRef, bindRef],
@@ -374,7 +374,7 @@ const PAGES = {
 // тренировки и т.п. всегда рисуются заново (там данные меняются). Прямой вызов route() (кнопки «Ещё раз», смена темы) — заново.
 const PAGE_KEEP = new Set(["урок", "альтернатива", "переводчик", "проверка", "словарь", "тексты", "справочник", "полезное", "библиотека", "о-языке", "экспресс"]);
 // 9.11: во французской оболочке ключи страниц начинаются с «fr:»; там же откладываются уроки (фр/N), карточки и тренировка
-const FR_KEEP = new Set(["фр", "тренировки", "тренировка", "карточки"]);
+const FR_KEEP = new Set(["фр", "фрт", "тренировки", "тренировка", "карточки"]);
 const keepPage = (k) => { const fr = /^fr:/.test(k), id = k.replace(/^fr:/, "").split("/")[0]; return PAGE_KEEP.has(id) || (fr && FR_KEEP.has(id)); };
 const PAGE_CACHE = new Map();                          // ключ (адрес) → { el, y, onShow }
 const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
@@ -399,7 +399,7 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = Shell.fr() && ["французский", "фр"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
+  const navId = Shell.fr() && ["французский", "фр", "фрт"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
   const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);

@@ -15,7 +15,7 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611100001`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611102059`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
@@ -70,10 +70,11 @@ const FR = (() => {
       <h1 class="page">Французский <i>по порядку</i></h1>
       <p class="lead">Для тех, кто начинает с нуля или немного знает: простыми словами, без терминов, с чтением русскими буквами и озвучкой. Каждый урок — как слоёный пирог: суть за 30 секунд, объяснение, «для любопытных», слова и задания. Каждый урок опирается только на пройденное.</p>
       <div class="learnhead"><div class="stats"><div class="st">📖 ${nd}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${Store.get().points}<small>очков</small></div></div>
-      <a class="btn gold" href="#/фр/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${num(next.n)} ▶</a>${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
+      ${(() => { const np = typeof FRP !== "undefined" && FRP.nextBefore(next.n); return np ? `<a class="btn gold" href="#/фрт/${np.id}">Продолжить: тренировка «${esc(np.t)}» ▶</a>`
+        : `<a class="btn gold" href="#/фр/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${num(next.n)} ▶</a>`; })()}${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
     <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv && !(lv === 1 && skipped(0) && !secPassed(0)) ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : (skipped(0) ? "пока без уровня — сдай контрольную «Первые фразы» (урок ${num(18)})" : "пока без уровня — пройди раздел «Звуки и чтение»")}</b></div></div>
       <div class="lvsteps">${LV.map((x, k) => `<div class="lvs${k < lv ? " d" : k === lv ? " c" : ""}"><i>${k + 1}</i><b class="fr">${x.w}</b><small>${x.ru}</small></div>`).join("")}</div>
-      <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${PASS} %). Уроки открываются строго по порядку.</div></div>
+      <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${PASS} %). Уроки открываются строго по порядку. 🏋 Тренировки между уроками — чтение, диалоги на слух, письмо и частые слова; в дневной лимит они не входят.</div></div>
     ${secPassed(0) ? "" : skipped(0)
       ? `<div class="card frskip"><b>⏩ Звуки и чтение пропущены</b><p class="muted">Уроки 1–7 открыты — заглядывай в них, когда захочешь: чтение русскими буквами есть в каждом уроке, так что без них можно идти дальше.</p><button class="btn sm" onclick="__frSkip(0, false)">Вернуть обычный порядок</button></div>`
       : `<div class="card frskip"><b>Скучно на звуках? Можно сразу к грамматике</b><p class="muted">Раздел «Звуки и чтение» останется открытым — вернёшься к нему, когда захочешь. Чтение русскими буквами есть в каждом уроке, так что дальше ты не потеряешься.</p><button class="btn gold sm" onclick="__frSkip(0, true)">⏩ Пропустить и перейти к уроку 8</button></div>`}
@@ -81,7 +82,7 @@ const FR = (() => {
       ${L.filter((l) => l.sec === k).map((l) => { const st = (P[l.n] || {}).stars || 0, open = isOpen(l.n);
         return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фр/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : num(l.n)) : "🔒"}</span>
           <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? `контрольная · уровень ${esc(LV[l.sec].w)}` : esc(l.s)}</small></span>
-          <span class="lst">${st ? "★".repeat(st) + "☆".repeat(3 - st) : l.n === next.n ? "▶" : ""}</span></${open ? "a" : "div"}>`; }).join("")}
+          <span class="lst">${st ? "★".repeat(st) + "☆".repeat(3 - st) : l.n === next.n ? "▶" : ""}</span></${open ? "a" : "div"}>` + (typeof FRP !== "undefined" ? FRP.after(l.n).map((t) => FRP.row(t, FRP.nextBefore(next.n) === t)).join("") : ""); }).join("")}
     </div></div>`).join("")}
     <p class="muted">Озвучка синтезирована — возможны неточности.</p>`;
   }
@@ -291,5 +292,5 @@ const FR = (() => {
   // реклама на страницах Etoilal: «Etoilal — простой вход во французский»
   const banner = () => `<a class="card xban frban" href="#/французский"><span class="xic">🇫🇷</span><span><b>Etoilal — простой вход во французский</b><small>те же корни и звуки, только без немых букв и исключений · а ещё на сайте есть самоучитель французского</small></span><span class="lst">▶</span></a>`;
   const onPage = () => { try { return /^#\/(французский|фр)(\/|$)/.test(decodeURIComponent(location.hash)) || (typeof Shell !== "undefined" && Shell.fr()); } catch (e) { return false; } };
-  return { num, page, pageLesson, bindLesson, banner, onPage, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
+  return { num, nextOf, skipped, page, pageLesson, bindLesson, banner, onPage, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
 })();

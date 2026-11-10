@@ -18,7 +18,7 @@ const FRT = (() => {
   const DS = { q: "", pos: "", shown: 60, open: null };
   let dictP = null;
   const dictLoad = () => dictP || (dictP = new Promise((ok, bad) => { if (window.FR_DICT) return ok(FR_DICT);
-    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611100001"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
+    const sc = document.createElement("script"); sc.src = "data/french/dict.js?v=202611102059"; sc.onload = () => ok(window.FR_DICT); sc.onerror = () => { dictP = null; bad(new Error("нет словаря")); }; document.head.appendChild(sc); }));
   const my = () => { const S = S0(); S.frMy = S.frMy || {}; return S.frMy; };
   function dictSearch(q, pos) {
     const W = FR_DICT.words; q = dn(q);
@@ -105,7 +105,10 @@ const FRT = (() => {
   async function bindCards() {
     await loadAll(); if (!$("#frc")) return;
     const W = wordsOf(learned()), have = new Set(W.map((x) => x.w));
-    Object.entries(S0().frMy || {}).forEach(([w, [m, r]]) => { if (!have.has(w)) W.push({ w, m, r, n: 0 }); });
+    Object.entries(S0().frMy || {}).forEach(([w, [m, r]]) => { if (!have.has(w)) { W.push({ w, m, r, n: 0 }); have.add(w); } });
+    // частые слова из пройденных тренировок: новых (ещё без карточки) — не больше 20 в день
+    const D = deck(), newToday = Object.values(D).filter((c) => c.since === today()).length; let room = Math.max(0, 20 - newToday);
+    if (typeof FRP !== "undefined") for (const x of FRP.packWords()) { if (have.has(x.w)) continue; if (!D[x.w]) { if (!room) continue; room--; } W.push(x); have.add(x.w); }
     if (!W.length) { $("#frc").innerHTML = `Карточки появятся, когда пройдёшь первый урок или добавишь слово из словаря (☆ в карточки). <a class="btn gold sm" href="#/фр/1">Урок 1 ▶</a>`; return; }
     const queue = AltT.shuffle(due(W)).slice(0, 20); let i = 0, good = 0;
     const show = () => {
@@ -114,13 +117,13 @@ const FRT = (() => {
         : `<h2>На сегодня всё повторено ✓</h2><p class="muted">Всего слов в карточках: ${W.length}. Следующие вернутся в свой день.</p><a class="btn gold" href="#/французский">К урокам</a>`;
         if (good) Store.addPoints(good); return; }
       const x = queue[i];
-      $("#frc").className = "card frcard"; $("#frc").innerHTML = `<div class="muted">${i + 1} из ${queue.length} · ${x.n ? `урок ${FR.num(x.n)}` : "из словаря"}</div><div class="frcw">${playBtn(x.w)}<b class="fr">${esc(x.w)}</b></div>
+      $("#frc").className = "card frcard"; $("#frc").innerHTML = `<div class="muted">${i + 1} из ${queue.length} · ${x.n ? `урок ${FR.num(x.n)}` : x.pack ? "частое слово" : "из словаря"}</div><div class="frcw">${playBtn(x.w)}<b class="fr">${esc(x.w)}</b></div>
         <div id="frcb"><button class="btn gold" id="frco">Показать перевод</button></div>`;
       speak(x.w);
       $("#frco").onclick = () => { $("#frcb").innerHTML = `<div class="frcm">${x.r ? `<span class="muted">«${esc(x.r)}»</span>` : ""}<b>${esc(x.m)}</b></div>
         <div class="row" style="justify-content:center;gap:10px"><button class="btn" data-k="0">✗ Не помню</button><button class="btn gold" data-k="1">✓ Помню</button></div>`;
         $("#frcb").querySelectorAll("[data-k]").forEach((b) => b.onclick = () => {
-          const c = deck()[x.w] || { box: 0 }, ok = b.dataset.k === "1"; if (ok) good++;
+          const c = deck()[x.w] || { box: 0, since: today() }, ok = b.dataset.k === "1"; if (ok) good++;
           c.box = ok ? Math.min(4, c.box + 1) : 0; const d = new Date(); d.setDate(d.getDate() + (ok ? DAYS[c.box] : 1)); c.due = d.toISOString().slice(0, 10);
           deck()[x.w] = c; Store.save(); i++; show(); }); };
     };
@@ -156,5 +159,5 @@ const FRT = (() => {
   // ---------------------------------------------------------------- полезное: фразы по ситуациям (data/french/useful.js)
   const useful = () => `${head("💬", "Полезное", "Готовые фразы для поездки во Францию: нажми ▶, послушай и повтори вслух.")}
     ${(window.FR_USEFUL || []).map((g) => `<details class="card c2sec" open><summary>${g.ic} ${esc(g.t)}</summary><div class="alt-exs">${g.p.map(([f, r, rd]) => `<div class="alt-ex">${playBtn(f, 1)}<div><span class="fr">${esc(f)}</span> <span class="alt-ru">— ${esc(r)}</span><div class="rd">«${esc(rd)}»</div></div></div>`).join("")}</div></details>`).join("")}${C2_AUD_NOTE}`;
-  return { dict, bindDict, ref, bindRef, cards, bindCards, train, bindTrain, useful };
+  return { dictLoad, dict, bindDict, ref, bindRef, cards, bindCards, train, bindTrain, useful };
 })();
