@@ -15,7 +15,7 @@ const FR = (() => {
   ];
   const load = (n) => { window.FR_C = window.FR_C || {};
     if (FR_C[n]) return Promise.resolve(FR_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611102300`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/${String(n).padStart(2, "0")}.js?v=202611102353`;
       s.onload = () => (FR_C[n] ? ok(FR_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.fr = S.fr || {}; return S; };
   const prog = () => S0().fr;
