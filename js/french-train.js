@@ -21,7 +21,7 @@ const FRP = (() => {
   // ближайшая открытая непройденная тренировка до урока n (для кнопки «Продолжить»)
   const nextBefore = (n) => list().find((t) => t.id < n && !tdone(t.id) && isOpen(t.id) && !skippedSec(t.sec)) || null;
   const load = (id) => { window.FR_T = window.FR_T || {}; if (FR_T[id]) return Promise.resolve(FR_T[id]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/t${id}.js?v=202611102059`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/t${id}.js?v=202611102132`;
       s.onload = () => (FR_T[id] ? ok(FR_T[id]) : bad(new Error("нет тренировки"))); s.onerror = () => bad(new Error("нет файла")); document.head.appendChild(s); }); };
   const row = (T, cur) => { const open = isOpen(T.id), d = tdone(T.id);
     return `<${open ? "a" : "div"} class="card lrow frtr${cur ? " cur" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фрт/${T.id}"` : ""}><span class="ln">${open ? "🏋" : "🔒"}</span>
@@ -73,12 +73,16 @@ const FRP = (() => {
     [/\bsi (je|j'|tu|il|elle|on|nous|vous|ils|elles) \w*(rai|ras|ra|rons|rez|ront)\b/i, "после si не ставят будущее: si il <b>pleut</b>, je resterai"],
     [/\bplus bon\b/i, "«лучше» — <b>meilleur</b>, а не plus bon"], [/\bsi ils?\b/i, "si + il → <b>s'il</b>, si + ils → <b>s'ils</b>"],
   ];
+  // \b и \w в JS не считают é, à, ç буквами — заменяем на свои, чтобы «café», «où», «créerai» проверялись правильно
+  const L_ = "a-zà-ÿœæ";
+  const rx = (re) => new RegExp(re.replace(/\\w/g, `[${L_}0-9_]`).replace(/\\b/g, `(?:(?<=[${L_}0-9])(?![${L_}0-9])|(?<![${L_}0-9])(?=[${L_}0-9]))`), "i");
   function writeCheck(txt, W) {
     const t = txt.replace(/[’]/g, "'").trim(), out = [];
     const sent = t.split(/[.!?]+/).map((x) => x.trim()).filter((x) => x.split(/\s+/).length >= 2);
-    const min = W.min || 3;
-    out.push(sent.length >= min ? `✓ Предложений: ${sent.length}` : `✗ Нужно хотя бы ${min} предложения (сейчас ${sent.length})`);
-    for (const [re, hint] of W.need || []) out.push(new RegExp(re, "i").test(t) ? `✓ ${hint}` : `✗ ${hint}`);
+    if (W.steps) W.steps.forEach(([what, hint, re], i) => out.push(rx(re).test(t) ? `✓ ${i + 1}. ${what}` : `✗ ${i + 1}. ${what} — например: <span class="fr">${esc(hint)}</span>`));
+    else { const min = W.min || 3;
+      out.push(sent.length >= min ? `✓ Предложений: ${sent.length}` : `✗ Нужно хотя бы ${min} предложения (сейчас ${sent.length})`);
+      for (const [re, hint] of W.need || []) out.push(rx(re).test(t) ? `✓ ${hint}` : `✗ ${hint}`); }
     for (const s of sent) if (/\b(ne|n')\b/i.test(s.replace(/n'/gi, "n' ")) && !/\b(pas|jamais|rien|plus|personne)\b/i.test(s)) out.push(`✗ «${esc(s)}»: к <b>ne</b> нужна вторая часть — <b>pas</b> (или jamais, rien)`);
     for (const [re, hint] of ERR) { const m = t.match(re); if (m) out.push(`✗ «${esc(m[0])}»: ${hint}`); }
     // слова, которых нет ни в словаре, ни в формах: возможно, опечатка; без значков — подсказать правильное написание
@@ -100,7 +104,9 @@ const FRP = (() => {
         for (const b of [w.replace(/s$/, ""), w.replace(/x$/, ""), w.replace(/e?s?$/, ""), w.replace(/aux$/, "al"), w.replace(/(euse|euses)$/, "eux"), w.replace(/(ive|ives)$/, "if"), w.replace(/(enne|ennes)$/, "en"), w.replace(/(ette|ettes)$/, "et")]) if (b !== w && D.has(b)) return true;
         return false;
       };
-      const bad = [...new Set(toks.filter((w) => !isWord(w)))];
+      // слова с большой буквы не в начале предложения — имена и города (Platon, Moscou): их не проверяем
+      const caps = new Set((t.match(/(?<![.!?«]\s*|^)(?<=\s)[A-ZÀ-Ý][a-zà-ÿ-]+/g) || []).map((x) => x.toLowerCase()));
+      const bad = [...new Set(toks.filter((w) => !caps.has(w) && !isWord(w)))];
       for (const w of bad.slice(0, 6)) { const r = byN[dn(w)]; out.push(r && r !== w ? `✗ «${esc(w)}» — скорее всего <b class="fr">${esc(r)}</b> (значок над буквой)` : `? «${esc(w)}» — такого слова нет в словаре: проверь написание`); }
     }
     return out;
@@ -150,7 +156,10 @@ const FRP = (() => {
         <div class="muted" style="margin-top:8px">Послушай 2–3 раза и ответь на вопросы. Текст — только если совсем не получается.</div><div id="frpdl" hidden>${D.lines.map(lineD).join("")}</div></div>
       <div class="alt-qs" id="frpdq"></div>` : ""}
       <h2 class="c2h">✍ Грамматика</h2><div class="alt-qs" id="frpgr"></div>
-      ${T.write ? `<h2 class="c2h">📝 Пишем сами</h2><div class="card frwrite"><div>${T.write.q}</div>
+      ${T.write ? `<h2 class="c2h">📝 Пишем сами</h2><div class="card frwrite">${T.write.steps ? `<div class="frwgoal"><b>Задача.</b> ${esc(T.write.goal)}</div>
+        <div class="muted" style="margin:6px 0 4px">Напиши по одному предложению на каждый пункт (можно больше):</div>
+        <ol class="frwsteps">${T.write.steps.map(([w, h]) => `<li>${esc(w)} <span class="muted">— например:</span> <span class="fr">${esc(h)}</span></li>`).join("")}</ol>
+        <div class="muted">Подставь своё: своё имя, свою семью, свой город. Образец — внизу, но сначала попробуй сам.</div>` : `<div>${T.write.q}</div>`}
         <textarea class="in" id="frpw" rows="5" spellcheck="false" placeholder="Пиши по-французски… значки над буквами можно не ставить — подскажу"></textarea>
         <div class="row" style="justify-content:flex-start;gap:8px;margin-top:8px"><button class="btn gold sm" id="frpwgo">Проверить</button><button class="btn sm" id="frpwmod">Показать образец</button></div>
         <div id="frpwres"></div></div>` : ""}
@@ -182,7 +191,7 @@ const FRP = (() => {
         const v = ta.value.trim(); if (!v) { toast("Сначала напиши пару предложений"); return; }
         try { await FRT.dictLoad(); } catch (e) {}
         const res = writeCheck(v, W), bad = res.filter((x) => x[0] === "✗").length;
-        $("#frpwres").innerHTML = `<div class="frwres">${res.map((x) => `<div class="${x[0] === "✓" ? "ok" : x[0] === "?" ? "q" : "bad"}">${x}</div>`).join("")}</div>
+        $("#frpwres").innerHTML = `<div class="frwres">${res.map((x) => `<div class="${x[0] === "✓" ? "frw-ok" : x[0] === "?" ? "frw-q" : "frw-bad"}">${x}</div>`).join("")}</div>
           <div class="muted" style="margin-top:6px">${bad ? "Поправь отмеченное и проверь ещё раз — или сравни с образцом." : "Отлично! Сравни с образцом — может, найдёшь что взять себе."}</div>`;
         showModel();
         rec.w = v; const first = !rec.wok; if (!rec.wok) { rec.wok = 1; S0().frtans[id] = rec; Store.save(); each(null, first && !bad, !bad); } else { S0().frtans[id] = rec; Store.save(); }
@@ -210,5 +219,5 @@ const FRP = (() => {
   function again(id) { const S = S0(); if (S.frtans) delete S.frtans[id]; Store.save(); route(); window.scrollTo(0, 0); }
   // частые слова из пройденных тренировок — для карточек
   const packWords = () => list().filter((t) => tdone(t.id)).flatMap((t) => ((window.FR_PACK || {})[t.id] || []).map(([w, m, r]) => ({ w, m, r, n: 0, pack: t.id })));
-  return { list, tinfo, isOpen, done: tdone, nextBefore, row, after, page, bind, again, packWords, writeCheck };
+  return { rx, list, tinfo, isOpen, done: tdone, nextBefore, row, after, page, bind, again, packWords, writeCheck };
 })();

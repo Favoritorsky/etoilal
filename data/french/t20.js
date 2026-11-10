@@ -44,8 +44,11 @@ FR_T[20] = {
     { k: "input", lang: "fr", q: "Мы занимаемся спортом.", a: ["Nous faisons du sport.", "On fait du sport."], why: "faire du sport; nous faisons («фёзон»)" },
     { k: "choice", q: "Как сказать «идёт дождь»?", opts: ["Il pleut.", "Il fait pluie.", "Il est pluie."], a: "Il pleut.", why: "у дождя свой глагол: il pleut" },
   ],
-  write: { q: "Напиши 3–4 предложения о своих выходных: куда ты идёшь (<i>je vais au / à la …</i>), что делаешь (<i>je fais …</i>) и какая погода (<i>il fait …</i>).",
-    need: [["\\bje vais\\b", "есть je vais"], ["\\b(je fais|il fait|on fait|nous faisons)\\b", "есть faire"]],
-    model: "Il fait beau. Je vais au parc et je fais du vélo. Le soir, je vais chez un copain. Nous faisons la cuisine.",
-    modelRu: "Хорошая погода. Я иду в парк и катаюсь на велосипеде. Вечером я иду к приятелю. Мы готовим.", min: 3 },
+  write: { goal: "Напиши другу, как пройдут твои выходные.",
+    steps: [
+      ["Какая погода", "Il fait beau. / Il pleut.", "\\b(il fait|il pleut|il neige)\\b"],
+      ["Куда ты идёшь", "Je vais au parc. / Je vais à la piscine.", "\\bje vais (au|à la|à l'|aux|chez)"],
+      ["Что ты там делаешь", "Je fais du vélo.", "\\b(je fais|nous faisons|on fait)\\b"]],
+    model: "Il fait beau. Je vais au parc et je fais du vélo. Le soir, je vais chez un copain.",
+    modelRu: "Хорошая погода. Я иду в парк и катаюсь на велосипеде. Вечером я иду к приятелю." },
 };

@@ -44,8 +44,11 @@ FR_T[41] = {
     { k: "choice", q: "Как сказать «ты мне звонишь?»", opts: ["Tu m'appelles ?", "Tu appelles me ?", "Tu me appelles ?"], a: "Tu m'appelles ?", why: "me перед гласной → m', и стоит перед глаголом" },
     { k: "tiles", lang: "fr", q: "Мы отправляем им открытку.", a: "Nous leur envoyons une carte", d: ["les", "lui"], why: "кому? им — leur" },
   ],
-  write: { q: "Напиши 3–4 предложения: кому ты хочешь сделать подарок, что подаришь и что скажешь. Используй <i>lui / leur</i> и <i>le / la / les</i> перед глаголом.",
-    need: [["\\b(lui|leur)\\b", "есть lui или leur"], ["\\b(je|il|elle|on|tu|nous|vous) (le|la|les|l')\\s?\\w+", "есть le / la / les перед глаголом"]],
-    model: "Samedi, c'est l'anniversaire de ma sœur. Je vais lui offrir une montre. Je la cache dans mon sac. Samedi, je lui donne le cadeau : surprise !",
-    modelRu: "В субботу у моей сестры день рождения. Я подарю ей часы. Я прячу их в сумке. В субботу я дарю ей подарок: сюрприз!", min: 3 },
+  write: { goal: "Ты готовишь подарок. Расскажи, кому и что.",
+    steps: [
+      ["Чей день рождения", "Samedi, c'est l'anniversaire de ma sœur.", "\\banniversaire\\b"],
+      ["Что ты ему / ей подаришь", "Je vais lui offrir une montre.", "\\b(lui|leur) offrir\\b"],
+      ["Что ты делаешь с подарком (его / её)", "Je la cache dans mon sac.", "\\b(je|il|elle|on) (le|la|les|l')\\s?\\w+"]],
+    model: "Samedi, c'est l'anniversaire de ma sœur. Je vais lui offrir une montre. Je la cache dans mon sac.",
+    modelRu: "В субботу у моей сестры день рождения. Я подарю ей часы. Я прячу их в сумке." },
 };

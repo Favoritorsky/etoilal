@@ -43,8 +43,11 @@ FR_T[35] = {
     { k: "fix", lang: "fr", q: "Il a tombé.", a: ["Il est tombé."], why: "tomber — с être" },
     { k: "choice", q: "Elle est ___ (пришла).", opts: ["venue", "venu", "venus"], a: "venue", why: "с être — по роду: она → venue" },
   ],
-  write: { q: "Напиши 3–4 предложения о своём детстве: как было обычно (<i>quand j'étais petit, je …-ais</i>) и одно событие (<i>à … ans, je suis allé / tombé …</i>).",
-    need: [["\\bquand j'[ée]tais\\b", "есть quand j'étais"], ["\\b(j'|je )\\w+ais\\b", "есть привычное прошлое на -ais"], ["\\bje suis \\w+", "есть je suis + прошлое (allé, tombé…)"]],
-    model: "Quand j'étais petit, j'habitais dans une petite ville. Tous les jours, je jouais au parc. Souvent, j'allais chez ma grand-mère. À sept ans, je suis tombé du vélo !",
-    modelRu: "Когда я был маленьким, я жил в маленьком городе. Каждый день я играл в парке. Я часто ездил к бабушке. В семь лет я упал с велосипеда!", min: 3 },
+  write: { goal: "Расскажи о своём детстве.",
+    steps: [
+      ["Начни так", "Quand j'étais petit, …", "\\bquand j'[ée]tais\\b"],
+      ["Что ты делал обычно (окончание -ais)", "j'habitais…, je jouais…", "\\b(je \\w+ais|j'(?![ée]tais)\\w+ais)\\b"],
+      ["Одно событие", "À sept ans, je suis tombé du vélo.", "\\bje suis \\w+"]],
+    model: "Quand j'étais petit, j'habitais dans une petite ville. Tous les jours, je jouais au parc. À sept ans, je suis tombé du vélo !",
+    modelRu: "Когда я был маленьким, я жил в маленьком городе. Каждый день я играл в парке. В семь лет я упал с велосипеда!" },
 };

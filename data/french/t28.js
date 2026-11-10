@@ -44,8 +44,12 @@ FR_T[28] = {
     { k: "fix", lang: "fr", q: "Ils prend le bus.", a: ["Ils prennent le bus."], why: "ils prennent — «они берут»" },
     { k: "choice", q: "Как спросить «ты откуда?»", opts: ["D'où tu viens ?", "Où tu viens ?", "De où tu viens ?"], a: "D'où tu viens ?", why: "d'où — откуда (de + où сливаются)" },
   ],
-  write: { q: "Опиши свою квартиру или комнату в 3–4 предложениях: что там есть (<i>il y a …</i>), какая она (<i>c'est …</i>) и на чём ты ездишь (<i>je prends …</i>).",
-    need: [["\\bil y a\\b", "есть il y a"], ["\\bc'est\\b", "есть c'est"]],
+  write: { goal: "Опиши свою квартиру или комнату.",
+    steps: [
+      ["Где ты живёшь", "J'habite dans un appartement.", "\\bj'habite\\b"],
+      ["Что там есть", "Il y a une chambre et un salon.", "\\bil y a\\b"],
+      ["Какая она", "C'est petit, mais joli.", "\\bc'est\\b"],
+      ["На чём ты ездишь", "Je prends le métro.", "\\bje prends\\b"]],
     model: "J'habite dans un appartement. Il y a deux chambres, un salon et une cuisine. C'est petit, mais j'aime l'appartement. Le matin, je prends le métro.",
-    modelRu: "Я живу в квартире. Там две спальни, гостиная и кухня. Она маленькая, но я люблю эту квартиру. Утром я езжу на метро.", min: 3 },
+    modelRu: "Я живу в квартире. Там две спальни, гостиная и кухня. Она маленькая, но я её люблю. Утром я езжу на метро." },
 };

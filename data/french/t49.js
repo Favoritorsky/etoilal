@@ -42,8 +42,11 @@ FR_T[49] = {
     { k: "fix", lang: "fr", q: "Le pull qui j'aime.", a: ["Le pull que j'aime."], why: "j'aime его → que (кого / что)" },
     { k: "choice", q: "Как сказать «город, где я живу»?", opts: ["la ville où j'habite", "la ville qui j'habite", "la ville que j'habite"], a: "la ville où j'habite", why: "о месте — où" },
   ],
-  write: { q: "Сравни в 3–4 предложениях два города, две игры или две вещи: <i>plus … que, moins … que, le plus …, meilleur / mieux</i> — и добавь одно предложение с <i>qui / que / où</i>.",
-    need: [["\\b(plus|moins|aussi) \\w+ que\\b", "есть сравнение … que"], ["\\b(le|la|les) (plus|meilleur|meilleure|meilleurs)\\b", "есть «самый»"], ["\\b(qui|que|où)\\b", "есть qui / que / où"]],
-    model: "Moscou est plus grand que Lyon. Lyon est moins cher et plus calme. La ville où j'habite est petite, mais c'est la plus jolie ville du monde ! Le jeu que j'adore est meilleur que les films.",
-    modelRu: "Москва больше Лиона. Лион дешевле и спокойнее. Город, где я живу, маленький, но это самый красивый город на свете! Игра, которую я обожаю, лучше фильмов.", min: 3 },
+  write: { goal: "Сравни два города — или две игры.",
+    steps: [
+      ["Что больше или меньше", "Moscou est plus grand que Lyon.", "\\b(plus|moins|aussi) \\w+ que\\b"],
+      ["Что самое", "… la plus jolie ville du monde.", "\\b(le|la|les) (plus|meilleur|meilleure)\\b"],
+      ["Одно предложение с «где» или «который»", "La ville où j'habite… / Le jeu que j'adore…", "\\b(o[ùu] j'|o[ùu] je|que j'|que je|qui est)"]],
+    model: "Moscou est plus grand que Lyon. La ville où j'habite est petite, mais c'est la plus jolie ville du monde !",
+    modelRu: "Москва больше Лиона. Город, где я живу, маленький, но это самый красивый город на свете!" },
 };

@@ -42,8 +42,11 @@ FR_T[51] = {
     { k: "fix", lang: "fr", q: "Si j'aurais le temps, je viendrais.", a: ["Si j'avais le temps, je viendrais."], why: "после si «бы» не ставят: si j'avais" },
     { k: "choice", q: "Как сказать «тебе следовало бы поспать»?", opts: ["Tu devrais dormir.", "Tu dois dormir.", "Tu devras dormir."], a: "Tu devrais dormir.", why: "совет — tu devrais" },
   ],
-  write: { q: "Напиши 3–4 предложения: что бы ты сделал, если бы выиграл в лотерею (<i>si je gagnais…, je …-rais</i>), и дай другу совет (<i>à ta place, je …-rais</i> или <i>tu devrais …</i>).",
-    need: [["\\bsi (j'|je |tu |il |elle |on )\\w*(ais|ait)\\b", "есть si + …-ais"], ["\\w+rais\\b", "есть «бы»: …-rais"]],
-    model: "Si je gagnais à la loterie, je serais riche. J'achèterais une maison à la mer et je ferais le tour du monde. Je partagerais l'argent avec ma famille. À ta place, je jouerais aussi !",
-    modelRu: "Если бы я выиграл в лотерею, я был бы богат. Я бы купил дом у моря и объехал вокруг света. Я бы поделился деньгами с семьёй. На твоём месте я бы тоже играл!", min: 3 },
+  write: { goal: "Помечтай: что бы ты сделал, если бы выиграл в лотерею?",
+    steps: [
+      ["Начни с «если бы»", "Si je gagnais à la loterie, …", "\\bsi (j'|je |tu |il |elle |on )\\w*(ais|ait)\\b"],
+      ["Что бы ты купил или сделал", "J'achèterais une maison.", "\\w+rais\\b"],
+      ["Дай совет другу", "À ta place, je … / Tu devrais …", "([àa] ta place|\\btu devrais)"]],
+    model: "Si je gagnais à la loterie, je serais riche. J'achèterais une maison à la mer. À ta place, je jouerais aussi !",
+    modelRu: "Если бы я выиграл в лотерею, я был бы богат. Я бы купил дом у моря. На твоём месте я бы тоже играл!" },
 };

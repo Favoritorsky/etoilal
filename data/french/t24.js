@@ -43,8 +43,11 @@ FR_T[24] = {
     { k: "choice", q: "Как сказать 10:30?", opts: ["dix heures et demie", "dix heures et quart", "dix heures demi"], a: "dix heures et demie", why: "et demie — «с половиной»" },
     { k: "fix", lang: "fr", q: "Il est deux heure.", a: ["Il est deux heures."], why: "больше одного часа — heures с -s" },
   ],
-  write: { q: "Напиши 3–4 предложения о своей неделе: что ты делаешь в какой день (<i>le samedi, je…</i>), во сколько (<i>à … heures</i>), сколько что-то стоит.",
-    need: [["\\bheures?\\b", "есть время: … heures"], ["\\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\\b", "есть день недели"]],
-    model: "Le lundi, j'ai un rendez-vous à neuf heures. Le samedi, je vais au cinéma. Le billet coûte douze euros. Le dimanche, le musée est fermé.",
-    modelRu: "По понедельникам у меня встреча в девять. По субботам я хожу в кино. Билет стоит двенадцать евро. По воскресеньям музей закрыт.", min: 3 },
+  write: { goal: "Расскажи о своей неделе: что, когда и почём.",
+    steps: [
+      ["Что ты делаешь в какой-то день недели", "Le samedi, je vais au cinéma.", "\\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\\b"],
+      ["Во сколько", "… à neuf heures.", "(^|\\s)[àa] \\S+ heures?\\b"],
+      ["Сколько что-то стоит", "Le billet coûte douze euros.", "\\bco[ûu]te\\b"]],
+    model: "Le lundi, j'ai un rendez-vous à neuf heures. Le samedi, je vais au cinéma. Le billet coûte douze euros.",
+    modelRu: "По понедельникам у меня встреча в девять. По субботам я хожу в кино. Билет стоит двенадцать евро." },
 };

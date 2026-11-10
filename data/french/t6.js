@@ -26,6 +26,11 @@ FR_T[6] = {
     { k: "choice", q: "Как читается g в слове girafe?", opts: ["ж", "г", "дж"], a: "ж", why: "g перед e, i, y — «ж»" },
     { k: "choice", q: "Как читается c в слове glace?", opts: ["с", "к", "ц"], a: "с", why: "c перед e, i, y — «с»" },
   ],
-  write: { q: "Напиши 3 сочетания из уроков 4–6 и этой тренировки (например, <i>un beau château</i>) — проверю написание.",
-    need: [], model: "Un beau château. Une glace au chocolat. Un chapeau rouge.", modelRu: "Красивый замок. Шоколадное мороженое. Красная шляпа.", min: 3 },
+  write: { goal: "Проверь, как ты пишешь слова из уроков. Напиши по-французски три сочетания:",
+    steps: [
+      ["«красивый замок»", "un beau …", "\\bbeau ch[âa]teau\\b"],
+      ["«шоколадное мороженое»", "une glace au …", "\\bglace au chocolat\\b"],
+      ["«красная шляпа»", "un … rouge", "\\bchapeau rouge\\b"]],
+    model: "Un beau château. Une glace au chocolat. Un chapeau rouge.",
+    modelRu: "Красивый замок. Шоколадное мороженое. Красная шляпа." },
 };

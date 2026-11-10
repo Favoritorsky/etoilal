@@ -40,8 +40,12 @@ FR_T[10] = {
     { k: "tiles", lang: "fr", q: "Мы готовы.", a: "Nous sommes prêts", d: ["êtes", "suis"], why: "nous sommes — мы есть" },
     { k: "input", lang: "fr", q: "Вот машина.", a: ["Voici la voiture.", "Voici une voiture."], why: "voici + la voiture" },
   ],
-  write: { q: "Напиши 3 предложения: поздоровайся, скажи, кто ты (je suis…), и покажи кого-то или что-то на «фото» (voici…).",
-    need: [["\\b(bonjour|salut)\\b", "есть приветствие: bonjour или salut"], ["\\bje suis\\b", "есть je suis"], ["\\bvoici\\b", "есть voici"]],
+  write: { goal: "Ты пишешь новому другу в чате: представься и покажи ему фото.",
+    steps: [
+      ["Поздоровайся", "Bonjour ! или Salut !", "\\b(bonjour|salut)\\b"],
+      ["Скажи, как тебя зовут", "Je suis + твоё имя.", "\\bje suis\\b"],
+      ["Скажи, кто ты", "Je suis russe. / Je suis étudiant.", "\\bje suis (russe|[ée]tudiante?|contente?|fatigu[ée]e?|malade|pr[êe]te?)\\b"],
+      ["Покажи человека на фото и скажи о нём одно слово", "Voici Anna. Elle est étudiante.", "\\bvoici\\b"]],
     model: "Bonjour ! Je suis Max. Je suis russe et je suis étudiant. Voici Anna. Elle est étudiante.",
-    modelRu: "Здравствуйте! Я Макс. Я русский и я студент. Вот Анна. Она студентка.", min: 3 },
+    modelRu: "Здравствуйте! Я Макс. Я русский и я студент. Вот Анна. Она студентка." },
 };

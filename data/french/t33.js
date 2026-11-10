@@ -44,8 +44,11 @@ FR_T[33] = {
     { k: "choice", q: "Как спросить «ты прочитал газету?»", opts: ["Tu as lu le journal ?", "Tu as lisé le journal ?", "Tu es lu le journal ?"], a: "Tu as lu le journal ?", why: "lire → lu" },
     { k: "tiles", lang: "fr", q: "Мы сходили за продуктами.", a: "Nous avons fait les courses", d: ["faisons", "sommes"], why: "faire → fait; nous avons fait" },
   ],
-  write: { q: "Напиши 3–4 предложения о том, что ты делал вчера (<i>hier, j'ai …</i>): что купил, увидел, сделал, забыл.",
-    need: [["\\bhier\\b", "есть hier"], ["\\bj'ai \\w+", "есть j'ai + прошлое"]],
-    model: "Hier, j'ai fait les courses. J'ai acheté du pain et du fromage. Le soir, j'ai vu un film et j'ai lu un livre. Je n'ai pas fait les devoirs !",
-    modelRu: "Вчера я ходил за продуктами. Я купил хлеб и сыр. Вечером я посмотрел фильм и почитал книгу. Домашку я не сделал!", min: 3 },
+  write: { goal: "Расскажи, что ты делал вчера.",
+    steps: [
+      ["Начни со слова «вчера»", "Hier, …", "\\bhier\\b"],
+      ["Что ты сделал или купил", "J'ai fait les courses. J'ai acheté du pain.", "\\bj'ai \\w+"],
+      ["Чего ты не сделал", "Je n'ai pas fait les devoirs.", "\\bje n'ai pas\\b"]],
+    model: "Hier, j'ai fait les courses. J'ai acheté du pain et du fromage. Le soir, j'ai vu un film. Je n'ai pas fait les devoirs !",
+    modelRu: "Вчера я ходил за продуктами. Я купил хлеб и сыр. Вечером я посмотрел фильм. Домашку я не сделал!" },
 };

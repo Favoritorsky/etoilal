@@ -45,8 +45,11 @@ FR_T[45] = {
     { k: "choice", q: "Как сказать «не ложись поздно!»?", opts: ["Ne te couche pas tard !", "Ne couche-toi pas tard !", "Te couche pas tard !"], a: "Ne te couche pas tard !", why: "в запрете: ne te … pas" },
     { k: "tiles", lang: "fr", q: "Мы гуляем в парке.", a: "Nous nous promenons au parc", d: ["se", "promène"], why: "nous nous promenons" },
   ],
-  write: { q: "Опиши своё утро в 3–4 предложениях с глаголами на «-ся» (<i>je me lève, je me lave, je m'habille…</i>) и добавь один приказ (<i>Dépêche-toi !, Mange !…</i>).",
-    need: [["\\b(je me|je m')\\s?\\w+", "есть je me …"], ["\\w+-toi\\b|\\w+ !", "есть приказ"]],
-    model: "Je me réveille à sept heures. Je me lève, je prends une douche et je m'habille. Je mange vite et je pars à l'école. Ma mère dit : « Dépêche-toi ! »",
-    modelRu: "Я просыпаюсь в семь. Встаю, принимаю душ и одеваюсь. Быстро ем и ухожу в школу. Мама говорит: «Поторапливайся!»", min: 3 },
+  write: { goal: "Опиши своё утро.",
+    steps: [
+      ["Во сколько ты просыпаешься", "Je me réveille à sept heures.", "\\bje me r[ée]veille\\b"],
+      ["Что ты делаешь дальше (глаголы на «-ся»)", "Je me lève, je m'habille.", "\\b(je me l[èe]ve|je m'habille|je me lave)\\b"],
+      ["Что тебе говорят, когда ты опаздываешь (приказ)", "« Dépêche-toi ! »", "\\w+-toi\\b"]],
+    model: "Je me réveille à sept heures. Je me lève et je m'habille. Ma mère dit : « Dépêche-toi ! »",
+    modelRu: "Я просыпаюсь в семь. Встаю и одеваюсь. Мама говорит: «Поторапливайся!»" },
 };

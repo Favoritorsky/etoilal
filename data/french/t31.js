@@ -44,8 +44,11 @@ FR_T[31] = {
     { k: "fix", lang: "fr", q: "Il va téléphone à Nina.", a: ["Il va téléphoner à Nina."], why: "после aller — глагол целиком: téléphoner" },
     { k: "tiles", lang: "fr", q: "Она только что приехала.", a: "Elle vient d'arriver", d: ["va", "arrive"], why: "venir de + arriver → vient d'arriver" },
   ],
-  write: { q: "Напиши 3–4 предложения о планах: что ты собираешься сделать скоро (<i>je vais + глагол</i>) и что ты только что сделал (<i>je viens de + глагол</i>).",
-    need: [["\\b(je vais|on va|nous allons) \\w+(er|ir|re)\\b", "есть je vais + глагол"], ["\\bje viens d(e|')", "есть je viens de"]],
-    model: "Le week-end prochain, je vais voyager. Je vais visiter Lyon et je vais faire une randonnée. Je viens de réserver le billet. Je viens de préparer la valise !",
-    modelRu: "В следующие выходные я поеду путешествовать. Я посмотрю Лион и схожу в поход. Я только что забронировал билет. Я только что собрал чемодан!", min: 3 },
+  write: { goal: "Напиши другу о своих планах.",
+    steps: [
+      ["Что ты скоро сделаешь", "Je vais voyager.", "\\b(je vais|on va|nous allons) \\w+(er|ir|re)\\b"],
+      ["Что ещё ты сделаешь", "Je vais visiter Lyon.", "\\b(je vais|on va|nous allons) \\w+(er|ir|re)\\b[\\s\\S]*\\b(je vais|on va|nous allons) \\w+(er|ir|re)\\b"],
+      ["Что ты только что сделал", "Je viens de réserver le billet.", "\\bje viens d(e|')"]],
+    model: "Le week-end prochain, je vais voyager. Je vais visiter Lyon. Je viens de réserver le billet !",
+    modelRu: "В следующие выходные я поеду путешествовать. Я посмотрю Лион. Я только что забронировал билет!" },
 };

@@ -43,8 +43,11 @@ FR_T[26] = {
     { k: "fix", lang: "fr", q: "Je veux de sortir.", a: ["Je veux sortir."], why: "после vouloir — глагол сразу, без de" },
     { k: "choice", q: "Как сказать «надо работать»?", opts: ["Il faut travailler.", "Il faut de travailler.", "Il faut travaille."], a: "Il faut travailler.", why: "il faut + глагол целиком" },
   ],
-  write: { q: "Напиши 3–4 предложения о своей неделе: что ты хочешь (<i>je veux …</i>), что ты должен (<i>je dois …</i>) и что можешь или не можешь (<i>je peux / je ne peux pas …</i>).",
-    need: [["\\bje veux\\b", "есть je veux"], ["\\bje dois\\b", "есть je dois"], ["\\bje (ne )?peux\\b", "есть je peux"]],
-    model: "Je veux sortir samedi. Mais je dois réviser : j'ai un examen. Je ne peux pas dormir tard. Il faut finir les devoirs !",
-    modelRu: "Я хочу пойти гулять в субботу. Но я должен повторять: у меня экзамен. Я не могу ложиться поздно. Надо доделать домашку!", min: 3 },
+  write: { goal: "Расскажи о своей неделе: что хочешь, что должен и чего не можешь.",
+    steps: [
+      ["Что ты хочешь сделать", "Je veux sortir samedi.", "\\bje veux \\w+"],
+      ["Что ты должен сделать", "Je dois réviser.", "\\bje dois \\w+"],
+      ["Чего ты не можешь", "Je ne peux pas dormir tard.", "\\bje ne peux pas\\b"]],
+    model: "Je veux sortir samedi. Mais je dois réviser : j'ai un examen. Je ne peux pas dormir tard.",
+    modelRu: "Я хочу пойти гулять в субботу. Но я должен повторять: у меня экзамен. Я не могу ложиться поздно." },
 };

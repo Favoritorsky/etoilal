@@ -42,8 +42,11 @@ FR_T[12] = {
     { k: "choice", q: "Как сказать «обожаю собак»?", opts: ["J'adore les chiens.", "J'adore chiens.", "J'adore des chiens."], a: "J'adore les chiens.", why: "после adorer, aimer, détester — le, la, les" },
     { k: "tiles", lang: "fr", q: "Вы говорите по-французски.", a: "Vous parlez français", d: ["parlons", "chante"], why: "vous + -ez" },
   ],
-  write: { q: "Напиши 3–4 предложения: что ты обожаешь, что любишь и что терпеть не можешь (<i>j'adore…, j'aime…, je déteste…</i>). Не забудь le, la, les!",
-    need: [["\\bj'adore\\b", "есть j'adore"], ["\\bje d[ée]teste\\b", "есть je déteste"], ["\\b(j'adore|j'aime|je d[ée]teste) (les|le|la|l')", "после «люблю» стоит le, la, les"]],
-    model: "J'adore les jeux vidéo. J'aime les chats et les chiens. Je déteste les séries. Le soir, je regarde des dessins animés.",
-    modelRu: "Обожаю видеоигры. Люблю кошек и собак. Терпеть не могу сериалы. Вечером я смотрю мультики.", min: 3 },
+  write: { goal: "Новый друг спрашивает, что ты любишь. Ответь ему.",
+    steps: [
+      ["Что ты обожаешь", "J'adore les … (не забудь les!)", "\\bj'adore (les|le|la|l')"],
+      ["Что ты просто любишь", "J'aime les …", "\\bj'aime (les|le|la|l')"],
+      ["Что терпеть не можешь", "Je déteste les …", "\\bje d[ée]teste (les|le|la|l')"]],
+    model: "J'adore les jeux vidéo. J'aime les chats et les chiens. Je déteste les séries.",
+    modelRu: "Обожаю видеоигры. Люблю кошек и собак. Терпеть не могу сериалы." },
 };

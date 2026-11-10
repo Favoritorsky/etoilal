@@ -42,8 +42,11 @@ FR_T[22] = {
     { k: "input", lang: "fr", q: "Где вокзал?", a: ["Où est la gare ?"], why: "où — где; la gare — вокзал" },
     { k: "tiles", lang: "fr", q: "Когда ты идёшь на рынок?", a: "Quand est-ce que tu vas au marché", d: ["où", "va"], why: "quand + est-ce que + tu vas" },
   ],
-  write: { q: "Ты на рынке. Напиши 3–4 фразы: что ты хочешь (<i>je veux du / de la / des …</i>), задай вопрос (<i>où, combien, pourquoi…</i>) и скажи, чего ты не ешь.",
-    need: [["\\bje veux\\b", "есть je veux"], ["\\b(du|de la|de l'|des)\\b", "есть du / de la / des"], ["\\?", "есть вопрос"]],
-    model: "Bonjour ! Je veux des fraises et du fromage, s'il vous plaît. Où est le pain ? Je ne mange pas de viande. Merci !",
-    modelRu: "Здравствуйте! Мне клубники и сыра, пожалуйста. Где хлеб? Я не ем мясо. Спасибо!", min: 3 },
+  write: { goal: "Ты на рынке. Поговори с продавцом.",
+    steps: [
+      ["Скажи, что ты хочешь", "Je veux des fraises et du fromage.", "\\bje veux (du|de la|de l'|des)\\b"],
+      ["Спроси, где что-то лежит", "Où est le pain ?", "\\bo[ùu]\\b[^.!]*\\?"],
+      ["Скажи, чего ты не ешь", "Je ne mange pas de viande.", "\\bne \\w+ pas de\\b"]],
+    model: "Bonjour ! Je veux des fraises et du fromage, s'il vous plaît. Où est le pain ? Je ne mange pas de viande.",
+    modelRu: "Здравствуйте! Мне клубники и сыра, пожалуйста. Где хлеб? Я не ем мясо." },
 };

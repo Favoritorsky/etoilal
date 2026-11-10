@@ -40,8 +40,12 @@ FR_T[37] = {
     { k: "choice", q: "Будущее от aller: «я пойду»", opts: ["j'irai", "j'allerai", "je vais"], a: "j'irai", why: "aller в будущем неправильный: j'irai" },
     { k: "fix", lang: "fr", q: "Plus tard, tu deveniras célèbre.", a: ["Plus tard, tu deviendras célèbre."], why: "devenir в будущем: tu deviendras" },
   ],
-  write: { q: "Напиши 3–4 предложения: что ты обычно делал раньше (<i>d'habitude, je …-ais</i>), одно событие (<i>une fois, j'ai …</i>) и кем будешь через десять лет (<i>je serai …, je …-rai</i>).",
-    need: [["\\b(je|j')\\s?\\w+ais\\b", "есть прошлое на -ais"], ["\\w+rai\\b", "есть будущее на -rai"]],
-    model: "D'habitude, je jouais aux jeux vidéo le soir. Une fois, j'ai rencontré un ingénieur. Plus tard, je serai ingénieur aussi. Je créerai des jeux et je voyagerai !",
-    modelRu: "Раньше по вечерам я обычно играл в видеоигры. Однажды я познакомился с инженером. Потом я тоже стану инженером. Я буду создавать игры и путешествовать!", min: 3 },
+  write: { goal: "Расскажи, каким ты был раньше и кем станешь.",
+    steps: [
+      ["Что ты обычно делал раньше", "D'habitude, je jouais…", "\\b(je \\w+ais|j'(?![ée]tais)\\w+ais)\\b"],
+      ["Одно событие", "Une fois, j'ai rencontré…", "\\bj'ai \\w+"],
+      ["Кем ты будешь через десять лет", "Je serai ingénieur.", "\\bje serai\\b"],
+      ["Что ты будешь делать", "Je créerai des jeux.", "\\b(je|j')\\s?(?!serai)\\w+rai\\b"]],
+    model: "D'habitude, je jouais aux jeux vidéo le soir. Une fois, j'ai rencontré un ingénieur. Plus tard, je serai ingénieur aussi. Je créerai des jeux !",
+    modelRu: "Раньше по вечерам я обычно играл в видеоигры. Однажды я познакомился с инженером. Потом я тоже стану инженером. Я буду создавать игры!" },
 };

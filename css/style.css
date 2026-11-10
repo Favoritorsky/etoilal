@@ -755,3 +755,5 @@ body.shell-fr .fr { color: #b9d0ff; }
 .frmodel { margin-top: 10px; } .frmodel .fr { font-size: 16px; margin: 4px 0; }
 .frpack { display: flex; flex-wrap: wrap; gap: 6px; } .frpack .tag { display: inline-flex; align-items: center; gap: 6px; }
 .frnote .k { margin-bottom: 6px; }
+.frwgoal { font-size: 16px; } .frwsteps { margin: 4px 0 8px 20px; padding: 0; } .frwsteps li { margin: 4px 0; }
+.frwres .frw-ok { color: #8fd18f; } .frwres .frw-bad { color: #f0a070; } .frwres .frw-q { color: var(--muted); }

@@ -43,8 +43,11 @@ FR_T[16] = {
     { k: "fix", lang: "fr", q: "Un chat noire.", a: ["Un chat noir."], why: "chat — он, поэтому noir без -e" },
     { k: "tiles", lang: "fr", q: "У нас маленький дом.", a: "Nous avons une petite maison", d: ["petit", "sommes"], why: "maison — она: une petite maison" },
   ],
-  write: { q: "Напиши 3–4 предложения о своей семье или друге: кто у тебя есть (<i>j'ai…</i>), сколько им лет (<i>il a … ans</i>), какие они (<i>grand, petit, sympa…</i>).",
-    need: [["\\bj'ai\\b", "есть j'ai"], ["\\bans\\b", "есть возраст: … ans"]],
-    model: "J'ai un frère et une sœur. Le frère a dix ans. La sœur est grande et très sympa. J'ai aussi un chat noir.",
-    modelRu: "У меня есть брат и сестра. Брату десять лет. Сестра высокая и очень классная. А ещё у меня есть чёрный кот.", min: 3 },
+  write: { goal: "Расскажи о своей семье — или придумай семью.",
+    steps: [
+      ["Кто у тебя есть", "J'ai un frère et une sœur.", "\\bj'ai (un|une|deux|trois|quatre)\\b"],
+      ["Сколько кому-то лет", "Le frère a dix ans.", "\\ba \\w+(-\\w+)? ans\\b"],
+      ["Какой он или она", "La sœur est grande et sympa.", "\\b(est|sont) (tr[èe]s )?(grande?s?|petite?s?|jeunes?|vieux|vieille|sympa|blonde?|jolie?|heureux|heureuse|noire?)\\b"]],
+    model: "J'ai un frère et une sœur. Le frère a dix ans. La sœur est grande et très sympa.",
+    modelRu: "У меня есть брат и сестра. Брату десять лет. Сестра высокая и очень классная." },
 };

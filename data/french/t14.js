@@ -41,8 +41,12 @@ FR_T[14] = {
     { k: "choice", q: "Как спросить «Ты любишь чай?» через est-ce que?", opts: ["Est-ce que tu aimes le thé ?", "Est-ce tu aimes le thé ?", "Tu est-ce que aimes le thé ?"], a: "Est-ce que tu aimes le thé ?", why: "est-ce que ставят в самое начало" },
     { k: "tiles", lang: "fr", q: "Что ты смотришь?", a: "Qu'est-ce que tu regardes", d: ["est", "pas"], why: "qu'est-ce que — «что» в вопросе" },
   ],
-  write: { q: "Ты в кафе. Напиши 3–4 фразы: поздоровайся, закажи что-нибудь с <i>s'il vous plaît</i>, скажи, чего ты не ешь или не пьёшь (<i>ne … pas</i>), и попроси счёт.",
-    need: [["s'il vous pla[iî]t", "есть s'il vous plaît"], ["\\b(ne|n')", "есть ne … pas"]],
-    model: "Bonjour ! Un thé et un croissant, s'il vous plaît. Je ne mange pas de sucre. L'addition, s'il vous plaît. Merci !",
-    modelRu: "Здравствуйте! Чай и круассан, пожалуйста. Я не ем сахар. Счёт, пожалуйста. Спасибо!", min: 3 },
+  write: { goal: "Ты в кафе во Франции. Сделай заказ официанту.",
+    steps: [
+      ["Поздоровайся", "Bonjour !", "\\bbonjour\\b"],
+      ["Закажи напиток и еду", "Un thé et un croissant, s'il vous plaît.", "s'il vous pla[iî]t"],
+      ["Скажи, чего ты не ешь", "Je ne mange pas de …", "\\b(ne|n')\\s?\\w+ pas\\b"],
+      ["Попроси счёт", "L'addition, s'il vous plaît.", "\\baddition\\b"]],
+    model: "Bonjour ! Un thé et un croissant, s'il vous plaît. Je ne mange pas de sucre. L'addition, s'il vous plaît.",
+    modelRu: "Здравствуйте! Чай и круассан, пожалуйста. Я не ем сахар. Счёт, пожалуйста." },
 };

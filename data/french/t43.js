@@ -44,8 +44,11 @@ FR_T[43] = {
     { k: "choice", q: "Как сказать «мне нужна вода»?", opts: ["J'ai besoin d'eau.", "J'ai besoin de l'eau.", "Je besoin d'eau."], a: "J'ai besoin d'eau.", why: "avoir besoin de + слово без артикля: d'eau" },
     { k: "tiles", lang: "fr", q: "Мы идём туда вместе.", a: "Nous y allons ensemble", d: ["en", "avec"], why: "туда — y, перед глаголом" },
   ],
-  write: { q: "Напиши 3–4 предложения о встрече с друзьями: куда вы идёте (<i>j'y vais</i>), с кем (<i>avec moi, avec eux</i>), что нужно (<i>on a besoin de…, j'en ai…</i>).",
-    need: [["\\b(j'y|y va|y vont|y allons)", "есть y (туда)"], ["\\b(j'en|en a|en ai|en apporte)", "есть en (этого)"], ["\\bavec (moi|toi|lui|elle|nous|vous|eux|elles)\\b", "есть avec + moi / toi / eux…"]],
-    model: "Samedi, je vais au parc. Mes amis y vont avec moi. On a besoin de jus : j'en apporte deux bouteilles. On mange ensemble dans l'herbe.",
-    modelRu: "В субботу я иду в парк. Друзья идут туда со мной. Нужен сок: я приношу две бутылки. Мы едим все вместе на траве.", min: 3 },
+  write: { goal: "Напиши другу про встречу с друзьями.",
+    steps: [
+      ["Куда вы идёте (туда — y)", "Mes amis y vont.", "\\b(j'y|y va|y vont|y allons|y vais)"],
+      ["С кем", "… avec moi.", "\\bavec (moi|toi|lui|elle|nous|vous|eux|elles)\\b"],
+      ["Что нужно принести и сколько (этого — en)", "J'en apporte deux bouteilles.", "\\b(j'en|en a|en ai|en apporte)"]],
+    model: "Samedi, je vais au parc. Mes amis y vont avec moi. On a besoin de jus : j'en apporte deux bouteilles.",
+    modelRu: "В субботу я иду в парк. Друзья идут туда со мной. Нужен сок: я приношу две бутылки." },
 };

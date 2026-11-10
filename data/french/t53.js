@@ -46,8 +46,13 @@ FR_T[53] = {
     { k: "choice", q: "Как сказать «он болен, однако работает»?", opts: ["Il est malade, pourtant il travaille.", "Il est malade, donc il travaille.", "Il est malade, enfin il travaille."], a: "Il est malade, pourtant il travaille.", why: "однако, и всё же — pourtant" },
     { k: "tiles", lang: "fr", q: "Так как идёт дождь, мы остаёмся здесь.", a: "Comme il pleut nous restons ici", d: ["donc", "sommes"], why: "так как — comme, в начале фразы" },
   ],
-  write: { q: "Расскажи историю одного своего дня в 4 предложениях по порядку (<i>d'abord…, ensuite…, enfin…</i>), добавь <i>donc</i> или <i>pourtant</i> и одно <i>il faut que …</i>.",
-    need: [["\\bd'abord\\b", "есть d'abord"], ["\\bensuite\\b", "есть ensuite"], ["\\b(donc|pourtant|comme|alors)\\b", "есть donc / pourtant / comme"], ["\\bil faut que\\b", "есть il faut que"]],
+  write: { goal: "Расскажи историю одного своего дня по порядку.",
+    steps: [
+      ["Сначала", "D'abord, …", "\\bd'abord\\b"],
+      ["Потом", "Ensuite, …", "\\bensuite\\b"],
+      ["Поэтому или однако", "… donc … / … pourtant …", "\\b(donc|pourtant|comme|alors)\\b"],
+      ["Что тебе надо было сделать", "Il faut que je …", "\\bil faut que\\b"],
+      ["Наконец", "Enfin, …", "\\benfin\\b"]],
     model: "Hier, j'avais un examen. D'abord, je me suis levé tôt, ensuite j'ai révisé. Il faut que je réussisse, donc j'ai travaillé beaucoup. Enfin, l'examen est fini !",
-    modelRu: "Вчера у меня был экзамен. Сначала я встал рано, потом повторял. Мне надо сдать, поэтому я много занимался. Наконец экзамен закончился!", min: 3 },
+    modelRu: "Вчера у меня был экзамен. Сначала я встал рано, потом повторял. Мне надо сдать, поэтому я много занимался. Наконец экзамен закончился!" },
 };
