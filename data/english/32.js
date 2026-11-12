@@ -1,0 +1,20 @@
+window.EN_C = window.EN_C || {};
+EN_C[32] = { n: 32, t: "Итоговая контрольная", s: "весь курс: уровень B1",
+  rule: `<p>Весь курс: времена (Present Simple/Continuous, Past Simple/Continuous, Present Perfect, Past Perfect, будущее), сравнение, much/many, can/must/should, in/on/at, вопросы, used to, фразовые глаголы, условные, I wish, пассив, косвенная речь, who/which, -ing и to, связки. Сдашь — уровень Speaker · B1.</p>`,
+  tasks: [
+    { k: "input", lang: "en", q: "Я живу здесь два года.", a: ["I've lived here for two years.", "I have lived here for two years.", "I've been living here for two years."], why: "Present Perfect + for" },
+    { k: "input", lang: "en", q: "Если бы я знал, я бы тебе сказал.", a: ["If I knew, I would tell you.", "If I knew, I'd tell you.", "If I had known, I would have told you."], why: "If I knew, I'd…" },
+    { k: "fix", lang: "en", q: "He said me he was busy.", a: ["He told me he was busy.", "He told me that he was busy."], why: "told me" },
+    { k: "choice", q: "I enjoy … with friends.", opts: ["playing", "to play"], a: "playing", why: "enjoy + -ing" },
+    { k: "input", lang: "en", q: "Вчера у меня украли телефон.", a: ["My phone was stolen yesterday.", "Yesterday my phone was stolen."], why: "пассив" },
+    { k: "choice", q: "When I arrived, the train … left.", opts: ["had", "has", "was"], a: "had", why: "Past Perfect" },
+    { k: "input", lang: "en", q: "Раньше я боялся темноты.", a: ["I used to be scared of the dark.", "I used to be afraid of the dark."], why: "used to" },
+    { k: "fix", lang: "en", q: "If it will rain, I'll stay at home.", a: ["If it rains, I'll stay at home.", "If it rains, I will stay at home."], why: "после if — без will" },
+    { k: "choice", q: "The girl … lives next door is a programmer.", opts: ["who", "which", "where"], a: "who", why: "люди — who" },
+    { k: "input", lang: "en", q: "Ты когда-нибудь был в Париже?", a: ["Have you ever been to Paris?"], why: "опыт" },
+    { k: "choice", q: "This game is … than that one.", opts: ["more difficult", "difficulter", "most difficult"], a: "more difficult", why: "длинное слово — more" },
+    { k: "input", lang: "en", q: "Жаль, что я не говорю по-французски.", a: ["I wish I could speak French.", "I wish I spoke French."], why: "I wish + could" },
+    { k: "fix", lang: "en", q: "What means this word?", a: ["What does this word mean?"], why: "нужен does" },
+    { k: "input", lang: "en", q: "Я спал, когда зазвонил телефон.", a: ["I was sleeping when the phone rang."], why: "фон + событие" },
+    { k: "choice", q: "Платить не нужно: You … pay.", opts: ["don't have to", "mustn't"], a: "don't have to", why: "не обязательно" },
+  ] };

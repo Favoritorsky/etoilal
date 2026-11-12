@@ -13,7 +13,8 @@ function speak(text, rate) {
   const V = window.ET_AUDIO_V2 || {};
   const s = low.replace(/[.!?]+$/, "");
   const FA = (typeof FR !== "undefined" && FR.onPage() && window.FR_AUDIO) || {};   // 8.11.2026: французский (js/french.js)
-  const f = FA[low] || FA[s] || V[low] || V[s] || K[low] || K[s] || C[low] || C[s] || A[low] || A[s] || (window.ET_AUDIO && window.ET_AUDIO[s]);
+  const EA = (typeof EN !== "undefined" && EN.onPage() && window.EN_AUDIO) || {};   // 13.11.2026: английский (js/english.js)
+  const f = EA[low] || EA[s] || FA[low] || FA[s] || V[low] || V[s] || K[low] || K[s] || C[low] || C[s] || A[low] || A[s] || (window.ET_AUDIO && window.ET_AUDIO[s]);
   if (f) { try { SPK && SPK.pause(); } catch (e) {}
     const a = new Audio(f); a.preservesPitch = a.mozPreservesPitch = a.webkitPreservesPitch = true; a.playbackRate = rate || 1; SPK = a;
     a.play().catch(() => speakTTS(text, rate)); return; }
@@ -21,8 +22,9 @@ function speak(text, rate) {
 }
 function speakTTS(text, rate) {
   if (!("speechSynthesis" in window)) { toast("Озвучка недоступна в этом браузере"); return; }
-  const u = new SpeechSynthesisUtterance(text.replace(/'/g, "")); u.lang = "fr-FR"; u.rate = .9 * (rate || 1);
-  const v = speechSynthesis.getVoices().find((x) => /^fr/i.test(x.lang)); if (v) u.voice = v;
+  const en = typeof EN !== "undefined" && EN.onPage();
+  const u = new SpeechSynthesisUtterance(en ? text : text.replace(/'/g, "")); u.lang = en ? "en-US" : "fr-FR"; u.rate = .9 * (rate || 1);
+  const v = speechSynthesis.getVoices().find((x) => (en ? /^en/i : /^fr/i).test(x.lang)); if (v) u.voice = v;
   speechSynthesis.cancel(); speechSynthesis.speak(u);
 }
 document.addEventListener("click", (e) => { const b = e.target.closest("[data-say]"); if (b) { e.preventDefault(); e.stopPropagation(); speak(b.dataset.say, +b.dataset.rate || undefined); } });
@@ -68,9 +70,14 @@ const ICO = {
 // с одинаковыми разделами и переключателем в шапке. Оболочка запоминается; страницы только одного языка переключают её сами
 // (урок Etoilal → Etoilal, урок французского → французский). Разделы, которых во французском ещё нет, показывают заглушку.
 const Shell = {
-  get() { try { return localStorage.getItem("etoilal-shell") === "fr" ? "fr" : "et"; } catch (e) { return "et"; } },
-  set(v) { try { localStorage.setItem("etoilal-shell", v); } catch (e) {} document.body.classList.toggle("shell-fr", v === "fr"); },
+  // 13.11.2026: третья оболочка — английский (js/english.js, js/english-extra.js)
+  get() { try { const v = localStorage.getItem("etoilal-shell"); return v === "fr" || v === "en" ? v : "et"; } catch (e) { return "et"; } },
+  set(v) { try { localStorage.setItem("etoilal-shell", v); } catch (e) {} document.body.classList.toggle("shell-fr", v === "fr"); document.body.classList.toggle("shell-en", v === "en"); },
   fr() { return this.get() === "fr"; },
+  en() { return this.get() === "en"; },
+  et() { return this.get() === "et"; },
+  pre() { const v = this.get(); return v === "et" ? "" : v + ":"; },
+  EN_ONLY: new Set(["английский", "ан", "ант", "история", "детектив", "слух", "прогресс"]),
   ET_ONLY: new Set(["урок", "альтернатива", "подготовка", "экспресс", "о-языке", "мат", "секрет"]),
   FR_ONLY: new Set(["французский", "фр", "фрт"]),
   // разделы с одинаковыми функциями: во французской оболочке — своя версия (когда будет) или заглушка
@@ -83,34 +90,43 @@ const Shell = {
 const FR_PAGES = { "словарь": [() => FRT.dict(), () => FRT.bindDict()], "справочник": [() => FRT.ref(), () => FRT.bindRef()],
   "карточки": [() => FRT.cards(), () => FRT.bindCards()], "тренировка": [() => FRT.train(), () => FRT.bindTrain()], "тренировки": [() => FRT.train(), () => FRT.bindTrain()],
   "полезное": [() => FRT.useful()] };
-function frSoon(id) { const [ic, t] = Shell.SAME[id];
-  return `<div class="card soon"><div class="ic">${ic}</div><h2>${t}</h2><p class="muted">Во французской оболочке этот раздел будет таким же, как в Etoilal, — сейчас он в работе. Пока есть пробные уроки французского.</p>
-    <p><a class="btn gold" href="#/учиться">Уроки французского</a> <a class="btn" href="#/${esc(id)}" data-shell="et">Открыть раздел в Etoilal</a></p></div>`; }
+// 13.11.2026: разделы английской оболочки (js/english-extra.js); остальные общие разделы — заглушка frSoon
+const EN_PAGES = { "история": [(a) => ENX.storyPage(a), (a) => ENX.storyBind(a)], "детектив": [(a) => ENX.detPage(a), (a) => ENX.detBind(a)],
+  "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()],
+  "тренировка": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "тренировки": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)],
+  "ан": [(a) => EN.pageLesson(a), (a) => EN.bindLesson(a)], "ант": [(a) => ENP.page(a), (a) => ENP.bind(a)] };
+function frSoon(id) { const [ic, t0] = Shell.SAME[id], en = Shell.en(), t = en ? t0.replace(/французск(ого|ой|ом|ий|ие|ая)/g, (m, e) => "английск" + e).replace("Французские", "Английские") : t0;
+  return `<div class="card soon"><div class="ic">${ic}</div><h2>${t}</h2><p class="muted">В ${en ? "английской" : "французской"} оболочке этот раздел будет таким же, как в Etoilal, — сейчас он в работе.${en ? " Пока есть уроки, истории, детектив и тренажёр слуха." : " Пока есть пробные уроки французского."}</p>
+    <p><a class="btn gold" href="#/учиться">Уроки ${en ? "английского" : "французского"}</a> <a class="btn" href="#/${esc(id)}" data-shell="et">Открыть раздел в Etoilal</a></p></div>`; }
 document.addEventListener("click", (e) => { const b = e.target.closest("[data-shell]"); if (b) { e.preventDefault(); Shell.set(b.dataset.shell); PAGE_CACHE.clear(); const h = b.getAttribute("href");
   let cur = location.hash; try { cur = decodeURIComponent(cur); } catch (x) {} if (cur === h) route(); else location.hash = h; } }, true);
-const shellSwitch = () => `<span class="shsw"><a href="#/главная" data-shell="et" class="${Shell.fr() ? "" : "on"}" title="Etoilal">✦ Etoilal</a><a href="#/главная" data-shell="fr" class="${Shell.fr() ? "on" : ""}" title="Французский">🇫🇷 Français</a></span>`;
+const shellSwitch = () => `<span class="shsw"><a href="#/главная" data-shell="et" class="${Shell.et() ? "on" : ""}" title="Etoilal">✦<span class="shn"> Etoilal</span></a><a href="#/главная" data-shell="fr" class="${Shell.fr() ? "on" : ""}" title="Французский">🇫🇷<span class="shn"> Français</span></a><a href="#/главная" data-shell="en" class="${Shell.en() ? "on" : ""}" title="Английский">🇬🇧<span class="shn"> English</span></a></span>`;
 // ---------------------------------------------------------------- меню
 const NAV = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["словарь", "Словарь", "📚"], ["карточки", "Карточки", "🃏"], ["переводчик", "Переводчик", "⇄"],
   ["проверка", "Проверь текст", "✅"], ["справочник", "Справочник", "📐"], ["песни", "Песни", "🎤"], ["библиотека", "Библиотека", "📜"], ["чат", "Чат", "💬"]];
+// 13.11.2026: у английской оболочки своё меню — истории, детектив, слух, прогресс
+const NAV_EN = [["главная", "Главная", "🏠"], ["учиться", "Учиться", "📖"], ["история", "Истории", "🎧"], ["детектив", "Детектив", "🔎"], ["слух", "Слух", "👂"], ["прогресс", "Прогресс", "📈"], ["чат", "Чат", "💬"]];
+const TABS_EN = [["главная", "Главная", "home"], ["учиться", "Учиться", "book"], ["история", "Истории", "🎧"], ["слух", "Слух", "👂"], ["ещё", "Ещё", "more"]];
+const navList = () => Shell.en() ? NAV_EN : NAV, tabList = () => Shell.en() ? TABS_EN : TABS;
 const TABS = [["главная", "Главная", "home"], ["учиться", "Учиться", "book"], ["проверка", "Проверка", "check"], ["переводчик", "Перевод", "swap"], ["ещё", "Ещё", "more"]];
 // каждая вкладка меню помнит, где ты в ней был (урок, слово в словаре, загадку…): вкладка ведёт туда; повторное нажатие на
 // уже открытую вкладку — к её началу. Хранится в браузере, переживает перезаход на сайт.
 let TAB_LAST = {}; try { TAB_LAST = JSON.parse(localStorage.getItem("etoilal-tabs") || "{}"); } catch (e) {}
 function tabRemember(navId, raw) {
-  const p = Shell.fr() ? "fr:" : "";
+  const p = Shell.pre();
   TAB_LAST[p + navId] = "#/" + raw; if (!TABS.some((x) => x[0] === navId)) TAB_LAST[p + "ещё"] = "#/" + raw;
   try { localStorage.setItem("etoilal-tabs", JSON.stringify(TAB_LAST)); } catch (e) {}
 }
-const tabHref = (id, cur) => { const k = (Shell.fr() ? "fr:" : "") + id; return id === cur || id === "главная" || !TAB_LAST[k] ? "#/" + id : TAB_LAST[k]; };
+const tabHref = (id, cur) => { const k = Shell.pre() + id; return id === cur || id === "главная" || !TAB_LAST[k] ? "#/" + id : TAB_LAST[k]; };
 function renderNav(cur) {
   const st = Store.streak(), pts = Store.get().points;
-  $("#topnav").innerHTML = (Shell.fr() ? `<a class="logo" href="#/главная"><span class="mk">🇫🇷</span> Fran<b>çais</b></a>` : `<a class="logo" href="#/главная"><span class="mk">✦</span> Etoil<b>al</b></a>`) + shellSwitch() +
-    NAV.map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="${esc(tabHref(id, cur))}">${t}</a>`).join("") +
+  $("#topnav").innerHTML = (Shell.en() ? `<a class="logo" href="#/главная"><span class="mk">🇬🇧</span> Engl<b>ish</b></a>` : Shell.fr() ? `<a class="logo" href="#/главная"><span class="mk">🇫🇷</span> Fran<b>çais</b></a>` : `<a class="logo" href="#/главная"><span class="mk">✦</span> Etoil<b>al</b></a>`) + shellSwitch() +
+    navList().map(([id, t]) => `<a class="nl${id === cur ? " on" : ""}" href="${esc(tabHref(id, cur))}">${t}</a>`).join("") +
     `<div class="sp"></div><span class="navr"><span class="chip f" title="Дней подряд">${ICO.flame} ${st}</span><span class="chip" title="Очки">${ICO.star} ${pts}</span>` +
     (Cloud.user() ? `<a class="chip cl nk" href="#/профиль" title="Профиль · прогресс в облаке">${ICO.user} ${esc(Cloud.user().nick)}</a>`
       : `<a class="chip cl" href="#/вход" title="Войти: прогресс на всех устройствах">${ICO.cloud} Войти</a><a class="chip" href="#/профиль" title="Профиль">${ICO.user}</a>`) + `</span>`;
-  const moreOn = !TABS.some((x) => x[0] === cur);
-  $("#tabbar").innerHTML = TABS.map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST[(Shell.fr() ? "fr:" : "") + "ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${ICO[i] || i}</i>${t}</a>`).join("");
+  const moreOn = !tabList().some((x) => x[0] === cur);
+  $("#tabbar").innerHTML = tabList().map(([id, t, i]) => `<a class="${id === cur || (id === "ещё" && moreOn) ? "on" : ""}" href="${esc(id === "ещё" ? (moreOn ? "#/ещё" : TAB_LAST[Shell.pre() + "ещё"] || "#/ещё") : tabHref(id, cur))}"><i>${ICO[i] || i}</i>${t}</a>`).join("");
 }
 
 // ---------------------------------------------------------------- главная
@@ -348,6 +364,7 @@ function bindCheck() {
 function pageMore() {
   const items = [["учиться", "📖", "Самоучитель", ET_TOC.length + " уроков с озвучкой"], ["альтернатива", "🧠", "Альтернативное обучение", "весь язык сразу: шпаргалка, тексты, загадки"], ["экспресс", "⚡", "Экспресс-курс", "10 экранов, 15 минут"], ["карточки", "🃏", "Карточки", "повторение слов"], ["тренировка", "🔥", "Ежедневная тренировка", "3–5 минут в день"], ["французский", "🇫🇷", "Французский", "самоучитель французского"], ["тренировки", "🎯", "Тренировки", "на время, на слух, произношение"], ["словарь", "📚", "Словарь", "все слова"], ["справочник", "📐", "Справочник", "грамматика"],
     ["песни", "🎤", "Песни", "караоке"], ["библиотека", "📜", "Библиотека", "рассказы и книги читателей"], ["чат", "💬", "Чат", "общение со всеми"], ["мат", "🔞", "Мат 18+", "с уровня filozof"], ["полезное", "💬", "Полезное", "фразы по ситуациям"], ["тексты", "✍", "Тексты", "переведи — я проверю"], ["о-языке", "✦", "О языке", "история"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"], ["магазин", "🛍", "Магазин", "темы, песни, секреты"]];
+  if (Shell.en()) return `<h1 class="page">Ещё</h1><div class="tools">${[["учиться", "🇬🇧", "Уроки английского", "30 уроков A2 → B1"], ["история", "🎧", "Истории", "интерактивные, со звуками и концовками"], ["детектив", "🔎", "Детектив", "слушай допросы и раскрой дело"], ["слух", "👂", "Тренажёр слуха", "услышал — напиши"], ["прогресс", "📈", "Прогресс", "слова, слух, график по дням"], ["чат", "💬", "Чат", "общение со всеми"], ["профиль", "👤", "Профиль", "звания и достижения"], ["вход", "☁", "Аккаунт", "прогресс на всех устройствах"]].map(([h, i, t, s]) => `<a class="card tool" href="#/${h}"><div class="ic">${i}</div><b>${t}</b><span>${s}</span></a>`).join("")}</div>`;
   const list = Shell.fr() ? items.filter(([h]) => !Shell.ET_ONLY.has(h) && h !== "французский").map((x) => x[0] === "учиться" ? ["учиться", "🇫🇷", "Уроки французского", "пробные уроки"] : x) : items;
   return `<h1 class="page">Ещё</h1><div class="tools">${list.map(([h, i, t, s]) => `<a class="card tool" href="#/${h}"><div class="ic">${i}</div><b>${t}</b><span>${s}</span></a>`).join("")}</div>`;
 }
@@ -359,7 +376,8 @@ const PAGES = {
   "главная": [pageHome], "словарь": [pageDict, bindDict], "переводчик": [(a) => Lv.examActive() ? Lv.lockedPage("Переводчик") : pageTranslate(a), (a) => !Lv.examActive() && bindTranslate(a)], "ещё": [pageMore], "профиль": [pageProfile, bindProfile],
   "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
   "тренировки": [pageTrain, bindTrain], "тренировка": [pageDaily, bindDaily],
-  "французский": [() => FR.page()], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)], "фрт": [(a) => FRP.page(a), (a) => FRP.bind(a)],
+  "французский": [() => FR.page()], "английский": [() => EN.page()], "ан": [(a) => EN.pageLesson(a), (a) => EN.bindLesson(a)], "ант": [(a) => ENP.page(a), (a) => ENP.bind(a)],
+  "история": [(a) => ENX.storyPage(a), (a) => ENX.storyBind(a)], "детектив": [(a) => ENX.detPage(a), (a) => ENX.detBind(a)], "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)], "фрт": [(a) => FRP.page(a), (a) => FRP.bind(a)],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
   "проверка": [(a) => Lv.examActive() ? Lv.lockedPage("«Проверь текст»") : pageCheck(a), (a) => !Lv.examActive() && bindCheck(a)],
   "справочник": [pageRef, bindRef],
@@ -375,7 +393,8 @@ const PAGES = {
 const PAGE_KEEP = new Set(["урок", "альтернатива", "переводчик", "проверка", "словарь", "тексты", "справочник", "полезное", "библиотека", "о-языке", "экспресс"]);
 // 9.11: во французской оболочке ключи страниц начинаются с «fr:»; там же откладываются уроки (фр/N), карточки и тренировка
 const FR_KEEP = new Set(["фр", "фрт", "тренировки", "тренировка", "карточки"]);
-const keepPage = (k) => { const fr = /^fr:/.test(k), id = k.replace(/^fr:/, "").split("/")[0]; return PAGE_KEEP.has(id) || (fr && FR_KEEP.has(id)); };
+const EN_KEEP = new Set(["ан", "ант"]);                  // истории/детектив/слух рисуются заново (там звук и таймеры)
+const keepPage = (k) => { const fr = /^fr:/.test(k), en = /^en:/.test(k), id = k.replace(/^(fr|en):/, "").split("/")[0]; return (!en && PAGE_KEEP.has(id)) || (fr && FR_KEEP.has(id)) || (en && EN_KEEP.has(id)); };
 const PAGE_CACHE = new Map();                          // ключ (адрес) → { el, y, onShow }
 const PageHook = { onShow: null };                      // страница может сказать, что сделать при возвращении к ней (урок — доска шпаргалок)
 let pageKey = null;
@@ -388,10 +407,11 @@ async function route(fromNav) {
   const raw = decodeURIComponent(location.hash.replace(/^#\/?/, "")), parts = raw.split("/");
   const id = PAGES[parts[0]] ? parts[0] : "главная";
   if (Shell.FR_ONLY.has(id) && !Shell.fr()) Shell.set("fr");
-  else if (Shell.ET_ONLY.has(id) && Shell.fr()) Shell.set("et");
-  else document.body.classList.toggle("shell-fr", Shell.fr());
-  const key = (Shell.fr() ? "fr:" : "") + id + "/" + parts.slice(1).join("/");
-  const [view, bind] = Shell.fr() ? (id === "главная" || id === "учиться" ? [() => FR.page()] : FR_PAGES[id] ? FR_PAGES[id] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : PAGES[id];
+  else if (Shell.EN_ONLY.has(id) && !Shell.en()) Shell.set("en");
+  else if (Shell.ET_ONLY.has(id) && !Shell.et()) Shell.set("et");
+  else Shell.set(Shell.get());
+  const key = Shell.pre() + id + "/" + parts.slice(1).join("/");
+  const [view, bind] = Shell.en() ? (id === "главная" || id === "учиться" || id === "английский" ? [() => EN.page()] : EN_PAGES[id] ? EN_PAGES[id] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : Shell.fr() ? (id === "главная" || id === "учиться" ? [() => FR.page()] : FR_PAGES[id] ? FR_PAGES[id] : Shell.SAME[id] ? [() => frSoon(id)] : PAGES[id]) : PAGES[id];
   const app = $("#app"), cur = [...app.childNodes];       // вся страница целиком (некоторые страницы перерисовывают #app сами)
   if (cur.length && pageKey && keepPage(pageKey) && pageKey !== key && (!app.querySelector("#exbox, .nokeep") || (typeof exOn === "function" && exOn() && app.querySelector("#exbox")))) {        // отложить уходящую страницу
     app.querySelectorAll("audio, video").forEach((m) => { try { m.pause(); } catch (e) {} });
@@ -399,7 +419,7 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = Shell.fr() && ["французский", "фр", "фрт"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
+  const navId = Shell.en() && ["английский", "ан", "ант"].includes(id) ? "учиться" : Shell.en() && ["тренировка", "тренировки"].includes(id) ? "слух" : Shell.fr() && ["французский", "фр", "фрт"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
   const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);
@@ -410,7 +430,7 @@ async function route(fromNav) {
     window.scrollTo(0, kept.y); return;
   }
   PAGE_CACHE.delete(key);
-  if (id === "главная" && !Shell.fr()) await trReady();               // фраза дня с чтением
+  if (id === "главная" && Shell.et()) await trReady();               // фраза дня с чтением
   const pg = document.createElement("div"); pg.className = "pg"; pg.innerHTML = view(parts.slice(1)); app.replaceChildren(pg);
   if (bind) await bind(parts.slice(1));
   checkAchievements();

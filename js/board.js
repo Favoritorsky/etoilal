@@ -34,8 +34,9 @@ const Board = (() => {
     document.querySelectorAll("[data-pin]").forEach((b) => { const on = B.cards.some((c) => c.id === b.dataset.pin); b.textContent = on ? "✓ На доске" : "📌 Закрепить на доске"; b.classList.toggle("gold", !on); });
   }
   // 8.11.2026: две оболочки — у французской свои закреплённые таблицы (id «fr…») и свои шпаргалки (sh: "fr")
-  const isFr = () => typeof Shell !== "undefined" && Shell.fr();
-  const mine = (c) => c.type === "lesson" || (c.type === "pin" ? /^fr/.test(c.id) === isFr() : (c.sh === "fr") === isFr());
+  // 13.11.2026: третья оболочка — английская (id «en…», sh: "en")
+  const shOf = () => (typeof Shell !== "undefined" ? Shell.get() : "et"), isFr = () => shOf() !== "et";
+  const mine = (c) => c.type === "lesson" || (c.type === "pin" ? (/^fr/.test(c.id) ? "fr" : /^en/.test(c.id) ? "en" : "et") === shOf() : (c.sh || "et") === shOf());
   const find = (id) => st().cards.find((c) => c.id === id);
   function pin(id, title, html) { const B = st(); if (B.cards.some((c) => c.id === id)) { B.cards = B.cards.filter((c) => c.id !== id); toast("Убрал с доски"); }
     else { const cnt = (s) => B.cards.filter((c) => shown(c.side) === s && mine(c)).length, opts = wide() ? ["L", "R", "L2", "R2"] : ["L", "R"];
@@ -53,7 +54,7 @@ const Board = (() => {
         if (k >= 0 && k < 4) { c.side = SIDES[k]; save(); render(); } }
       else if (t.closest("[data-del]")) { const id = t.closest("[data-del]").dataset.del, c = find(id);
         if (c.type === "note" && c.text && !confirm("Удалить свою шпаргалку?")) return; st().cards = st().cards.filter((x) => x.id !== id); save(); render(); }
-      else if (t.closest("[data-add]")) { const id = "n" + Date.now().toString(36); st().cards.push({ id, type: "note", side: t.closest("[data-add]").dataset.add, coll: false, title: "Моя шпаргалка", text: "", ...(isFr() ? { sh: "fr" } : {}) }); save(); render();
+      else if (t.closest("[data-add]")) { const id = "n" + Date.now().toString(36); st().cards.push({ id, type: "note", side: t.closest("[data-add]").dataset.add, coll: false, title: "Моя шпаргалка", text: "", ...(isFr() ? { sh: shOf() } : {}) }); save(); render();
         setTimeout(() => { const ta = document.querySelector(`[data-note="${id}"]`); if (ta) ta.focus(); }, 30); }
       else if (t.closest("[data-ren]")) { const c = find(t.closest("[data-ren]").dataset.ren), n = prompt("Название шпаргалки:", c.title || ""); if (n !== null) { c.title = n.trim() || "Моя шпаргалка"; save(); render(); } }
       else if (t.closest("[data-pin]")) { const b = t.closest("[data-pin]"), P = (cur && cur.pins || []).find((p) => p.id === b.dataset.pin); if (P) pin(P.id, P.t, P.html); }
