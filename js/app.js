@@ -77,7 +77,7 @@ const Shell = {
   en() { return this.get() === "en"; },
   et() { return this.get() === "et"; },
   pre() { const v = this.get(); return v === "et" ? "" : v + ":"; },
-  EN_ONLY: new Set(["английский", "ан", "ант", "история", "детектив", "слух", "прогресс"]),
+  EN_ONLY: new Set(["английский", "ан", "ант", "история", "детектив", "слух", "прогресс", "уровень"]),
   ET_ONLY: new Set(["урок", "альтернатива", "подготовка", "экспресс", "о-языке", "мат", "секрет"]),
   FR_ONLY: new Set(["французский", "фр", "фрт"]),
   // разделы с одинаковыми функциями: во французской оболочке — своя версия (когда будет) или заглушка
@@ -92,7 +92,7 @@ const FR_PAGES = { "словарь": [() => FRT.dict(), () => FRT.bindDict()], "
   "полезное": [() => FRT.useful()] };
 // 13.11.2026: разделы английской оболочки (js/english-extra.js); остальные общие разделы — заглушка frSoon
 const EN_PAGES = { "история": [(a) => ENX.storyPage(a), (a) => ENX.storyBind(a)], "детектив": [(a) => ENX.detPage(a), (a) => ENX.detBind(a)],
-  "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()],
+  "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()], "уровень": [(a) => ENL.page(a), (a) => ENL.bind(a)],
   "тренировка": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "тренировки": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)],
   "ан": [(a) => EN.pageLesson(a), (a) => EN.bindLesson(a)], "ант": [(a) => ENP.page(a), (a) => ENP.bind(a)] };
 function frSoon(id) { const [ic, t0] = Shell.SAME[id], en = Shell.en(), t = en ? t0.replace(/французск(ого|ой|ом|ий|ие|ая)/g, (m, e) => "английск" + e).replace("Французские", "Английские") : t0;
@@ -377,7 +377,7 @@ const PAGES = {
   "учиться": [c2PageLearn], "урок": [c2PageLesson, c2BindLesson], "экспресс": [pageExpress, bindExpress],
   "тренировки": [pageTrain, bindTrain], "тренировка": [pageDaily, bindDaily],
   "французский": [() => FR.page()], "английский": [() => EN.page()], "ан": [(a) => EN.pageLesson(a), (a) => EN.bindLesson(a)], "ант": [(a) => ENP.page(a), (a) => ENP.bind(a)],
-  "история": [(a) => ENX.storyPage(a), (a) => ENX.storyBind(a)], "детектив": [(a) => ENX.detPage(a), (a) => ENX.detBind(a)], "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)], "фрт": [(a) => FRP.page(a), (a) => FRP.bind(a)],
+  "история": [(a) => ENX.storyPage(a), (a) => ENX.storyBind(a)], "детектив": [(a) => ENX.detPage(a), (a) => ENX.detBind(a)], "слух": [(a) => ENX.earPage(a), (a) => ENX.earBind(a)], "прогресс": [() => ENX.progPage(), () => ENX.progBind()], "уровень": [(a) => ENL.page(a), (a) => ENL.bind(a)], "фр": [(a) => FR.pageLesson(a), (a) => FR.bindLesson(a)], "фрт": [(a) => FRP.page(a), (a) => FRP.bind(a)],
   "карточки": [(a) => a[0] ? pageCardSession(a) : pageCards(), (a) => a[0] && bindCardSession(a)],
   "проверка": [(a) => Lv.examActive() ? Lv.lockedPage("«Проверь текст»") : pageCheck(a), (a) => !Lv.examActive() && bindCheck(a)],
   "справочник": [pageRef, bindRef],
@@ -419,7 +419,7 @@ async function route(fromNav) {
     while (PAGE_CACHE.size > 15) PAGE_CACHE.delete(PAGE_CACHE.keys().next().value);
   }
   PageHook.onShow = null;
-  const navId = Shell.en() && ["английский", "ан", "ант"].includes(id) ? "учиться" : Shell.en() && ["тренировка", "тренировки"].includes(id) ? "слух" : Shell.fr() && ["французский", "фр", "фрт"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
+  const navId = Shell.en() && ["английский", "ан", "ант", "уровень"].includes(id) ? "учиться" : Shell.en() && ["тренировка", "тренировки"].includes(id) ? "слух" : Shell.fr() && ["французский", "фр", "фрт"].includes(id) ? "учиться" : ["урок", "экспресс", "тренировки", "тренировка", "альтернатива", "подготовка"].includes(id) ? "учиться" : id === "книги" ? "библиотека" : id;
   if (id !== "ещё") tabRemember(navId, raw || "главная");
   renderNav(navId);
   const kept = fromNav === true && !(Lv.examActive() && ["переводчик", "проверка"].includes(id)) && PAGE_CACHE.get(key);

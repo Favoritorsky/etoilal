@@ -21,7 +21,7 @@ const FRP = (() => {
   // ближайшая открытая непройденная тренировка до урока n (для кнопки «Продолжить»)
   const nextBefore = (n) => list().find((t) => t.id < n && !tdone(t.id) && isOpen(t.id) && !skippedSec(t.sec)) || null;
   const load = (id) => { window.FR_T = window.FR_T || {}; if (FR_T[id]) return Promise.resolve(FR_T[id]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/t${id}.js?v=202611130500`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/french/t${id}.js?v=202611131818`;
       s.onload = () => (FR_T[id] ? ok(FR_T[id]) : bad(new Error("нет тренировки"))); s.onerror = () => bad(new Error("нет файла")); document.head.appendChild(s); }); };
   const row = (T, cur) => { const open = isOpen(T.id), d = tdone(T.id);
     return `<${open ? "a" : "div"} class="card lrow frtr${cur ? " cur" : ""}${open ? "" : " lockd"}"${open ? ` href="#/фрт/${T.id}"` : ""}><span class="ln">${open ? "🏋" : "🔒"}</span>

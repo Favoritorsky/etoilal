@@ -11,10 +11,11 @@ const ENP = (() => {
     return out; };
   const tinfo = (id) => list().find((t) => t.id === +id);
   const tdone = (id) => ((S0().ent[id] || {}).times || 0) > 0;
-  const isOpen = (id) => { const T = tinfo(id); if (!T || !EN.done(T.id)) return false; const prev = list().filter((x) => x.id < T.id).pop(); return !prev || tdone(prev.id); };
-  const nextBefore = (n) => list().find((t) => t.id < n && !tdone(t.id) && isOpen(t.id)) || null;
+  const isOpen = (id) => { const T = tinfo(id); if (!T || !EN.done(T.id)) return false; const prev = list().filter((x) => x.id < T.id && !EN.skipped(x.sec)).pop(); return !prev || tdone(prev.id); };
+  const nextBefore = (n) => list().find((t) => t.id < n && !EN.skipped(t.sec) && !tdone(t.id) && isOpen(t.id)) || null;
   const after = (n) => list().filter((t) => t.id === n);
-  const row = (T, cur) => { const open = isOpen(T.id), d = tdone(T.id);
+  const row = (T, cur) => { if (EN.skipped(T.sec) && !tdone(T.id)) return "";   // раздел засчитан тестом на уровень — тренировка не нужна
+    const open = isOpen(T.id), d = tdone(T.id);
     return `<${open ? "a" : "div"} class="card lrow frtr${cur ? " cur" : ""}${open ? "" : " lockd"}"${open ? ` href="#/ант/${T.id}"` : ""}><span class="ln">${open ? "🏋" : "🔒"}</span>
       <span class="lt"><b>Тренировка: ${esc(T.t)}</b><small>${esc(T.s)}</small></span><span class="lst">${d ? "✓" : cur ? "▶" : ""}</span></${open ? "a" : "div"}>`; };
 
@@ -33,10 +34,10 @@ const ENP = (() => {
     const tasks = sh(A.flatMap((L) => (L.tasks || []).filter((t) => t.k !== "tiles"))).slice(0, 8).map(fix);
     const exs = sh(A.flatMap((L) => ["sut", "prosto"].flatMap((f) => String(L[f] || "").split("\n").map(EN.exParse).filter(Boolean))).filter((e) => !/[«»…]/.test(e.fr)));
     const dict = exs.slice(0, 4).map((e) => ({ k: "input", lsn: "dict", sec: T.sec, say: e.fr, q: "Послушай и напиши, что услышал", a: [e.fr], lang: "en", why: `«${e.fr}» — ${e.ru}`, rq: `«${e.fr}» — ${e.ru}` }));
-    const older = Ls.filter((L) => L && !T.from.includes(L.n) && (L.words || []).length);
-    const rev = sh(older.flatMap((L) => L.words.map((w) => [...w, L.n]))).slice(0, 4).map(([w, m, r, k], i) => i % 2
+    const older = Ls.filter((L) => L && !T.from.includes(L.n) && EN.wordsOf(L.n).length);
+    const rev = sh(older.flatMap((L) => EN.wordsOf(L.n).map((w) => [...w, L.n]))).slice(0, 4).map(([w, m, r, k], i) => i % 2
       ? { k: "input", lang: "en", q: `Напиши по-английски: «${m}»`, a: [w], why: `${w} — ${m} (урок ${EN.num(k)})`, hint: `читается «${r}»` }
-      : { k: "listen", say: w, q: "Что значит прозвучавшее слово?", opts: sh([m, ...sh(older.flatMap((L) => L.words.map((x) => x[1])).filter((x) => x !== m)).slice(0, 2)]), a: m, lang: "x", why: `${w} — ${m}` });
+      : { k: "listen", say: w, q: "Что значит прозвучавшее слово?", opts: sh([m, ...sh(older.flatMap((L) => EN.wordsOf(L.n).map((x) => x[1])).filter((x) => x !== m)).slice(0, 2)]), a: m, lang: "x", why: `${w} — ${m}` });
     const items = [...mem, ...tasks, ...dict, ...rev];
     $("#entr").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a><span class="muted">после урока ${EN.num(T.id)}</span></div>
       <div class="k">🇬🇧 Тренировка</div><h1 class="page">${esc(T.t)}</h1><p class="lead">Повторяем два прошлых урока: слова, задания вперемешку и диктант — услышал, напиши. Новых правил нет.</p>

@@ -17,7 +17,7 @@ const EN = (() => {
   ];
   const load = (n) => { window.EN_C = window.EN_C || {};
     if (EN_C[n]) return Promise.resolve(EN_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611130500`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611131818`;
       s.onload = () => (EN_C[n] ? ok(EN_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.en = S.en || {}; return S; };
   const prog = () => S0().en;
@@ -74,11 +74,12 @@ const EN = (() => {
       <p class="lead">Для тех, кто учил английский в школе: слова вроде знакомы, а живую речь понимать трудно. Простыми словами, без терминов. В каждом уроке есть правило «почему так», шпаргалка на доску и задания, где пишешь сам с нуля. А между уроками — истории со звуками, детектив и тренажёр слуха.</p>
       <div class="learnhead"><div class="stats"><div class="st">📖 ${nd}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${Store.get().points}<small>очков</small></div></div>
       ${np ? `<a class="btn gold" href="#/ант/${np.id}">Продолжить: тренировка «${esc(np.t)}» ▶</a>` : `<a class="btn gold" href="#/ан/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${num(next.n)} ▶</a>`}${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
+    ${typeof ENL !== "undefined" ? ENL.banner() : ""}
     ${typeof ENX !== "undefined" ? ENX.homeCards() : ""}
     <div class="card lvlad"><div class="row"><div><div class="k">Твой уровень</div><b class="lvnow">${lv ? `${LV[lv - 1].ic} <span class="fr">${LV[lv - 1].w}</span> · ${LV[lv - 1].ru}` : "пока без уровня — пройди раздел «Повторяем основу»"}</b></div></div>
       <div class="lvsteps">${LV.map((x, k) => `<div class="lvs${k < lv ? " d" : k === lv ? " c" : ""}"><i>${k + 1}</i><b class="fr">${x.w}</b><small>${x.ru}</small></div>`).join("")}</div>
       <div class="muted">Уровень раздела даёт контрольная (нужно ≥ ${PASS} %). Уроки открываются строго по порядку. 🏋 Тренировки между уроками повторяют два прошлых урока; в дневной лимит они не входят.</div></div>
-    ${EN_I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}<span class="lvtag${secPassed(k) ? " d" : ""}">${LV[k].ic} <span class="fr">${LV[k].w}</span></span></h2><div class="llist">
+    ${EN_I.sections.map((sec, k) => `<div class="lsec"><h2><span class="gn">${k + 1}</span>${esc(sec)}${skipped(k) ? `<span class="enskt">✓ засчитан тестом</span>` : ""}<span class="lvtag${secPassed(k) || skipped(k) ? " d" : ""}">${LV[k].ic} <span class="fr">${LV[k].w}</span></span></h2><div class="llist">
       ${L.filter((l) => l.sec === k).map((l) => { const st = (P[l.n] || {}).stars || 0, open = isOpen(l.n);
         return `<${open ? "a" : "div"} class="card lrow${l.n === next.n ? " cur" : ""}${l.check ? " chk" : ""}${open ? "" : " lockd"}"${open ? ` href="#/ан/${l.n}"` : ""}><span class="ln">${open ? (l.check ? "✓" : num(l.n)) : "🔒"}</span>
           <span class="lt"><b>${esc(l.t)}</b><small>${l.check ? `контрольная · уровень ${esc(LV[l.sec].w)}` : esc(l.s)}</small></span>
@@ -90,10 +91,13 @@ const EN = (() => {
   const sig = (t) => { const s = t.q + "|" + JSON.stringify(t.a) + "|" + (t.say || ""); let h = 5381; for (const c of s) h = ((h * 33) ^ c.charCodeAt(0)) >>> 0; return h.toString(36); };
   const mix = (base, add) => { const out = base.slice(); add.forEach((t, i) => out.splice(Math.min(out.length, Math.round((i + 1) * base.length / (add.length + 1)) + i), 0, t)); return out; };
   const fix = (t) => Object.assign({ rq: t.why }, t, { lang: t.lang || (t.opts ? "x" : "en") });
-  const wordsUpTo = (n, incl) => lessons().filter((l) => (incl ? l.n <= n : l.n < n)).flatMap((l) => (window.EN_C && EN_C[l.n] && EN_C[l.n].words) || []);
+  // слова, которые пользователь не знал в засчитанных тестом разделах (english-level.js), «переезжают» в уроки слабых разделов: S.enExtra[N]
+  const extraOf = (n) => ((S0().enExtra || {})[n] || []).map((x) => x.slice(0, 3));
+  const wordsOf = (n) => [...((window.EN_C && EN_C[n] && EN_C[n].words) || []), ...extraOf(n)];
+  const wordsUpTo = (n, incl) => lessons().filter((l) => (incl ? l.n <= n : l.n < n)).flatMap((l) => wordsOf(l.n));
   const exOf = (L) => ["sut", "prosto"].flatMap((f) => String(L[f] || "").split("\n").map(exParse).filter(Boolean));
   function memItems(L) {
-    const W = L.words || []; if (!W.length) return [];
+    const W = L.n ? wordsOf(L.n) : L.words || []; if (!W.length) return [];
     const pool = wordsUpTo(L.n, true);
     return W.map(([w, m, r], i) => {
       const others = AltT.shuffle(pool.filter((x) => x[0] !== w && x[1] !== m)).slice(0, 2), why = `${w} «${r}» — ${m}`;
@@ -120,7 +124,7 @@ const EN = (() => {
   // повторение: слова уроков n-1, n-3, n-7, n-15 — 4 задания, одно — написать слово, одно — на слух
   function reviewItems(n) {
     const back = [1, 3, 7, 15].map((d) => lessons()[num(n) - 1 - d]).filter(Boolean).map((l) => l.n);
-    const cand = back.flatMap((k) => ((window.EN_C && EN_C[k] && EN_C[k].words) || []).map((w) => [...w, k]));
+    const cand = back.flatMap((k) => wordsOf(k).map((w) => [...w, k]));
     const pick = AltT.shuffle(cand).slice(0, 4), pool = wordsUpTo(n);
     return pick.map(([w, m, r, k], i) => {
       const others = AltT.shuffle(pool.filter((x) => x[0] !== w && x[1] !== m)).slice(0, 2), why = `${w} «${r}» — ${m} (урок ${num(k)})`;
@@ -159,11 +163,13 @@ const EN = (() => {
     const exL = exOf(L).slice(0, 5).map((e) => `> ${e.fr} :: ${e.ru}`).join("\n"), errM = String(L.prosto || "").match(/<h3>Частые ошибки<\/h3>([\s\S]*?)(?=<h3>|$)/);
     const wl = (W) => W.map(([w, m, r]) => `<div class="bw">${playBtn(w, 1)}<b class="fr">${esc(w)}</b> <span class="muted">«${esc(r)}» ${esc(m)}</span></div>`).join("");
     const bInfo = { title: L.t, pins: L.pins || [], html: `<div class="brule"><b class="btitle">${esc(L.t)}</b>${rich(L.rule || L.sut, L)}</div>`,
-      words: (L.words || []).length ? wl(L.words) : "", ex: exL ? rich(exL, L) : "", err: errM ? rich(errM[1], L) : "" };
+      words: wordsOf(n).length ? wl(wordsOf(n)) : "", ex: exL ? rich(exL, L) : "", err: errM ? rich(errM[1], L) : "" };
     Board.setLesson(bInfo); PageHook.onShow = () => { Board.setLesson(bInfo); Board.render(); };
     if (I.check) return examBind(n, L, I);
-    const words = (L.words || []).length ? `<h2 class="c2h">🆕 Новые слова <small class="muted">${L.words.length}</small></h2>
-      <div class="card c2words">${L.words.map(([w, m, r]) => `<div class="c2w">${playBtn(w, 1)}<div><b class="fr">${esc(w)}</b> <span class="muted">«${esc(r)}»</span><div>${esc(m)}</div></div></div>`).join("")}${C2_AUD_NOTE}
+    const wcard = (W) => W.map(([w, m, r]) => `<div class="c2w">${playBtn(w, 1)}<div><b class="fr">${esc(w)}</b> <span class="muted">«${esc(r)}»</span><div>${esc(m)}</div></div></div>`).join("");
+    const XW = extraOf(n), XF = ((S0().enExtra || {})[n] || []).map((x) => x[3]);
+    const words = wordsOf(n).length ? `<h2 class="c2h">🆕 Новые слова <small class="muted">${wordsOf(n).length}</small></h2>
+      <div class="card c2words">${wcard(L.words || [])}${XW.length ? `<div class="enxw"><b>♻ Ещё ${XW.length} — слова, которых ты не знал в тесте на уровень</b><small class="muted">из разделов, которые засчитаны: ${[...new Set(XF)].map((k) => "урок " + num(k)).join(", ")}</small></div>${wcard(XW)}` : ""}${C2_AUD_NOTE}
       <div class="muted" style="margin-top:8px">Нажми ▶ у каждого слова и повтори вслух. Потом — быстрая проверка, чтобы слова запомнились.</div></div>
       <h3 class="c2h3">🧠 Запомни</h3><div class="alt-qs" id="enmem"></div>` : "";
     const sec = EN_I.sections[I.sec];
@@ -289,6 +295,6 @@ const EN = (() => {
     $("#exprog").style.width = "100%";
   }
 
-  const onPage = () => { try { return /^#\/(английский|ан|ант|история|детектив|слух|прогресс)(\/|$)/.test(decodeURIComponent(location.hash)) || (typeof Shell !== "undefined" && Shell.en()); } catch (e) { return false; } };
-  return { num, nextOf, skipped, page, pageLesson, bindLesson, onPage, prog, lessons, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
+  const onPage = () => { try { return /^#\/(английский|ан|ант|история|детектив|слух|прогресс|уровень)(\/|$)/.test(decodeURIComponent(location.hash)) || (typeof Shell !== "undefined" && Shell.en()); } catch (e) { return false; } };
+  return { num, nextOf, skipped, extraOf, wordsOf, page, pageLesson, bindLesson, onPage, prog, lessons, rich, again, load, done, isOpen, level, LV, info, exParse, listenItems, memItems };
 })();
