@@ -17,7 +17,7 @@ const EN = (() => {
   ];
   const load = (n) => { window.EN_C = window.EN_C || {};
     if (EN_C[n]) return Promise.resolve(EN_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611131818`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611182249`;
       s.onload = () => (EN_C[n] ? ok(EN_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.en = S.en || {}; return S; };
   const prog = () => S0().en;
@@ -94,6 +94,19 @@ const EN = (() => {
   // слова, которые пользователь не знал в засчитанных тестом разделах (english-level.js), «переезжают» в уроки слабых разделов: S.enExtra[N]
   const extraOf = (n) => ((S0().enExtra || {})[n] || []).map((x) => x.slice(0, 3));
   const wordsOf = (n) => [...((window.EN_C && EN_C[n] && EN_C[n].words) || []), ...extraOf(n)];
+  // фразы, которых пользователь не знал в пропущенных/засчитанных разделах (18.11.2026): S.enExtraP[N] = [[англ, рус, пояснение, урок-источник]]
+  const extraPOf = (n) => (S0().enExtraP || {})[n] || [];
+  const unshort = (s) => s.replace(/\bI'm\b/g, "I am").replace(/\bcan't\b/gi, "cannot").replace(/\bwon't\b/gi, "will not").replace(/n't\b/g, " not")
+    .replace(/'re\b/g, " are").replace(/'ll\b/g, " will").replace(/'ve\b/g, " have").replace(/\b(he|she|it|that|what|where|who|there)'s\b/gi, "$1 is");
+  function phraseItems(n) {
+    const P = extraPOf(n); if (!P.length) return [];
+    const pool = [...new Set(Object.values(S0().enExtraP || {}).flat().concat(lessons().flatMap((l) => (window.EN_C && EN_C[l.n] ? exOf(EN_C[l.n]) : []).map((e) => [e.fr, e.ru]))).map((x) => x[1]))];
+    return P.map(([w, m, note, k], i) => {
+      const why = `${w} — ${m}${note ? " (" + note + ")" : ""} · из урока ${num(k)}`;
+      if (i % 2 === 0) return { k: "choice", q: `Что значит «${w}»?`, opts: AltT.shuffle([m, ...AltT.shuffle(pool.filter((x) => x !== m)).slice(0, 2)]), a: m, lang: "x", why, rq: why };
+      return { k: "input", lang: "en", q: `Скажи по-английски: «${m}»`, a: [...new Set([w, unshort(w)])], why, rq: why, hint: `фраза из урока ${num(k)}` };
+    });
+  }
   const wordsUpTo = (n, incl) => lessons().filter((l) => (incl ? l.n <= n : l.n < n)).flatMap((l) => wordsOf(l.n));
   const exOf = (L) => ["sut", "prosto"].flatMap((f) => String(L[f] || "").split("\n").map(exParse).filter(Boolean));
   function memItems(L) {
@@ -172,6 +185,11 @@ const EN = (() => {
       <div class="card c2words">${wcard(L.words || [])}${XW.length ? `<div class="enxw"><b>♻ Ещё ${XW.length} — слова, которых ты не знал в тесте на уровень</b><small class="muted">из разделов, которые засчитаны: ${[...new Set(XF)].map((k) => "урок " + num(k)).join(", ")}</small></div>${wcard(XW)}` : ""}${C2_AUD_NOTE}
       <div class="muted" style="margin-top:8px">Нажми ▶ у каждого слова и повтори вслух. Потом — быстрая проверка, чтобы слова запомнились.</div></div>
       <h3 class="c2h3">🧠 Запомни</h3><div class="alt-qs" id="enmem"></div>` : "";
+    const XP = extraPOf(n);
+    const phr = XP.length ? `<h2 class="c2h">💬 Фразы из пропущенного раздела <small class="muted">${XP.length}</small></h2>
+      <div class="card c2words enxp">${XP.map(([w, m, note, k]) => `<div class="c2w">${playBtn(w, 1)}<div><b class="fr">${esc(w)}</b><div>${esc(m)}${note ? ` <span class="muted">— ${esc(note)}</span>` : ""}</div><small class="muted">урок ${num(k)}</small></div></div>`).join("")}
+      <div class="muted" style="margin-top:8px">Эти фразы ты отметил как незнакомые в тесте на уровень. Послушай каждую, повтори вслух — потом задания.</div></div>
+      <h3 class="c2h3">💬 Фразы: проверка</h3><div class="alt-qs" id="enphr"></div>` : "";
     const sec = EN_I.sections[I.sec];
     $("#enl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(sec)} · урок ${num(n)} из ${lessons().length}</span></div>
       <div class="k">🇬🇧 Урок ${num(n)}${I.kind ? " · " + esc(I.kind) : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
@@ -182,6 +200,7 @@ const EN = (() => {
       ${L.prosto ? `<details class="card c2sec" open><summary>📖 Простыми словами</summary>${rich(L.prosto, L, true)}${C2_AUD_NOTE}</details>` : ""}
       ${L.lub ? `<details class="card c2sec"><summary>🔭 Для любопытных</summary>${rich(L.lub, L)}</details>` : ""}
       ${words}
+      ${phr}
       <h2 class="c2h">✍ Задания <small class="muted" id="entn"></small></h2><div class="alt-qs" id="entasks"></div>
       <h2 class="c2h" id="enrevh">🔁 Повторение слов прошлых уроков</h2><div class="alt-qs" id="enrev"></div><div id="enend"></div>`;
     Board.render();
@@ -189,18 +208,21 @@ const EN = (() => {
     const S = S0(); S.enans = S.enans || {};
     const saved = S.enans[n] && S.enans[n].items ? S.enans[n] : null;
     const mem = saved ? saved.items.mem : memItems(L), rev = saved ? saved.items.rev : reviewItems(n), lsn = saved && saved.items.lsn ? saved.items.lsn : listenItems(L, I);
+    const ph = saved && saved.items.ph && saved.items.ph.length === XP.length ? saved.items.ph : phraseItems(n);
     const tasks = mix((L.tasks || []).map(fix), lsn);
     const rec = saved || { items: { mem, rev, lsn }, a: { mem: {}, tasks: {}, rev: {} } }; rec.items.lsn = lsn;
+    if (rec.items.ph !== ph) { rec.items.ph = ph; rec.a.ph = {}; } rec.a.ph = rec.a.ph || {};
     const sigs = tasks.map(sig), was = rec.sigs || sigs, bySig = {};
     for (const [k, v] of Object.entries(rec.a.tasks)) if (was[k] && !bySig[was[k]]) bySig[was[k]] = v;
     rec.a.tasks = {}; sigs.forEach((sg, k) => { if (bySig[sg]) rec.a.tasks[k] = bySig[sg]; }); rec.sigs = sigs;
     const onTry = (g) => (k, v) => { (rec.a[g][k] = rec.a[g][k] || []).push(v); rec.at = new Date().toISOString(); S0().enans = S0().enans || {}; S0().enans[n] = rec; Store.save(); };
     $("#entn").textContent = tasks.length;
     if (!rev.length) { $("#enrevh").remove(); $("#enrev").remove(); }
-    const st = CUR = { n, L, rec, total: mem.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
-    window.__enCur = { mem, tasks, rev };                 // для тестов
+    const st = CUR = { n, L, rec, total: mem.length + ph.length + tasks.length + rev.length, done: 0, first: 0, finished: false };
+    window.__enCur = { mem, ph, tasks, rev };                 // для тестов
     const each = (item, first, ok) => { st.done++; if (first && ok) st.first++; const b = $("#enbar"); if (b) b.style.width = Math.round(st.done / st.total * 100) + "%"; if (st.done >= st.total) finish(st); };
     if (mem.length) AltT.mount($("#enmem"), mem, { onAnswer: each, onTry: onTry("mem"), restore: rec.a.mem, bonus: true });
+    if (ph.length) AltT.mount($("#enphr"), ph, { onAnswer: each, onTry: onTry("ph"), restore: rec.a.ph, bonus: true });
     AltT.mount($("#entasks"), tasks, { onAnswer: each, onTry: onTry("tasks"), restore: rec.a.tasks, bonus: true });
     if (rev.length) AltT.mount($("#enrev"), rev, { onAnswer: each, onTry: onTry("rev"), restore: rec.a.rev, bonus: true });
     if (saved && st.done && !st.finished) toast("Продолжаешь с того места, где остановился ✦");
