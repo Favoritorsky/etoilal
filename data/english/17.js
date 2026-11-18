@@ -6,7 +6,7 @@ EN_C[17] = { n: 17, t: "Контрольная: Present Perfect", s: "уроки
     { k: "choice", q: "I've never … this game.", opts: ["played", "play", "playing"], a: "played", why: "have + 3-я форма" },
     { k: "input", lang: "en", q: "Я ещё не закончил.", a: ["I haven't finished yet.", "I have not finished yet."], why: "yet в конце" },
     { k: "fix", lang: "en", q: "I know her since 2020.", a: ["I've known her since 2020.", "I have known her since 2020."], why: "отрезок до сейчас — have known" },
-    { k: "choice", q: "We've been friends … ten years.", opts: ["for", "since", "ago"], a: "for", why: "сколько — for" },
+    { k: "choice", q: "We've been friends … ten years.", opts: ["for", "since", "фор"], a: "for", why: "сколько — for" },
     { k: "input", lang: "en", q: "Я жду уже час!", a: ["I've been waiting for an hour!", "I have been waiting for an hour!", "I've been waiting for an hour."], why: "have been waiting for" },
     { k: "fix", lang: "en", q: "I have seen him two days ago.", a: ["I saw him two days ago."], why: "ago — Past Simple" },
     { k: "choice", q: "She has gone to Rome. — Значит:", opts: ["Она уехала в Рим и сейчас там.", "Она бывала в Риме."], a: "Она уехала в Рим и сейчас там.", why: "gone — уехал" },

@@ -1,7 +1,7 @@
 window.EN_C = window.EN_C || {};
 EN_C[19] = { n: 19, t: "Раньше: used to", s: "I used to play — раньше было, теперь нет",
-  words: [["used to", "раньше (обычно) …", "юсту"], ["anymore", "больше не", "энимóр"], ["kid", "ребёнок", "кид"], ["hair", "волосы", "хэа"], ["glasses", "очки", "гласиз"], ["scared of", "боится чего-то", "скэд ов"], ["get used to", "привыкнуть", "гет юст ту"], ["be used to", "привык (уже)", "би юст ту"]],
-  sut: "{{used to}} + глагол — «раньше так было, а теперь нет». {{I used to play football.}} — «Раньше я играл в футбол (а теперь нет)». Звучит «юсту».",
+  words: [["used to", "раньше (обычно) …", "юсту"], ["anymore", "больше не", "энимóр"], ["kid", "ребёнок", "кид"], ["hair", "волосы", "хэр"], ["glasses", "очки", "глэ́сиз"], ["scared of", "боится чего-то", "скэрд ов"], ["get used to", "привыкнуть", "гет юст ту"], ["be used to", "привык (уже)", "би юст ту"]],
+  sut: "{{used to}} + глагол — «раньше так было, а теперь нет». {{I used to play soccer.}} — «Раньше я играл в футбол (а теперь нет)». Звучит «юсту».",
   rule: `<table class="tbl"><thead><tr><th></th><th>форма</th><th>пример</th></tr></thead><tbody>
 <tr><td>было раньше</td><td class="fr">used to + глагол</td><td class="fr">I used to live in Minsk.</td></tr>
 <tr><td>не было раньше</td><td class="fr">didn't use to</td><td class="fr">I didn't use to like fish.</td></tr>
@@ -23,7 +23,7 @@ EN_C[19] = { n: 19, t: "Раньше: used to", s: "I used to play — рань�
   lub: `<p>{{would}} тоже бывает «раньше обычно»: {{Every summer we would go to the sea.}} — «Каждое лето мы ездили на море». Так говорят в воспоминаниях, чуть по-книжному.</p>`,
   pins: [{ id: "en19", t: "used to", html: `<table class="tbl"><tbody><tr><td class="fr">I used to play</td><td>раньше играл (теперь нет)</td></tr><tr><td class="fr">didn't use to · Did you use to?</td><td>не / вопрос</td></tr><tr><td class="fr">I'm used to + -ing · get used to</td><td>привык · привыкать</td></tr><tr><td class="fr">not … anymore</td><td>больше не</td></tr></tbody></table>` }],
   tasks: [
-    { k: "input", lang: "en", q: "Раньше я играл в футбол.", a: ["I used to play football."], why: "used to + play" },
+    { k: "input", lang: "en", q: "Раньше я играл в футбол.", a: ["I used to play soccer."], why: "used to + play" },
     { k: "choice", q: "Did you … play this game?", opts: ["use to", "used to", "using to"], a: "use to", why: "после did — use" },
     { k: "fix", lang: "en", q: "I use to live in Minsk when I was a kid.", a: ["I used to live in Minsk when I was a kid."], why: "про прошлое — used" },
     { k: "input", lang: "en", q: "Раньше я боялся темноты.", a: ["I used to be scared of the dark.", "I used to be afraid of the dark."], why: "used to be scared of" },

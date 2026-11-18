@@ -179,7 +179,7 @@ const ENX = (() => {
   function storyPage(args) {
     const id = args[0], St = stories()[id];
     if (!St) { const S = S0();
-      return `<div class="k">🇬🇧 Английский · истории</div><h1 class="page">Истории <i>со звуком</i></h1>
+      return `<div class="k">🇺🇸 Английский · истории</div><h1 class="page">Истории <i>со звуком</i></h1>
         <p class="lead">Слушаешь фразу за фразой: звук, атмосфера, перевод по клику на любое слово. В ключевых местах ты сам решаешь, что делать герою, — и у каждой истории несколько концовок.</p>
         <div class="enstl">${Object.entries(stories()).map(([k, s]) => { const st = S.enSt[k] || {}, ne = Object.keys(st.endings || {}).length, all = endCount(s);
           return `<a class="card enstc" href="#/история/${k}"><span class="enic">${s.ic}</span><div><b>${esc(s.t)}</b><span class="muted">${esc(s.ru)}</span><p>${esc(s.d)}</p>
@@ -224,7 +224,7 @@ const ENX = (() => {
   const cases = () => window.EN_DET || {};
   function detPage(args) {
     const id = args[0], C = cases()[id], S = S0();
-    if (!C) return `<div class="k">🇬🇧 Английский · детектив</div><h1 class="page">Детектив: <i>раскрой дело</i></h1>
+    if (!C) return `<div class="k">🇺🇸 Английский · детектив</div><h1 class="page">Детектив: <i>раскрой дело</i></h1>
       <p class="lead">Слушай вступление, допрашивай подозреваемых в любом порядке, собирай улики в блокнот. Когда поймёшь — назови виновного и объясни по-английски, почему. Понял английский — раскрыл дело.</p>
       <div class="enstl">${Object.entries(cases()).map(([k, c]) => { const r = S.enDet[k] || {};
         return `<a class="card enstc" href="#/детектив/${k}"><span class="enic">${c.ic}</span><div><b>${esc(c.t)}</b><span class="muted">${esc(c.ru)}</span><p>${esc(c.d)}</p>
@@ -309,7 +309,7 @@ const ENX = (() => {
   function earPage(args) {
     const S = S0(), E = S.enEar, src = args[0] || "", d = S.enDay[today()] || {};
     const srcName = { "": "всё вперемешку", lessons: "примеры из уроков", stories: "фразы из историй", det: "фразы из детективов" }[src] || (/^st:/.test(src) ? "фразы из истории «" + ((stories()[src.slice(3)] || {}).t || "") + "»" : /^det:/.test(src) ? "фразы из дела «" + ((cases()[src.slice(4)] || {}).t || "") + "»" : src);
-    return `<div class="k">🇬🇧 Английский · тренажёр слуха</div><h1 class="page">Услышал — <i>напиши</i></h1>
+    return `<div class="k">🇺🇸 Английский · тренажёр слуха</div><h1 class="page">Услышал — <i>напиши</i></h1>
       <p class="lead">Фраза звучит — ты печатаешь её по-английски с нуля. Потом видишь по словам: что расслышал верно, что почти (опечатка, апостроф — засчитывается), а что пропустил. Не расслышанные фразы вернутся позже.</p>
       <div class="seg ensrc">${[["", "Всё"], ["lessons", "Из уроков"], ["stories", "Из историй"], ["det", "Из детективов"]].map(([k, t]) => `<a class="${k === src ? "on" : ""}" href="#/слух${k ? "/" + k : ""}">${t}</a>`).join("")}</div>
       <div class="card enearst"><span>Сегодня: <b>${d.ear || 0}</b> фраз, с первого раза <b>${d.ear ? Math.round((d.earOk || 0) / d.ear * 100) : 0}%</b></span><span>Ждут повторения: <b>${E.miss.length}</b></span><span class="muted">${esc(srcName)}</span></div>
@@ -367,7 +367,7 @@ const ENX = (() => {
     const solved = Object.values(S.enDet).filter((r) => r.solved).length;
     const W = 640, H = 170, bw = W / 14;
     const accPts = days.map((k, i) => [i, acc(k)]).filter(([, v]) => v != null);
-    return `<div class="k">🇬🇧 Английский · прогресс</div><h1 class="page">Что ты <i>уже умеешь</i></h1>
+    return `<div class="k">🇺🇸 Английский · прогресс</div><h1 class="page">Что ты <i>уже умеешь</i></h1>
       <section class="gstats enpst">${[["📖", done.length + "/" + L.length, "уроков пройдено"], ["🔤", words, "слов из уроков"], ["👂", ew ? Math.round(ewo / ew * 100) + "%" : "—", "слов расслышано (всего)"], ["🎯", ear ? Math.round(earOk / ear * 100) + "%" : "—", "фраз с первого раза"], ["🎬", endsGot + "/" + endsAll, "концовок историй"], ["🔎", solved + "/" + Object.keys(cases()).length, "дел раскрыто"], ["🎧", tot("phrases"), "фраз прослушано"], ["🏆", EN.level() ? EN.LV[EN.level() - 1].w : "—", "уровень"]]
         .map(([ic, v, t]) => `<div class="gst"><span class="gi">${ic}</span><div><b>${v}</b><span>${t}</span></div></div>`).join("")}</section>
       <div class="card"><div class="k">Занятия за 14 дней</div>

@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[3] = { n: 3, t: "Прямо сейчас: Present Continuous", s: "I'm working — процесс в эту минуту",
-  words: [["right now", "прямо сейчас", "райт нáу"], ["at the moment", "в данный момент", "эт зэ мóумэнт"], ["wait", "ждать", "уэйт"], ["rain", "дождь; идёт дождь", "рэйн"], ["sleep", "спать", "слип"], ["listen", "слушать", "лисн"], ["look for", "искать", "лук фо"], ["talk", "разговаривать", "ток"]],
+  words: [["right now", "прямо сейчас", "райт нáу"], ["at the moment", "в данный момент", "эт зэ мóумэнт"], ["wait", "ждать", "уэйт"], ["rain", "дождь; идёт дождь", "рэйн"], ["sleep", "спать", "слип"], ["listen", "слушать", "лисн"], ["look for", "искать", "лук фор"], ["talk", "разговаривать", "ток"]],
   sut: "То, что происходит <b>прямо сейчас</b>, в процессе: {{I'm playing.}} — «я (есть) играющий». Это am/is/are из урока 1 + глагол с <b>-ing</b>.",
   rule: `<table class="tbl"><thead><tr><th></th><th>сейчас</th></tr></thead><tbody>
 <tr><td>я</td><td class="fr">I'm waiting</td></tr><tr><td>он, она</td><td class="fr">she's sleeping</td></tr><tr><td>мы, они</td><td class="fr">they're talking</td></tr>
@@ -25,7 +25,7 @@ EN_C[3] = { n: 3, t: "Прямо сейчас: Present Continuous", s: "I'm work
     { k: "choice", q: "Тише! Малыш спит. — Be quiet! The baby …", opts: ["is sleeping", "sleeps", "sleeping"], a: "is sleeping", why: "сейчас — is + -ing" },
     { k: "input", lang: "en", q: "Что ты делаешь (сейчас)?", a: ["What are you doing?"], why: "What are you doing?" },
     { k: "input", lang: "en", q: "Идёт дождь.", a: ["It's raining.", "It is raining."], why: "про погоду — it's raining" },
-    { k: "choice", q: "I … football every Saturday.", opts: ["play", "am playing", "playing"], a: "play", why: "каждую субботу — обычно, Present Simple" },
+    { k: "choice", q: "I … soccer every Saturday.", opts: ["play", "am playing", "playing"], a: "play", why: "каждую субботу — обычно, Present Simple" },
     { k: "fix", lang: "en", q: "I waiting for the bus.", a: ["I'm waiting for the bus.", "I am waiting for the bus."], why: "пропущено am" },
     { k: "choice", q: "Как правильно?", opts: ["I'm knowing the answer.", "I know the answer."], a: "I know the answer.", why: "know — без -ing" },
     { k: "input", lang: "en", q: "Я жду автобус.", a: ["I'm waiting for the bus.", "I am waiting for the bus."], why: "wait for — ждать кого-то" },

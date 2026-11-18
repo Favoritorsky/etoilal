@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[7] = { n: 7, t: "Сравнение: bigger, more interesting", s: "-er, more, the most, as … as",
-  words: [["cheap", "дешёвый", "чип"], ["expensive", "дорогой", "икспэ́нсив"], ["easy", "лёгкий (простой)", "и́зи"], ["difficult", "трудный", "дúфикэлт"], ["fast", "быстрый", "фаст"], ["slow", "медленный", "слоу"], ["than", "чем", "зэн"], ["better / worse", "лучше / хуже", "бэ́тэ / уёрс"]],
+  words: [["cheap", "дешёвый", "чип"], ["expensive", "дорогой", "икспэ́нсив"], ["easy", "лёгкий (простой)", "и́зи"], ["difficult", "трудный", "дúфикэлт"], ["fast", "быстрый", "фэст"], ["slow", "медленный", "слоу"], ["than", "чем", "зэн"], ["better / worse", "лучше / хуже", "бэ́дэр / уёрс"]],
   sut: "Короткие слова получают <b>-er</b> и <b>the -est</b>: {{fast}} → {{faster}} → {{the fastest}}. Длинные — <b>more</b> и <b>the most</b>: {{more interesting}}, {{the most interesting}}. «Чем» — {{than}}.",
   rule: `<table class="tbl"><thead><tr><th>слово</th><th>больше</th><th>самый</th></tr></thead><tbody>
 <tr><td>короткое: fast, cheap, big</td><td class="fr">faster · cheaper · bigger</td><td class="fr">the fastest · the biggest</td></tr>
@@ -13,10 +13,10 @@ EN_C[7] = { n: 7, t: "Сравнение: bigger, more interesting", s: "-er, mo
 > This game is more difficult than that one. :: Эта игра сложнее той.
 > It's the best day of my life! :: Это лучший день в моей жизни!
 > English is easier than French. :: Английский легче французского. — easy → easier
-> This is the most expensive phone in the shop. :: Это самый дорогой телефон в магазине.
+> This is the most expensive phone in the store. :: Это самый дорогой телефон в магазине.
 > The new version is worse. :: Новая версия хуже.
 > He's as tall as his father. :: Он такой же высокий, как его отец.
-> The bus isn't as fast as the metro. :: Автобус не такой быстрый, как метро.
+> The bus isn't as fast as the subway. :: Автобус не такой быстрый, как метро.
 @@pin:en7@@
 <h3>Частые ошибки</h3>
 <p>• «more fast» — короткое слово: {{faster}}. • «more better» — better уже значит «более хороший». • «than me» и «than I am» — оба нормальные: {{He's taller than me.}} • big → {{bigger}}: короткое слово на «гласная + согласная» удваивает букву (как в running).</p>`,
@@ -32,5 +32,5 @@ EN_C[7] = { n: 7, t: "Сравнение: bigger, more interesting", s: "-er, mo
     { k: "input", lang: "en", q: "Он такой же высокий, как его отец.", a: ["He's as tall as his father.", "He is as tall as his father."], why: "as … as" },
     { k: "listen", say: "The new version is worse.", q: "Что прозвучало?", opts: ["Новая версия хуже.", "Новая версия лучше.", "Новая версия дороже."], a: "Новая версия хуже.", why: "worse — хуже" },
     { k: "fix", lang: "en", q: "She is more better than me.", a: ["She is better than me.", "She's better than me."], why: "better — без more" },
-    { k: "input", lang: "en", q: "Автобус не такой быстрый, как метро.", a: ["The bus isn't as fast as the metro.", "The bus is not as fast as the metro."], why: "not as … as" },
+    { k: "input", lang: "en", q: "Автобус не такой быстрый, как метро.", a: ["The bus isn't as fast as the subway.", "The bus is not as fast as the subway."], why: "not as … as" },
   ] };

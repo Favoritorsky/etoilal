@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[13] = { n: 13, t: "Опыт: Have you ever…?", s: "have been, have seen — было ли в жизни",
-  words: [["ever", "когда-нибудь (в жизни)", "э́вэ"], ["been", "был, бывал (be)", "бин"], ["seen", "видел (see)", "син"], ["done", "сделал (do)", "дан"], ["eaten", "ел (eat)", "итн"], ["tried", "пробовал (try)", "трайд"], ["once / twice", "один раз / два раза", "уанс / туайс"], ["abroad", "за границей", "эбрóд"]],
+  words: [["ever", "когда-нибудь (в жизни)", "э́вэр"], ["been", "был, бывал (be)", "бин"], ["seen", "видел (see)", "син"], ["done", "сделал (do)", "дан"], ["eaten", "ел (eat)", "итн"], ["tried", "пробовал (try)", "трайд"], ["once / twice", "один раз / два раза", "уанс / туайс"], ["abroad", "за границей", "эбрóд"]],
   sut: "Present Perfect — «есть в моём опыте». {{I have been to London.}} — «Я бывал в Лондоне» (когда — неважно). Строится так: {{have}} / {{has}} + <b>третья форма</b> глагола: {{seen}}, {{been}}, {{done}}.",
   rule: `<table class="tbl"><thead><tr><th></th><th>I / you / we / they</th><th>he / she / it</th></tr></thead><tbody>
 <tr><td>да</td><td class="fr">I've seen it.</td><td class="fr">She's seen it.</td></tr>
@@ -16,7 +16,7 @@ EN_C[13] = { n: 13, t: "Опыт: Have you ever…?", s: "have been, have seen �
 > We've never been abroad. :: Мы никогда не были за границей.
 > He's done it before. :: Он уже делал это раньше.
 > I haven't eaten anything today. :: Я сегодня ничего не ел. — «сегодня» ещё не кончилось
-> It's the best film I've ever seen. :: Это лучший фильм, который я когда-либо видел.
+> It's the best movie I've ever seen. :: Это лучший фильм, который я когда-либо видел.
 @@pin:en13@@
 <h3>been или gone?</h3>
 <p>{{He has been to Paris.}} — он бывал в Париже (и вернулся). {{He has gone to Paris.}} — он уехал в Париж (и сейчас там).</p>
@@ -34,6 +34,6 @@ EN_C[13] = { n: 13, t: "Опыт: Have you ever…?", s: "have been, have seen �
     { k: "choice", q: "eat → третья форма:", opts: ["ate", "eaten", "eated"], a: "eaten", why: "eat — ate — eaten" },
     { k: "listen", say: "She's tried sushi twice.", q: "Что прозвучало?", opts: ["Она пробовала суши два раза.", "Она никогда не пробовала суши.", "Она ест суши сейчас."], a: "Она пробовала суши два раза.", why: "twice — два раза" },
     { k: "input", lang: "en", q: "Ты когда-нибудь играл в эту игру?", a: ["Have you ever played this game?"], why: "Have you ever played" },
-    { k: "fix", lang: "en", q: "I have saw this film.", a: ["I have seen this film.", "I've seen this film."], why: "see — saw — seen" },
-    { k: "input", lang: "en", q: "Это лучший фильм, который я когда-либо видел.", a: ["It's the best film I've ever seen.", "This is the best film I've ever seen.", "It's the best film I have ever seen.", "This is the best film I have ever seen.", "It's the best movie I've ever seen."], why: "the best … I've ever seen" },
+    { k: "fix", lang: "en", q: "I have saw this movie.", a: ["I have seen this movie.", "I've seen this movie."], why: "see — saw — seen" },
+    { k: "input", lang: "en", q: "Это лучший фильм, который я когда-либо видел.", a: ["It's the best movie I've ever seen.", "This is the best movie I've ever seen.", "It's the best movie I have ever seen.", "This is the best movie I have ever seen.", "It's the best movie I've ever seen."], why: "the best … I've ever seen" },
   ] };

@@ -4,14 +4,14 @@
 window.EN_ST = window.EN_ST || {};
 EN_ST.train = { t: "The Last Train", ru: "Последний поезд", ic: "🚇", lv: "A2", min: 15,
   d: "Павел засыпает в последнем поезде метро и просыпается на станции «Заря», которой нет на карте. Три концовки.",
-  v: { N: "am_michael", P: "am_fenrir", W: "bf_emma", A: "af_sarah" }, start: "s1",
+  v: { N: "am_michael", P: "am_fenrir", W: "af_nova", A: "af_sarah" }, start: "s1",
   gl: { tired: "уставший", waited: "ждал", came: "пришёл", car: "вагон", empty: "пустой", sat: "сел (sit)", closed: "закрыл; закрылся", eyes: "глаза", fell: "упал; fell asleep — заснул", asleep: "спящий; fall asleep — заснуть",
     opened: "открыл; открылся", standing: "стоял", strange: "странный", lamps: "лампы", lamp: "лампа", yellow: "жёлтый", screens: "экраны", screen: "экран", name: "название, имя", called: "называется; позвонил", line: "линия (метро)",
     heard: "услышал (hear)", steps: "шаги", dark: "темнота; тёмный", wore: "был одет в (wear)", uniform: "форма", evening: "вечер", young: "молодой", ticket: "билет", tickets: "билеты", card: "карта", paper: "бумажный; бумага", newspaper: "газета", date: "дата",
     april: "апрель", twelfth: "двенадцатый", nineteen: "девятнадцать", sixty: "шестьдесят", five: "пять", question: "вопрос", course: "of course — конечно", pale: "бледный", answer: "ответить; ответ", ran: "побежал (run)", started: "начал", move: "двигаться",
     faster: "быстрее", lights: "свет, лампы", final: "конечный", station: "станция", leave: "покинуть, выйти", usual: "обычный", security: "охрана", guard: "охранник; дежурный", normal: "обычный, нормальный", dream: "сон, мечта", stupid: "дурацкий, глупый",
     laughed: "засмеялся", hands: "руки", pockets: "карманы", pocket: "карман", stopped: "перестал, остановился", laughing: "смеяться", metro: "метро", cost: "стоил", kopecks: "копейки", felt: "почувствовал (feel)", cold: "холодный; холод", wrong: "не так, неправильный",
-    newest: "самый новый", city: "город", week: "неделя", thinking: "думать", table: "стол", internet: "интернет", throw: "бросить, выбросить", forget: "забыть", bin: "мусорка", weeks: "недели", busy: "занятой", forgot: "забыл", between: "между", tunnel: "тоннель",
+    newest: "самый новый", city: "город", week: "неделя", thinking: "думать", table: "стол", internet: "интернет", throw: "бросить, выбросить", forget: "забыть", trash: "мусорка", weeks: "недели", busy: "занятой", forgot: "забыл", between: "между", tunnel: "тоннель",
     second: "секунда", gone: "исчез, ушёл", doors: "двери", once: "однажды; один раз", computer: "компьютер", typed: "напечатал", first: "сначала; первый", website: "сайт", text: "текст", knows: "знает", photo: "фото", workers: "работники", middle: "середина",
     machine: "автомат, турникет", quiet: "тихий", blink: "мигать", walls: "стены", green: "зелёный", nobody: "никто", said: "сказал", left: "ушёл, уехал (leave)", job: "работа", ago: "назад", different: "другой", gets: "gets off — выходит",
     world: "мир", thing: "вещь, дело", let: "позволить; don't let — не дай", rest: "отдохнуть, обрести покой", smiled: "улыбнулся", gave: "дал (give)", metal: "металлический", badge: "значок", word: "слово", wait: "ждать", window: "окно", waved: "помахал рукой",
@@ -104,7 +104,7 @@ EN_ST.train = { t: "The Last Train", ru: "Последний поезд", ic: "�
       ["?", "What does Pavel do?", "Что делает Павел?", [["Look for Zarya on the internet.", "Поискать «Зарю» в интернете.", "web"], ["Throw the ticket away and forget.", "Выбросить билет и забыть.", "throw"]]]],
     throw: [
       ["P", "It was just a dream. I don't want to think about it.", "Это был просто сон. Не хочу об этом думать."],
-      ["N", "He put the ticket in the bin.", "Он выбросил билет в мусорку.", 1],
+      ["N", "He put the ticket in the trash.", "Он выбросил билет в мусорку.", 1],
       ["N", "Weeks went by. He was busy. He forgot.", "Прошли недели. Он был занят. Он забыл.", 1],
       ["amb", "train"], ["gap", 1],
       ["N", "One night, he took the last train again.", "Однажды ночью он снова ехал на последнем поезде."],
@@ -226,7 +226,7 @@ EN_ST.train = { t: "The Last Train", ru: "Последний поезд", ic: "�
   } };
 EN_ST.sand = { t: "Red Sand", ru: "Красный песок", ic: "🪐", lv: "A2", min: 12,
   d: "Корабль Лины разбился на чужой планете. Кислорода — на шесть часов, вокруг красный песок, а ночью кто-то стучит в стену. Три концовки.",
-  v: { N: "af_heart", L: "af_bella", M: "bm_george", K: "am_puck", A: "af_sarah" }, start: "s1",
+  v: { N: "af_heart", L: "af_bella", M: "am_adam", K: "am_puck", A: "af_sarah" }, start: "s1",
   gl: { ship: "корабль", hit: "ударился", ground: "земля", hard: "сильно", quiet: "тихо", head: "голова", hurt: "болела", blinking: "мигающий", everywhere: "везде", computer: "компьютер", news: "новости", engine: "двигатель", broken: "сломан", oxygen: "кислород",
     hours: "часы", alive: "живой", planet: "планета", water: "вода", somewhere: "где-то", space: "космос", suit: "костюм; space suit — скафандр", outside: "снаружи", sky: "небо", purple: "фиолетовый", sand: "песок", suns: "солнца", hot: "жаркий",
     scanner: "сканер", kilometres: "километры", north: "север", rocks: "скалы, камни", radio: "радио, рация", repair: "чинить", part: "деталь", worked: "работала", message: "сообщение", help: "помощь", noise: "шум", left: "осталось",
@@ -365,7 +365,7 @@ EN_ST.sand = { t: "Red Sand", ru: "Красный песок", ic: "🪐", lv: "
   } };
 EN_ST.glitch = { t: "Glitch", ru: "Глюк", ic: "👾", lv: "A2 → B1", min: 12,
   d: "Три часа ночи. Ты делаешь свою игру — и персонаж вдруг спрашивает: «Почему я умираю каждый раз?» Три концовки.",
-  v: { N: "bm_fable", D: "am_michael", G: "af_nicole" }, start: "s1",
+  v: { N: "am_eric", D: "am_michael", G: "af_nicole" }, start: "s1",
   gl: { night: "ночь", making: "делал", game: "игра", small: "маленький", knight: "рыцарь", jump: "прыгать", lava: "лава", level: "уровень", levels: "уровни", tested: "тестировал", times: "раз", died: "умер", die: "умирать", bug: "баг, ошибка", screen: "экран",
     text: "текст", appeared: "появился", wrote: "написал", code: "код", nobody: "никто", hurts: "больно", every: "каждый", time: "раз; время", delete: "удалить", deleted: "удалил", talk: "поговорить", alive: "живой", maybe: "может быть", file: "файл", desktop: "рабочий стол",
     goodbye: "прощай", asked: "спросить", world: "мир", better: "лучше", without: "без", trees: "деревья", river: "река", design: "придумывать, проектировать", together: "вместе", players: "игроки", thousands: "тысячи", downloaded: "скачали", review: "отзыв",

@@ -1,10 +1,10 @@
 window.EN_C = window.EN_C || {};
 EN_C[10] = { n: 10, t: "Где и когда: in, on, at", s: "три маленьких слова, которые путают все",
-  words: [["weekend", "выходные", "уи́кэнд"], ["morning", "утро", "мóнинг"], ["evening", "вечер", "и́внинг"], ["corner", "угол", "кóнэ"], ["floor", "этаж; пол", "фло"], ["station", "станция, вокзал", "стэ́йшн"], ["birthday", "день рождения", "бёсдэй"], ["midnight", "полночь", "мúднайт"]],
+  words: [["weekend", "выходные", "уи́кэнд"], ["morning", "утро", "мóрнинг"], ["evening", "вечер", "и́внинг"], ["corner", "угол", "кóрнэр"], ["floor", "этаж; пол", "флор"], ["station", "станция, вокзал", "стэ́йшн"], ["birthday", "день рождения", "бёрсдэй"], ["midnight", "полночь", "мúднайт"]],
   sut: "Представь три размера. {{at}} — точка: {{at 6 o'clock}}, {{at the station}}. {{on}} — поверхность, день: {{on the table}}, {{on Monday}}. {{in}} — внутри, большой кусок: {{in the room}}, {{in June}}, {{in 2026}}.",
   rule: `<table class="tbl"><thead><tr><th></th><th>когда</th><th>где</th></tr></thead><tbody>
-<tr><td class="fr">at — точка</td><td class="fr">at 7 o'clock · at night · at the weekend</td><td class="fr">at the station · at home · at school</td></tr>
-<tr><td class="fr">on — день, поверхность</td><td class="fr">on Monday · on my birthday · on 5 May</td><td class="fr">on the table · on the wall · on the second floor</td></tr>
+<tr><td class="fr">at — точка</td><td class="fr">at 7 o'clock · at night · at noon</td><td class="fr">at the station · at home · at school</td></tr>
+<tr><td class="fr">on — день, поверхность</td><td class="fr">on Monday · on my birthday · on May 5 · on the weekend</td><td class="fr">on the table · on the wall · on the second floor</td></tr>
 <tr><td class="fr">in — внутри, долго</td><td class="fr">in the morning · in June · in 2026 · in summer</td><td class="fr">in the room · in London · in the car</td></tr></tbody></table>`,
   prosto: `<p>Время: чем короче отрезок, тем «меньше» слово. Час — at, день — on, месяц/год/часть дня — in.</p>
 > See you at six. :: Увидимся в шесть.

@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[15] = { n: 15, t: "Как долго: for и since", s: "I've lived here for two years",
-  words: [["for", "в течение (сколько)", "фо"], ["since", "с (какого момента)", "синс"], ["known", "знал (know)", "нóун"], ["had", "имел (have)", "хэд"], ["studied", "учил (study)", "стáдид"], ["worked", "работал (work)", "уёркт"], ["ages", "целую вечность", "э́йджиз"], ["childhood", "детство", "чáйлдхуд"]],
+  words: [["for", "в течение (сколько)", "фор"], ["since", "с (какого момента)", "синс"], ["known", "знал (know)", "нóун"], ["had", "имел (have)", "хэд"], ["studied", "учил (study)", "стáдид"], ["worked", "работал (work)", "уёркт"], ["ages", "целую вечность", "э́йджиз"], ["childhood", "детство", "чáйлдхуд"]],
   sut: "Русский говорит «Я живу здесь два года» — в настоящем. Английский — «Я <b>прожил</b> здесь два года (и живу)»: {{I've lived here for two years.}} {{for}} — сколько длится, {{since}} — с какого момента.",
   rule: `<table class="tbl"><thead><tr><th></th><th>for — сколько</th><th>since — с какого момента</th></tr></thead><tbody>
 <tr><td>примеры</td><td class="fr">for two years · for a week · for ages</td><td class="fr">since 2020 · since Monday · since I was ten</td></tr>

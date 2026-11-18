@@ -40,7 +40,7 @@ const ENP = (() => {
       : { k: "listen", say: w, q: "Что значит прозвучавшее слово?", opts: sh([m, ...sh(older.flatMap((L) => EN.wordsOf(L.n).map((x) => x[1])).filter((x) => x !== m)).slice(0, 2)]), a: m, lang: "x", why: `${w} — ${m}` });
     const items = [...mem, ...tasks, ...dict, ...rev];
     $("#entr").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a><span class="muted">после урока ${EN.num(T.id)}</span></div>
-      <div class="k">🇬🇧 Тренировка</div><h1 class="page">${esc(T.t)}</h1><p class="lead">Повторяем два прошлых урока: слова, задания вперемешку и диктант — услышал, напиши. Новых правил нет.</p>
+      <div class="k">🇺🇸 Тренировка</div><h1 class="page">${esc(T.t)}</h1><p class="lead">Повторяем два прошлых урока: слова, задания вперемешку и диктант — услышал, напиши. Новых правил нет.</p>
       <div class="c2prog"><i id="entbar"></i></div><div class="alt-qs" id="entq"></div><div id="entend"></div>`;
     window.__enCur = { items };
     let done = 0, first = 0;

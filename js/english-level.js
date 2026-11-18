@@ -76,7 +76,7 @@ const ENL = (() => {
         <span class="enlvbtn">${wNeed ? `<a class="btn gold sm" href="#/уровень/слова/${k + 1}">Проверить слова ▶</a>` : ""}${pNeed ? `<a class="btn gold sm" href="#/уровень/фразы/${k + 1}">Проверить фразы ▶</a>` : ""}<a class="btn${r ? "" : " gold"} sm" href="#/уровень/${k + 1}">${r ? "Тест ещё раз" : "Проверить"}</a>${r && r.v === "know" ? "" : `<button class="btn sm" onclick="__enlSkip(${k})" title="Засчитать раздел без теста — незнакомые слова и фразы переедут в следующий раздел">⏭ Пропустить</button>`}</span></div>`; }).join("");
     const ex = Object.entries(S.enExtra).filter(([, W]) => W.length), exP = Object.entries(S.enExtraP).filter(([, W]) => W.length);
     return `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a></div>
-      <div class="k">🇬🇧 Тест на уровень</div><h1 class="page">Что ты <i>уже знаешь</i></h1>
+      <div class="k">🇺🇸 Тест на уровень</div><h1 class="page">Что ты <i>уже знаешь</i></h1>
       <p class="lead">У каждого раздела курса — свой короткий тест: по два задания из каждого урока, 8–10 заданий, 3–5 минут. Вторых попыток нет, разбор — сразу.</p>
       <div class="card enlvhow"><div>✅ <b>${KNOW}% и выше</b> — раздел засчитан: уроки откроются со следующего раздела. Потом быстрая проверка слов раздела.</div>
         <div>🟡 <b>${MID}–${KNOW - 1}%</b> и 🔴 <b>ниже ${MID}%</b> — раздел остаётся: там есть что подтянуть.</div>

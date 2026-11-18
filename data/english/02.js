@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[2] = { n: 2, t: "Обычно: Present Simple", s: "I work, he works; do и does в вопросах",
-  words: [["usually", "обычно", "ю́жуэли"], ["often", "часто", "óфн"], ["sometimes", "иногда", "сáмтаймз"], ["never", "никогда", "нéвэ"], ["every day", "каждый день", "э́ври дэй"], ["watch", "смотреть (видео, фильм)", "уоч"], ["live", "жить", "лив"], ["need", "нуждаться, нужно", "нид"]],
+  words: [["usually", "обычно", "ю́жуэли"], ["often", "часто", "óфн"], ["sometimes", "иногда", "сáмтаймз"], ["never", "никогда", "нэ́вэр"], ["every day", "каждый день", "э́ври дэй"], ["watch", "смотреть (видео, фильм)", "уач"], ["live", "жить", "лив"], ["need", "нуждаться, нужно", "нид"]],
   sut: "То, что бывает обычно, всегда, каждый день: {{I play games every day.}} С he, she, it к глаголу добавляется <b>-s</b>: {{He plays.}} А в вопросах и с «не» появляется помощник — {{do}} или {{does}}.",
   rule: `<table class="tbl"><thead><tr><th></th><th>I / you / we / they</th><th>he / she / it</th></tr></thead><tbody>
 <tr><td>обычно</td><td class="fr">I work</td><td class="fr">he works</td></tr>
@@ -10,7 +10,7 @@ EN_C[2] = { n: 2, t: "Обычно: Present Simple", s: "I work, he works; do и
   prosto: `<p>Русский говорит «я играю» и про сейчас, и про «вообще». В английском это разные вещи. «Вообще, обычно» — это Present Simple:</p>
 > I play games every day. :: Я играю в игры каждый день.
 > She lives in London. :: Она живёт в Лондоне. — lives: she → +s
-> We often watch films. :: Мы часто смотрим фильмы.
+> We often watch movies. :: Мы часто смотрим фильмы.
 > He never eats breakfast. :: Он никогда не завтракает.
 > I don't like coffee. :: Я не люблю кофе.
 > She doesn't need help. :: Ей не нужна помощь.
@@ -30,9 +30,9 @@ EN_C[2] = { n: 2, t: "Обычно: Present Simple", s: "I work, he works; do и
     { k: "choice", q: "… she like music?", opts: ["Do", "Does", "Is"], a: "Does", why: "she → does" },
     { k: "fix", lang: "en", q: "Does he likes pizza?", a: ["Does he like pizza?"], why: "после does — без -s" },
     { k: "input", lang: "en", q: "Я не люблю кофе.", a: ["I don't like coffee.", "I do not like coffee."], why: "не — don't" },
-    { k: "choice", q: "Куда поставить often? «I … play football.»", opts: ["I often play football.", "I play often football.", "Often I play football often."], a: "I often play football.", why: "often — перед глаголом" },
+    { k: "choice", q: "Куда поставить often? «I … play soccer.»", opts: ["I often play soccer.", "I play often soccer.", "Often I play soccer often."], a: "I often play soccer.", why: "often — перед глаголом" },
     { k: "input", lang: "en", q: "Ей не нужна помощь.", a: ["She doesn't need help.", "She does not need help."], why: "she → doesn't + need" },
-    { k: "listen", say: "We often watch films.", q: "Что прозвучало?", opts: ["Мы часто смотрим фильмы.", "Мы никогда не смотрим фильмы.", "Мы смотрим фильм сейчас."], a: "Мы часто смотрим фильмы.", why: "often — часто" },
+    { k: "listen", say: "We often watch movies.", q: "Что прозвучало?", opts: ["Мы часто смотрим фильмы.", "Мы никогда не смотрим фильмы.", "Мы смотрим фильм сейчас."], a: "Мы часто смотрим фильмы.", why: "often — часто" },
     { k: "input", lang: "en", q: "Ты здесь живёшь?", a: ["Do you live here?"], why: "вопрос — Do you…?" },
     { k: "fix", lang: "en", q: "He never eat breakfast.", a: ["He never eats breakfast."], why: "he → eats" },
     { k: "choice", q: "What does he do?", opts: ["Чем он занимается?", "Что он делает прямо сейчас?", "Что он сделал?"], a: "Чем он занимается?", why: "Present Simple — «вообще»" },

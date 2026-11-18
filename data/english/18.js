@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[18] = { n: 18, t: "Был в процессе: Past Continuous", s: "I was sleeping when the phone rang",
-  words: [["while", "пока, в то время как", "уайл"], ["suddenly", "вдруг", "сáднли"], ["rang", "зазвонил (ring)", "рэнг"], ["fell", "упал (fall)", "фэл"], ["noise", "шум", "нойз"], ["shower", "душ", "шáуэ"], ["walk", "идти пешком, гулять", "уок"], ["crash", "авария; разбиться, «вылететь»", "крэш"]],
+  words: [["while", "пока, в то время как", "уайл"], ["suddenly", "вдруг", "сáднли"], ["rang", "зазвонил (ring)", "рэнг"], ["fell", "упал (fall)", "фэл"], ["noise", "шум", "нойз"], ["shower", "душ", "шáуэр"], ["walk", "идти пешком, гулять", "уок"], ["crash", "авария; разбиться, «вылететь»", "крэш"]],
   sut: "{{was}} / {{were}} + <b>-ing</b> — «был в процессе» в какой-то момент прошлого. Чаще всего — фон для события: {{I was sleeping when the phone rang.}} — «Я спал (процесс), когда зазвонил телефон (событие)».",
   rule: `<table class="tbl"><thead><tr><th></th><th>процесс (фон)</th><th>событие</th></tr></thead><tbody>
 <tr><td>форма</td><td class="fr">was / were + -ing</td><td class="fr">Past Simple</td></tr>
@@ -26,7 +26,7 @@ EN_C[18] = { n: 18, t: "Был в процессе: Past Continuous", s: "I was 
   tasks: [
     { k: "choice", q: "I … when the phone rang.", opts: ["was sleeping", "slept", "sleeping"], a: "was sleeping", why: "фон — was + -ing" },
     { k: "input", lang: "en", q: "Игра вылетела, пока я сохранялся.", a: ["The game crashed while I was saving.", "The game crashed when I was saving."], why: "событие crashed + фон was saving" },
-    { k: "fix", lang: "en", q: "They was playing football.", a: ["They were playing football."], why: "they → were" },
+    { k: "fix", lang: "en", q: "They was playing soccer.", a: ["They were playing soccer."], why: "they → were" },
     { k: "input", lang: "en", q: "Что ты делал вчера в девять вечера?", a: ["What were you doing at nine last night?", "What were you doing at 9 last night?", "What were you doing yesterday at nine?", "What were you doing at nine yesterday evening?"], why: "в процессе в момент — were doing" },
     { k: "choice", q: "Suddenly the lights … out.", opts: ["went", "were going", "go"], a: "went", why: "событие — Past Simple" },
     { k: "input", lang: "en", q: "Весь день шёл дождь.", a: ["It was raining all day."], why: "was raining" },

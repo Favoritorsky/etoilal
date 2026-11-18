@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[24] = { n: 24, t: "Если бы: if + would", s: "If I had money, I would buy it",
-  words: [["would", "бы", "вуд"], ["rich", "богатый", "рич"], ["famous", "знаменитый", "фэ́ймэс"], ["superpower", "суперсила", "сýпэпауэ"], ["invisible", "невидимый", "инвúзэбл"], ["island", "остров", "áйлэнд"], ["were", "был бы (if I were)", "уё"], ["in your place", "на твоём месте", "ин ё плэйс"]],
+  words: [["would", "бы", "вуд"], ["rich", "богатый", "рич"], ["famous", "знаменитый", "фэ́ймэс"], ["superpower", "суперсила", "сýпэрпауэр"], ["invisible", "невидимый", "инвúзэбл"], ["island", "остров", "áйлэнд"], ["were", "был бы (if I were)", "уёр"], ["in your place", "на твоём месте", "ин ёр плэйс"]],
   sut: "Нереальное или маловероятное: «если бы…, то бы…». После {{if}} — <b>прошедшее</b> (had, knew, were), во второй половине — {{would}} + глагол. {{If I had a million, I would buy an island.}}",
   rule: `<table class="tbl"><thead><tr><th>если бы (прошедшее)</th><th>то бы (would)</th></tr></thead><tbody>
 <tr><td class="fr">If I had more time,</td><td class="fr">I would learn Japanese.</td></tr>

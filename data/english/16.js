@@ -1,18 +1,18 @@
 window.EN_C = window.EN_C || {};
 EN_C[16] = { n: 16, t: "Present Perfect или Past Simple?", s: "есть результат сейчас — или просто было вчера",
-  words: [["when", "когда", "уэн"], ["last year", "в прошлом году", "ласт йиэ"], ["this year", "в этом году", "зис йиэ"], ["recently", "недавно", "рúсэнтли"], ["lately", "в последнее время", "лэ́йтли"], ["moved", "переехал (move)", "мувд"], ["written", "написал (write)", "ритн"], ["met", "встретил (meet)", "мэт"]],
+  words: [["when", "когда", "уэн"], ["last year", "в прошлом году", "лэст йир"], ["this year", "в этом году", "зис йир"], ["recently", "недавно", "рúсэнтли"], ["lately", "в последнее время", "лэ́йтли"], ["moved", "переехал (move)", "мувд"], ["written", "написал (write)", "ритн"], ["met", "встретил (meet)", "мэт"]],
   sut: "Главное правило: если сказано <b>когда</b> (вчера, в 2020, неделю назад, when?) — Past Simple. Если «когда» нет, а важен опыт или результат сейчас — Present Perfect.",
   rule: `<table class="tbl"><thead><tr><th>Present Perfect</th><th>Past Simple</th></tr></thead><tbody>
 <tr><td>время не названо, важно сейчас</td><td>названо, когда (закончилось)</td></tr>
 <tr><td class="fr">I've lost my keys.</td><td class="fr">I lost my keys yesterday.</td></tr>
-<tr><td class="fr">Have you seen this film?</td><td class="fr">When did you see it?</td></tr>
+<tr><td class="fr">Have you seen this movie?</td><td class="fr">When did you see it?</td></tr>
 <tr><td class="fr">ever, never, just, already, yet, for, since, recently, this year, today</td><td class="fr">yesterday, ago, last week, in 2020, when?</td></tr></tbody></table>`,
   prosto: `<p>Живой разговор часто начинается с Present Perfect, а потом переходит в Past Simple — когда появляются подробности:</p>
 > Have you ever been to London? :: Ты бывал в Лондоне?
 > Yes, I have. I went there last year. :: Да. Я ездил туда в прошлом году. — появилось «когда» — Past Simple
 > I've met a very nice girl. :: Я познакомился с очень классной девушкой.
 > Where did you meet her? :: Где ты с ней познакомился? — подробности — Past Simple
-> We've moved to a new flat. :: Мы переехали в новую квартиру.
+> We've moved to a new apartment. :: Мы переехали в новую квартиру.
 > We moved two months ago. :: Мы переехали два месяца назад.
 > Have you written to him recently? :: Ты писал ему в последнее время?
 > I haven't played much this year. :: В этом году я мало играл. — год ещё идёт
@@ -28,7 +28,7 @@ EN_C[16] = { n: 16, t: "Present Perfect или Past Simple?", s: "есть ре�
     { k: "choice", q: "… you ever … to London?", opts: ["Have … been", "Did … go", "Are … been"], a: "Have … been", why: "ever — Present Perfect" },
     { k: "fix", lang: "en", q: "When have you arrived?", a: ["When did you arrive?"], why: "when — Past Simple" },
     { k: "input", lang: "en", q: "Мы переехали два месяца назад.", a: ["We moved two months ago."], why: "ago — Past Simple" },
-    { k: "input", lang: "en", q: "Мы переехали в новую квартиру (результат сейчас).", a: ["We've moved to a new flat.", "We have moved to a new flat.", "We've moved to a new apartment.", "We have moved to a new apartment."], why: "без «когда» — Present Perfect" },
+    { k: "input", lang: "en", q: "Мы переехали в новую квартиру (результат сейчас).", a: ["We've moved to a new apartment.", "We have moved to a new apartment.", "We've moved to a new apartment.", "We have moved to a new apartment."], why: "без «когда» — Present Perfect" },
     { k: "fix", lang: "en", q: "I have lost my keys yesterday.", a: ["I lost my keys yesterday."], why: "yesterday — Past" },
     { k: "choice", q: "I … much this year.", opts: ["haven't played", "didn't play"], a: "haven't played", why: "this year — год ещё идёт" },
     { k: "listen", say: "Where did you meet her?", q: "Что прозвучало?", opts: ["Где ты с ней познакомился?", "Ты с ней познакомился?", "Когда ты с ней встретишься?"], a: "Где ты с ней познакомился?", why: "where did — где (в прошлом)" },

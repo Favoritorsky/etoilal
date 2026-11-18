@@ -20,17 +20,17 @@ EN_C[14] = { n: 14, t: "Уже, только что, ещё нет", s: "already
 <p>Новости почти всегда начинают с Present Perfect: {{A new game has come out!}} — «Вышла новая игра!» А подробности — уже в Past Simple: {{It came out yesterday.}}</p>
 <h3>Частые ошибки</h3>
 <p>• «I already have finished» → {{I've already finished.}} • «I didn't finish yet» → {{I haven't finished yet.}} • «Have you finished already?» — можно, но звучит удивлённо: «Ты что, уже?!»</p>`,
-  lub: `<p>В американском английском часто говорят {{Did you eat yet?}} вместо {{Have you eaten yet?}} — так проще. В британском так звучит неправильно. Ты будешь слышать оба варианта.</p>`,
+  lub: `<p>Наш курс — американский английский. В Америке с just, already и yet часто говорят просто в прошедшем: {{Did you eat yet?}} вместо {{Have you eaten yet?}}, {{I just arrived.}} вместо {{I've just arrived.}} В заданиях засчитываются оба варианта. Present Perfect всё равно стоит знать: в США он тоже звучит постоянно, а в Британии без него никак.</p>`,
   pins: [{ id: "en14", t: "just / already / yet", html: `<table class="tbl"><tbody><tr><td class="fr">I've just arrived</td><td>только что</td></tr><tr><td class="fr">She's already left</td><td>уже</td></tr><tr><td class="fr">I haven't finished yet · …yet?</td><td>ещё не · уже? (в конце)</td></tr><tr><td class="fr">результат сейчас</td><td>Present Perfect</td></tr></tbody></table>` }],
   tasks: [
-    { k: "input", lang: "en", q: "Я только что приехал.", a: ["I've just arrived.", "I have just arrived.", "I've just come."], why: "have + just + arrived" },
+    { k: "input", lang: "en", q: "Я только что приехал.", a: ["I've just arrived.", "I have just arrived.", "I've just come.", "I just arrived.", "I just got here."], why: "have + just + arrived" },
     { k: "choice", q: "I haven't finished …", opts: ["yet", "already", "just"], a: "yet", why: "с «не» в конце — yet" },
     { k: "fix", lang: "en", q: "She already has left.", a: ["She has already left.", "She's already left."], why: "already — между has и глаголом" },
-    { k: "input", lang: "en", q: "Ты уже сделал домашку?", a: ["Have you done your homework yet?", "Have you done your homework already?", "Have you already done your homework?"], why: "Have you done … yet?" },
+    { k: "input", lang: "en", q: "Ты уже сделал домашку?", a: ["Have you done your homework yet?", "Have you done your homework already?", "Have you already done your homework?", "Did you do your homework yet?", "Did you already do your homework?"], why: "Have you done … yet?" },
     { k: "choice", q: "О нет, я разбил телефон! — Oh no, I've … my phone!", opts: ["broke", "broken", "breaked"], a: "broken", why: "break — broke — broken" },
-    { k: "fix", lang: "en", q: "I didn't finish yet.", a: ["I haven't finished yet."], why: "yet — с Present Perfect" },
-    { k: "input", lang: "en", q: "Игра ещё не началась.", a: ["The game hasn't started yet.", "The game has not started yet."], why: "hasn't started yet" },
+    { k: "fix", lang: "en", q: "I haven't finish yet.", a: ["I haven't finished yet.", "I have not finished yet."], why: "have + 3-я форма: finished" },
+    { k: "input", lang: "en", q: "Игра ещё не началась.", a: ["The game hasn't started yet.", "The game has not started yet.", "The game didn't start yet."], why: "hasn't started yet" },
     { k: "listen", say: "Someone has taken my seat.", q: "Что прозвучало?", opts: ["Кто-то занял моё место.", "Я занял чьё-то место.", "Кто-то нашёл моё место."], a: "Кто-то занял моё место.", why: "has taken — занял (и сейчас занято)" },
     { k: "choice", q: "Поезда на платформе нет: The train …", opts: ["has left", "leaves", "is leaving"], a: "has left", why: "результат сейчас" },
-    { k: "input", lang: "en", q: "Она уже ушла.", a: ["She's already left.", "She has already left.", "She's already gone.", "She has already gone."], why: "has already left" },
+    { k: "input", lang: "en", q: "Она уже ушла.", a: ["She's already left.", "She has already left.", "She's already gone.", "She has already gone.", "She already left."], why: "has already left" },
   ] };

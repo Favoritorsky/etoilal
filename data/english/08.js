@@ -1,6 +1,6 @@
 window.EN_C = window.EN_C || {};
 EN_C[8] = { n: 8, t: "Сколько: much, many, a lot of", s: "some, any, a few, a little",
-  words: [["money", "деньги", "мáни"], ["time", "время", "тайм"], ["water", "вода", "уóтэ"], ["people", "люди", "пипл"], ["a few", "несколько (штук)", "э фью"], ["a little", "немного (чего-то)", "э литл"], ["enough", "достаточно", "инáф"], ["too many / too much", "слишком много", "ту мэ́ни / ту мач"]],
+  words: [["money", "деньги", "мáни"], ["time", "время", "тайм"], ["water", "вода", "уóдэр"], ["people", "люди", "пипл"], ["a few", "несколько (штук)", "э фью"], ["a little", "немного (чего-то)", "э лидл"], ["enough", "достаточно", "инáф"], ["too many / too much", "слишком много", "ту мэ́ни / ту мач"]],
   sut: "Есть то, что считают поштучно ({{friends}}, {{games}}) — с ними {{many}}, {{a few}}. И то, что не считают ({{money}}, {{time}}, {{water}}) — с ними {{much}}, {{a little}}. А {{a lot of}} подходит ко всему.",
   rule: `<table class="tbl"><thead><tr><th></th><th>считаемое: friends, games</th><th>несчитаемое: money, time</th></tr></thead><tbody>
 <tr><td>много</td><td class="fr">many friends · a lot of friends</td><td class="fr">much time · a lot of time</td></tr>

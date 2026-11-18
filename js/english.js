@@ -12,12 +12,12 @@
 const EN = (() => {
   const PASS = 80, RETRY_MIN = 60, EX_SEC = 60, NO_COOLDOWN = new Set(["qub"]);
   const LV = [
-    { w: "Restarter", ru: "Перезапуск · A2", ic: "🔄" }, { w: "Explorer", ru: "Исследователь", ic: "🧭" }, { w: "Traveller", ru: "Путешественник", ic: "🧳" },
+    { w: "Restarter", ru: "Перезапуск · A2", ic: "🔄" }, { w: "Explorer", ru: "Исследователь", ic: "🧭" }, { w: "Traveler", ru: "Путешественник", ic: "🧳" },
     { w: "Storyteller", ru: "Рассказчик", ic: "🕰" }, { w: "Dreamer", ru: "Мечтатель", ic: "💭" }, { w: "Speaker", ru: "Свободно · B1", ic: "🗽" },
   ];
   const load = (n) => { window.EN_C = window.EN_C || {};
     if (EN_C[n]) return Promise.resolve(EN_C[n]);
-    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611182249`;
+    return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = `data/english/${String(n).padStart(2, "0")}.js?v=202611190443`;
       s.onload = () => (EN_C[n] ? ok(EN_C[n]) : bad(new Error("нет урока"))); s.onerror = () => bad(new Error("нет файла урока")); document.head.appendChild(s); }); };
   const S0 = () => { const S = Store.get(); S.en = S.en || {}; return S; };
   const prog = () => S0().en;
@@ -69,9 +69,9 @@ const EN = (() => {
     const L = lessons(), nd = L.filter((l) => done(l.n)).length, lv = level(), next = firstOpen() || L[L.length - 1], P = prog();
     const stars = L.reduce((a, l) => a + ((P[l.n] || {}).stars || 0), 0);
     const np = typeof ENP !== "undefined" && ENP.nextBefore(next.n);
-    return `<section class="frhero card enhero"><div class="k">🇬🇧 Английский · ${L.length} уроков · от A2 до B1</div>
+    return `<section class="frhero card enhero"><div class="k">🇺🇸 Английский · ${L.length} уроков · от A2 до B1</div>
       <h1 class="page">Английский <i>для тех, кто «вроде знает»</i></h1>
-      <p class="lead">Для тех, кто учил английский в школе: слова вроде знакомы, а живую речь понимать трудно. Простыми словами, без терминов. В каждом уроке есть правило «почему так», шпаргалка на доску и задания, где пишешь сам с нуля. А между уроками — истории со звуками, детектив и тренажёр слуха.</p>
+      <p class="lead">🇺🇸 <b>Американский английский</b> — как в фильмах, играх и на YouTube. Для тех, кто учил английский в школе: слова вроде знакомы, а живую речь понимать трудно. Простыми словами, без терминов. В каждом уроке есть правило «почему так», шпаргалка на доску и задания, где пишешь сам с нуля. А между уроками — истории со звуками, детектив и тренажёр слуха.</p>
       <div class="learnhead"><div class="stats"><div class="st">📖 ${nd}<small>из ${L.length} уроков</small></div><div class="st">★ ${stars}<small>звёзд</small></div><div class="st">✦ ${Store.get().points}<small>очков</small></div></div>
       ${np ? `<a class="btn gold" href="#/ант/${np.id}">Продолжить: тренировка «${esc(np.t)}» ▶</a>` : `<a class="btn gold" href="#/ан/${next.n}">${nd ? "Продолжить" : "Начать"}: ${next.check ? "контрольная" : "урок"} ${num(next.n)} ▶</a>`}${dayLimit() ? `<div class="muted dlim">Сегодня новых уроков: <b>${Math.min(dayUsed(), dayLimit())} из ${dayLimit()}</b> · новый день начинается в 7:30</div>` : ""}</div></section>
     ${typeof ENL !== "undefined" ? ENL.banner() : ""}
@@ -192,7 +192,7 @@ const EN = (() => {
       <h3 class="c2h3">💬 Фразы: проверка</h3><div class="alt-qs" id="enphr"></div>` : "";
     const sec = EN_I.sections[I.sec];
     $("#enl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(sec)} · урок ${num(n)} из ${lessons().length}</span></div>
-      <div class="k">🇬🇧 Урок ${num(n)}${I.kind ? " · " + esc(I.kind) : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
+      <div class="k">🇺🇸 Урок ${num(n)}${I.kind ? " · " + esc(I.kind) : ""}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
       <div class="c2prog"><i id="enbar"></i></div>
       ${L.sut ? `<div class="card c2sut"><div class="k">⚡ Суть за 30 секунд</div><div class="c2big">${rich(L.sut, L)}</div></div>` : ""}
       ${L.rule ? `<div class="card frrule">${rich(L.rule, L)}</div>` : ""}
@@ -262,7 +262,7 @@ const EN = (() => {
     const base = AltT.shuffle(own.concat(fromL)), items = mix(base, listenItems(src, I).slice(0, Math.round(base.length / 2)));
     Board.render();
     $("#enl").innerHTML = `<div class="row c2crumbs"><a class="muted" href="#/английский">← Все уроки</a><span class="muted">Раздел ${I.sec + 1}: ${esc(EN_I.sections[I.sec])}</span></div>
-      <div class="k">🇬🇧 Контрольная · урок ${num(n)}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
+      <div class="k">🇺🇸 Контрольная · урок ${num(n)}</div><h1 class="page">${esc(L.t)}</h1><p class="lead">${esc(L.s || "")}</p>
       ${L.rule ? `<div class="card frrule">${rich(L.rule, L)}</div>` : ""}
       <div class="card exrules"><div class="exlv"><span class="k">Сдашь — получишь уровень</span><b>${lv.ic} <span class="fr">${lv.w}</span> · ${lv.ru}</b></div>
         <ul><li><b>${items.length} заданий</b>, по одному. На каждое — <b>${EX_SEC} секунд</b>. Время вышло — задание не засчитано.</li>
